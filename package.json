@@ -18,5 +18,8 @@
   "license": {
     "name": "Dual MIT/StrongLoop",
     "url": "https://github.com/strongloop/loopback-connector/blob/master/LICENSE"
+  },
+  "dependencies": {
+    "async": "^0.9.0"
   }
 }
