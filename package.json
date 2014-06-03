@@ -1,7 +1,7 @@
 {
   "name": "loopback-connector",
   "version": "1.0.0",
-  "description": "LoopBack connector building blocks",
+  "description": "Building blocks for LoopBack connectors",
   "keywords": [
     "StrongLoop",
     "LoopBack",
