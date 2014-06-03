@@ -1,7 +1,7 @@
 {
   "name": "loopback-connector",
   "version": "1.0.0",
-  "description": "LoopBack connector building blocks",
+  "description": "Building blocks for LoopBack connectors",
   "keywords": [
     "StrongLoop",
     "LoopBack",
@@ -9,11 +9,21 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bajtos/loopback-connector"
+    "url": "https://github.com/strongloop/loopback-connector"
   },
   "main": "index.js",
+  "scripts": {
+    "pretest": "jshint .",
+    "test": "mocha"
+  },
   "license": {
     "name": "Dual MIT/StrongLoop",
     "url": "https://github.com/strongloop/loopback-connector/blob/master/LICENSE"
+  },
+  "dependencies": {
+    "async": "^0.9.0"
+  },
+  "devDependencies": {
+    "mocha": "^1.19.0"
   }
 }

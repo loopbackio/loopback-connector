@@ -7,7 +7,7 @@
 "undef": true,
 "unused": true,
 "quotmark": "single",
-"maxlen": 80,
+"maxlen": 90,
 "trailing": true,
 "newcap": true,
 "nonew": true,
@@ -18,8 +18,6 @@
   "before": true,
   "beforeEach": true,
   "after": true,
-  "afterEach": true,
-  "define": true,
-  "expect": true
+  "afterEach": true
 }
 }
