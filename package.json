@@ -1,6 +1,6 @@
 {
   "name": "loopback-connector",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Building blocks for LoopBack connectors",
   "keywords": [
     "StrongLoop",
@@ -24,6 +24,8 @@
     "async": "^0.9.0"
   },
   "devDependencies": {
+    "chai": "~1.9.2",
+    "loopback-datasource-juggler": "^2.0.0",
     "mocha": "^1.19.0"
   }
 }
