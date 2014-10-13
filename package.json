@@ -24,6 +24,8 @@
     "async": "^0.9.0"
   },
   "devDependencies": {
+    "chai": "~1.9.2",
+    "loopback-datasource-juggler": "^2.0.0",
     "mocha": "^1.19.0"
   }
 }
