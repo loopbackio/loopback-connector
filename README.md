@@ -4,7 +4,7 @@ LoopBack Connector is a set of building blocks simplifying implementation
 of datasource-specific connectors like Oracle, MongoDB, REST.
 
 **For full documentation, see the official StrongLoop documentation**:
- * [Data sources and connectors](http://docs.strongloop.com/display/DOC/Data+sources+and+connectors)
+ * [Data sources and connectors](http://docs.strongloop.com/display/public/LB/Database+connectors)
 
 ## Installation
 
