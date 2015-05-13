@@ -1,3 +1,15 @@
+2015-05-13, Version 2.0.0
+=========================
+
+ * Upgrade deps (Raymond Feng)
+
+ * Make sure invalid fields are filtered out (Raymond Feng)
+
+ * Refactor base and sql connector (Raymond Feng)
+
+ * Update README.md (Paulo McNally)
+
+
 2015-01-28, Version 1.2.1
 =========================
 
