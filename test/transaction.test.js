@@ -6,6 +6,7 @@ var testConnector = require('./connectors/test-sql-connector');
 var juggler = require('loopback-datasource-juggler');
 
 var db, Post;
+var Review;
 
 describe('transactions', function() {
 
@@ -19,6 +20,11 @@ describe('transactions', function() {
         title: {type: String, length: 255, index: true},
         content: {type: String}
       });
+      Review = db.define('ReviewTX', {
+        author: String,
+        content: {type: String}
+      });
+      Post.hasMany(Review, {as: 'reviews', foreignKey: 'postId'});
       done();
     });
   });
@@ -54,12 +60,18 @@ describe('transactions', function() {
             next();
           });
           currentTx = tx;
-          Post.create(post, {transaction: tx},
+          Post.create(post, {transaction: tx, model: 'Post'},
             function(err, p) {
               if (err) {
                 done(err);
               } else {
-                done();
+                p.reviews.create({
+                    author: 'John',
+                    content: 'Review for ' + p.title
+                  }, {transaction: tx, model: 'Review'},
+                  function(err, c) {
+                    done(err);
+                  });
               }
             });
         });
@@ -70,7 +82,7 @@ describe('transactions', function() {
   // records to equal to the count
   function expectToFindPosts(where, count, inTx) {
     return function(done) {
-      var options = {};
+      var options = {model: 'Post'};
       if (inTx) {
         options.transaction = currentTx;
       }
@@ -78,7 +90,19 @@ describe('transactions', function() {
         function(err, posts) {
           if (err) return done(err);
           expect(posts.length).to.be.eql(count);
-          done();
+          if (count) {
+            // Find related reviews
+            options.model = 'Review';
+            // Please note the empty {} is required, otherwise, the options
+            // will be treated as a filter
+            posts[0].reviews({}, options, function(err, reviews) {
+              if (err) return done(err);
+              expect(reviews.length).to.be.eql(count);
+              done();
+            });
+          } else {
+            done();
+          }
         });
     };
   }
@@ -114,7 +138,7 @@ describe('transactions', function() {
 
     before(function() {
       // Reset the collection
-      db.connector.collection.data = [];
+      db.connector.data = {};
     });
 
     var post = {title: 't2', content: 'c2'};
@@ -146,7 +170,7 @@ describe('transactions', function() {
 
     before(function() {
       // Reset the collection
-      db.connector.collection.data = [];
+      db.connector.data = {};
     });
 
     var post = {title: 't3', content: 'c3'};

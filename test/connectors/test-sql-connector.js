@@ -10,20 +10,24 @@ var transactionId = 0;
 function MockTransaction(connector, name) {
   this.connector = connector;
   this.name = name;
-  this.data = [];
+  this.data = {};
 }
 
 MockTransaction.prototype.commit = function(cb) {
   var self = this;
-  this.data.forEach(function(d) {
-    self.connector.collection.data.push(d);
-  });
-  this.data = [];
+  // Merge data from this TX to the global data var
+  for (var m in this.data) {
+    self.connector.data[m] = self.connector.data[m] || [];
+    for (var i = 0, n = this.data[m].length; i < n; i++) {
+      self.connector.data[m].push(this.data[m]);
+    }
+  }
+  this.data = {};
   cb();
 };
 
 MockTransaction.prototype.rollback = function(cb) {
-  this.data = [];
+  this.data = {};
   cb();
 };
 
@@ -41,9 +45,7 @@ exports.initialize = function initializeDataSource(dataSource, callback) {
 function TestConnector(settings) {
   SQLConnector.call(this, 'testdb', settings);
   this._tables = {};
-  this.collection = {
-    data: []
-  };
+  this.data = {};
 }
 
 util.inherits(TestConnector, SQLConnector);
@@ -203,9 +205,12 @@ TestConnector.prototype.rollback = function(tx, cb) {
 
 TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
   var transaction = options.transaction;
+  var model = options.model;
   if (transaction && transaction.connector === this && transaction.connection) {
     if (sql.indexOf('INSERT') === 0) {
-      transaction.connection.data.push({title: 't1', content: 'c1'});
+      transaction.connection.data[model] =
+        transaction.connection.data[model] || [];
+      transaction.connection.data[model].push({sql: sql, params: params});
       debug('INSERT', transaction.connection.data, sql,
         transaction.connection.name);
       callback(null, 1);
@@ -213,16 +218,17 @@ TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
     else {
       debug('SELECT', transaction.connection.data, sql,
         transaction.connection.name);
-      callback(null, transaction.connection.data);
+      callback(null, transaction.connection.data[model] || []);
     }
   } else {
     if (sql.indexOf('INSERT') === 0) {
-      this.collection.data.push({title: 't1', content: 'c1'});
-      debug('INSERT', this.collection.data, sql);
+      this.data[model] = this.data[model] || [];
+      this.data[model].push({sql: sql, params: params});
+      debug('INSERT', this.data, sql);
       callback(null, 1);
     } else {
-      debug('SELECT', this.collection.data, sql);
-      callback(null, this.collection.data);
+      debug('SELECT', this.data, sql);
+      callback(null, this.data[model] || []);
     }
   }
 };
