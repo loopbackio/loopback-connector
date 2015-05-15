@@ -3,6 +3,8 @@
 This tutorial walks you through the MySQL connector implementation to teach you
 how to develop a connector for relational databases.
 
+> NOTE: This document is being moved to http://docs.strongloop.com/display/LB/How+to+build+a+connector+for+a+relational+database.  
+
 ## Understand a connector's responsibilities
 
 In LoopBack, models encapsulate business data and logic as JavaScript properties
