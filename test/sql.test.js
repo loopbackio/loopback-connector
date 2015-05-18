@@ -307,4 +307,3 @@ describe('sql connector', function() {
     }).to.throw('callback must be a function');
   });
 });
-

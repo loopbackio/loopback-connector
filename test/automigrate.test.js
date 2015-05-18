@@ -45,4 +45,3 @@ describe('sql connector', function() {
   });
 
 });
-
