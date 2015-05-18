@@ -1,3 +1,11 @@
+2015-05-18, Version 2.0.1
+=========================
+
+ * Replace with link to Confluence (Rand McKinney)
+
+ * Update sql-connector.md (Rand McKinney)
+
+
 2015-05-13, Version 2.0.0
 =========================
 
