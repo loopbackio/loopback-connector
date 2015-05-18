@@ -1,3 +1,13 @@
+2015-05-18, Version 2.1.0
+=========================
+
+ * Update sql-connector.md (Rand McKinney)
+
+ * Add tests for propagating a transaction over relations (Raymond Feng)
+
+ * Add transaction support (Raymond Feng)
+
+
 2015-05-18, Version 2.0.1
 =========================
 
