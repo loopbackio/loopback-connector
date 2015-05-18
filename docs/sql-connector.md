@@ -1,5 +1,3 @@
-# Using loopback-connector
-
 Use the loopback-connector module to build a LoopBack connector to back-end data sources
 such as databases or web services.  There are many existing connectors for the most popular data sources; see:
 - [Database connectors](http://docs.strongloop.com/display/LB/Database+connectors) (for example, MongoDB, MySQL, Oracle).
