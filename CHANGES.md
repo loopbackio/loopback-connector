@@ -1,3 +1,9 @@
+2015-05-20, Version 2.1.1
+=========================
+
+ * Fix for https://github.com/strongloop/loopback-connector-postgresql/issues/80 (Raymond Feng)
+
+
 2015-05-18, Version 2.1.0
 =========================
 
