@@ -9,13 +9,14 @@ var ds = new juggler.DataSource({
   debug: true
 });
 var connector;
+var Customer;
 
 describe('sql connector', function() {
   before(function() {
     connector = ds.connector;
     connector._tables = {};
     connector._models = {};
-    ds.createModel('customer',
+    Customer = ds.createModel('customer',
       {
         name: {
           id: true,
@@ -306,5 +307,24 @@ describe('sql connector', function() {
     expect(function() {
       connector.execute('SELECT * FROM `CUSTOMER`', [], {}, 'xyz');
     }).to.throw('callback must be a function');
+  });
+
+  it('should invoke hooks', function(done) {
+    var events = [];
+    connector.observe('before execute', function(ctx, next) {
+      expect(ctx.req.sql).be.a('string');
+      expect(ctx.req.params).be.a('array');
+      events.push('before execute');
+      next();
+    });
+    connector.observe('after execute', function(ctx, next) {
+      expect(ctx.res).be.an('array');
+      events.push('after execute');
+      next();
+    });
+    Customer.find(function(err, results) {
+      expect(events).to.eql(['before execute', 'after execute']);
+      done(err, results);
+    });
   });
 });
