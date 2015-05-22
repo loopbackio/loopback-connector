@@ -1,3 +1,11 @@
+2015-05-22, Version 2.1.2
+=========================
+
+ * Fix for https://github.com/strongloop/loopback-connector-mssql/issues/45 (Raymond Feng)
+
+ * Fix the jsdoc for applyPagination (Raymond Feng)
+
+
 2015-05-20, Version 2.1.1
 =========================
 
