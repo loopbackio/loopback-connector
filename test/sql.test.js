@@ -143,7 +143,8 @@ describe('sql connector', function() {
   });
 
   it('builds fields for columns', function() {
-    var fields = connector.buildFields('customer', {name: 'John', vip: true});
+    var fields = connector.buildFields('customer',
+      {name: 'John', vip: true, unknown: 'Random'});
     expect(fields.names).to.eql(['`NAME`', '`VIP`']);
     expect(fields.columnValues[0].toJSON()).to.eql(
       {sql: '?', params: ['John']});
