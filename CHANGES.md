@@ -1,3 +1,11 @@
+2015-05-27, Version 2.2.0
+=========================
+
+ * Update deps (Raymond Feng)
+
+ * Add hooks to sql based connectors (Raymond Feng)
+
+
 2015-05-22, Version 2.1.2
 =========================
 
