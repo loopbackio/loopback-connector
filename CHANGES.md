@@ -1,3 +1,9 @@
+2015-06-23, Version 2.2.2
+=========================
+
+ * Enable Inversion of Control in connector hooks through modifications of the context object. (Frank Steegmans)
+
+
 2015-05-27, Version 2.2.1
 =========================
 
