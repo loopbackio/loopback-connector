@@ -128,6 +128,15 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds where with nesting and/or', function() {
+    var where = connector.buildWhere('customer',
+      {and: [{name: 'John'}, {or: [{vip: true}, {address: null}]}]});
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE (`NAME`=?) AND ((`VIP`=?) OR (`ADDRESS` IS NULL))',
+      params: ['John', true]
+    });
+  });
+
   it('builds order by with one field', function() {
     var orderBy = connector.buildOrderBy('customer', 'name');
     expect(orderBy).to.eql('ORDER BY `NAME`');
