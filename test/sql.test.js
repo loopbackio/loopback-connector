@@ -86,6 +86,14 @@ describe('sql connector', function() {
     expect(column).to.eql('John');
   });
 
+  it.only('builds REGEXP', function() {
+    var sql = connector.buildRegexp('customer', {name: {regexp: '^J'}});
+    expect(sql.toJSON()).to.eql({
+      sql: "REGEXP '^J'",
+      params: []
+    });
+  });
+
   it('builds where', function() {
     var where = connector.buildWhere('customer', {name: 'John'});
     expect(where.toJSON()).to.eql({
