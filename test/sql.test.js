@@ -128,6 +128,78 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds where with a regexp string that does not have flags', function() {
+    var where = connector.buildWhere('customer', {
+      name: {
+        regexp: '^J'
+      }
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME` REGEXP ?',
+      params: ['^J']
+    });
+  });
+
+  it('builds where with a regexp string that has flags', function() {
+    var where = connector.buildWhere('customer', {
+      name: {
+        regexp: '^J/i'
+      }
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME` REGEXP ?',
+      params: ['^J/i']
+    });
+  });
+
+  it('builds where with a regexp literal that does not have flags', function() {
+    var where = connector.buildWhere('customer', {
+      name: {
+        regexp: /^J/
+      }
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME` REGEXP ?',
+      params: [/^J/]
+    });
+  });
+
+  it('builds where with a regexp literal that has flags', function() {
+    var where = connector.buildWhere('customer', {
+      name: {
+        regexp: /^J/i
+      }
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME` REGEXP ?',
+      params: [/^J/i]
+    });
+  });
+
+  it('builds where with a regexp object that does not have flags', function() {
+    var where = connector.buildWhere('customer', {
+      name: {
+        regexp: new RegExp(/^J/)
+      }
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME` REGEXP ?',
+      params: [/^J/]
+    });
+  });
+
+  it('builds where with a regexp object that has flags', function() {
+    var where = connector.buildWhere('customer', {
+      name: {
+        regexp: new RegExp(/^J/i)
+      }
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME` REGEXP ?',
+      params: [new RegExp(/^J/i)]
+    });
+  });
+
   it('builds where with nesting and/or', function() {
     var where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {or: [{vip: true}, {address: null}]}]});
