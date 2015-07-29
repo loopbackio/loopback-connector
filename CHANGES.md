@@ -1,3 +1,13 @@
+2015-07-29, Version 2.3.0
+=========================
+
+ * Fix RegExp coercion (Simon Ho)
+
+ * Add support for RegExp operator (Simon Ho)
+
+ * Add a test for nesting and/or (Raymond Feng)
+
+
 2015-06-23, Version 2.2.2
 =========================
 
