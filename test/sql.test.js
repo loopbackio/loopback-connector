@@ -10,6 +10,8 @@ var ds = new juggler.DataSource({
 });
 var connector;
 var Customer;
+var Order;
+var Store;
 
 describe('sql connector', function() {
   before(function() {
@@ -35,6 +37,28 @@ describe('sql connector', function() {
         address: String
       },
       {testdb: {table: 'CUSTOMER'}});
+    Order = ds.createModel('order',
+      {
+        id: {
+          id: true
+        },
+        date: Date
+      });
+    Store = ds.createModel('store',
+      {
+        id: {
+          id: true,
+          type: String
+        },
+        state: String
+      });
+    // Relations
+    Customer.hasMany(Order, {as: 'orders', foreignKey: 'customer_name'});
+    Order.belongsTo(Customer, {as: 'customer', foreignKey: 'customer_name'});
+    Order.belongsTo(Store, {as: 'store', foreignKey: 'store_id'});
+    Store.hasMany(Order, {as: 'orders', foreignKey: 'store_id'});
+    Customer.belongsTo(Store, {as: 'favorite_store', foreignKey: 'favorite_store'});
+    Store.hasMany(Customer, {as: 'customers_fav', foreignKey: 'favorite_store'});
   });
 
   it('should map table name', function() {
@@ -303,6 +327,93 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql: 'INSERT INTO `CUSTOMER`(`NAME`,`VIP`) VALUES($1,$2)',
       params: ['John', true]
+    });
+  });
+
+  it('builds INNER JOIN', function () {
+    var sql = connector.buildJoins('customer', {orders: {where: {id: 10}}});
+    expect(sql.toJSON()).to.eql({
+      sql: 'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
+      '`ORDER`.`ID`=? ORDER BY `ORDER`.`ID` ) AS `ORDER` ON ' +
+      '`CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`',
+      params: [10]
+    });
+  });
+
+  it('builds SELECT with INNER JOIN', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        orders: {
+          where: {
+            date: {between: ['2015-01-01', '2015-01-31']}
+          }
+        }
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT DISTINCT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
+      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` ' +
+      'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
+      '`ORDER`.`DATE` BETWEEN $1 AND $2 ORDER BY `ORDER`.`ID` ) AS `ORDER` ' +
+      'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ORDER BY `CUSTOMER`.`NAME`',
+      params: ['2015-01-01', '2015-01-31']
+    });
+  });
+
+  it('builds SELECT with multiple INNER JOIN', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        orders: {
+          where: {
+            date: {between: ['2015-01-01', '2015-01-31']}
+          }
+        },
+        /*jshint camelcase:false */
+        favorite_store: {
+          where: {
+            state: 'NY'
+          }
+        }
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT DISTINCT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
+      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` ' +
+      'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
+      '`ORDER`.`DATE` BETWEEN $1 AND $2 ORDER BY `ORDER`.`ID` ) AS `ORDER` ON ' +
+      '`CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` INNER JOIN ( SELECT `STORE`.`ID` ' +
+      'FROM `STORE` WHERE `STORE`.`STATE`=$3 ORDER BY `STORE`.`ID` ) AS `STORE` ' +
+      'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID`  ORDER BY `CUSTOMER`.`NAME`',
+      params: ['2015-01-01', '2015-01-31', 'NY']
+    });
+  });
+
+  it('builds nested SELECTs', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        orders: {
+          where: {
+            store: {
+              where: {
+                state: 'NY'
+              }
+            }
+          }
+        }
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT DISTINCT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
+      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` ' +
+      'INNER JOIN ( SELECT DISTINCT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` ' +
+      'INNER JOIN ( SELECT `STORE`.`ID` FROM `STORE` WHERE `STORE`.`STATE`=$1 ' +
+      'ORDER BY `STORE`.`ID` ) AS `STORE` ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
+      'ORDER BY `ORDER`.`ID` ) AS `ORDER` ON `CUSTOMER`.`NAME`=`ORDER`.' +
+      '`CUSTOMER_NAME`  ORDER BY `CUSTOMER`.`NAME`',
+      params: ['NY']
     });
   });
 
