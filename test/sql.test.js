@@ -102,7 +102,7 @@ describe('sql connector', function() {
 
   it('should find escaped column name', function() {
     var column = connector.columnEscaped('customer', 'vip');
-    expect(column).to.eql('`VIP`');
+    expect(column).to.eql('`CUSTOMER`.`VIP`');
   });
 
   it('should convert to escaped id column value', function() {
@@ -113,7 +113,7 @@ describe('sql connector', function() {
   it('builds where', function() {
     var where = connector.buildWhere('customer', {name: 'John'});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME`=?',
+      sql: 'WHERE `CUSTOMER`.`NAME`=?',
       params: ['John']
     });
   });
@@ -121,7 +121,7 @@ describe('sql connector', function() {
   it('builds where with null', function() {
     var where = connector.buildWhere('customer', {name: null});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` IS NULL',
+      sql: 'WHERE `CUSTOMER`.`NAME` IS NULL',
       params: []
     });
   });
@@ -129,7 +129,7 @@ describe('sql connector', function() {
   it('builds where with inq', function() {
     var where = connector.buildWhere('customer', {name: {inq: ['John', 'Mary']}});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` IN (?,?)',
+      sql: 'WHERE `CUSTOMER`.`NAME` IN (?,?)',
       params: ['John', 'Mary']
     });
   });
@@ -138,7 +138,7 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {or: [{name: 'John'}, {name: 'Mary'}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) OR (`NAME`=?)',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) OR (`CUSTOMER`.`NAME`=?)',
       params: ['John', 'Mary']
     });
   });
@@ -147,7 +147,7 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {vip: true}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND (`VIP`=?)',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND (`CUSTOMER`.`VIP`=?)',
       params: ['John', true]
     });
   });
@@ -159,7 +159,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: ['^J']
     });
   });
@@ -171,7 +171,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: ['^J/i']
     });
   });
@@ -183,7 +183,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/]
     });
   });
@@ -195,7 +195,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/i]
     });
   });
@@ -207,7 +207,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/]
     });
   });
@@ -219,7 +219,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [new RegExp(/^J/i)]
     });
   });
@@ -228,30 +228,31 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {or: [{vip: true}, {address: null}]}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND ((`VIP`=?) OR (`ADDRESS` IS NULL))',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND ((`CUSTOMER`.`VIP`=?) OR ' +
+        '(`CUSTOMER`.`ADDRESS` IS NULL))',
       params: ['John', true]
     });
   });
 
   it('builds order by with one field', function() {
     var orderBy = connector.buildOrderBy('customer', 'name');
-    expect(orderBy).to.eql('ORDER BY `NAME`');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME`');
   });
 
   it('builds order by with two fields', function() {
     var orderBy = connector.buildOrderBy('customer', ['name', 'vip']);
-    expect(orderBy).to.eql('ORDER BY `NAME`,`VIP`');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`');
   });
 
   it('builds order by with two fields and dirs', function() {
     var orderBy = connector.buildOrderBy('customer', ['name ASC', 'vip DESC']);
-    expect(orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME` ASC,`CUSTOMER`.`VIP` DESC');
   });
 
   it('builds fields for columns', function() {
     var fields = connector.buildFields('customer',
       {name: 'John', vip: true, unknown: 'Random'});
-    expect(fields.names).to.eql(['`NAME`', '`VIP`']);
+    expect(fields.names).to.eql(['`CUSTOMER`.`NAME`', '`CUSTOMER`.`VIP`']);
     expect(fields.columnValues[0].toJSON()).to.eql(
       {sql: '?', params: ['John']});
     expect(fields.columnValues[1].toJSON()).to.eql(
@@ -262,7 +263,7 @@ describe('sql connector', function() {
     var fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true});
     expect(fields.toJSON()).to.eql({
-      sql: 'SET `VIP`=?',
+      sql: 'SET `CUSTOMER`.`VIP`=?',
       params: [true]
     });
   });
@@ -271,35 +272,36 @@ describe('sql connector', function() {
     var fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true}, false);
     expect(fields.toJSON()).to.eql({
-      sql: 'SET `NAME`=?,`VIP`=?',
+      sql: 'SET `CUSTOMER`.`NAME`=?,`CUSTOMER`.`VIP`=?',
       params: ['John', true]
     });
   });
 
   it('builds column names for SELECT', function() {
     var cols = connector.buildColumnNames('customer');
-    expect(cols).to.eql('`NAME`,`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
+      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', {fields: {name: true}});
-    expect(cols).to.eql('`NAME`');
+    expect(cols).to.eql('`CUSTOMER`.`NAME`');
   });
 
   it('builds column names with false fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', {fields: {name: false}});
-    expect(cols).to.eql('`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE`');
   });
 
   it('builds column names with array fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', {fields: ['name']});
-    expect(cols).to.eql('`NAME`');
+    expect(cols).to.eql('`CUSTOMER`.`NAME`');
   });
 
   it('builds DELETE', function() {
     var sql = connector.buildDelete('customer', {name: 'John'});
     expect(sql.toJSON()).to.eql({
-      sql: 'DELETE FROM `CUSTOMER` WHERE `NAME`=$1',
+      sql: 'DELETE FROM `CUSTOMER` WHERE `CUSTOMER`.`NAME`=$1',
       params: ['John']
     });
   });
@@ -307,7 +309,7 @@ describe('sql connector', function() {
   it('builds UPDATE', function() {
     var sql = connector.buildUpdate('customer', {name: 'John'}, {vip: false});
     expect(sql.toJSON()).to.eql({
-      sql: 'UPDATE `CUSTOMER` SET `VIP`=$1 WHERE `NAME`=$2',
+      sql: 'UPDATE `CUSTOMER` SET `CUSTOMER`.`VIP`=$1 WHERE `CUSTOMER`.`NAME`=$2',
       params: [false, 'John']
     });
   });
@@ -316,8 +318,9 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer',
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`VIP`,`ADDRESS` FROM `CUSTOMER`' +
-      ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+        '`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` WHERE `CUSTOMER`.`NAME`=$1 ' +
+        'ORDER BY `CUSTOMER`.`NAME` LIMIT 5',
       params: ['John']
     });
   });
@@ -325,7 +328,7 @@ describe('sql connector', function() {
   it('builds INSERT', function() {
     var sql = connector.buildInsert('customer', {name: 'John', vip: true});
     expect(sql.toJSON()).to.eql({
-      sql: 'INSERT INTO `CUSTOMER`(`NAME`,`VIP`) VALUES($1,$2)',
+      sql: 'INSERT INTO `CUSTOMER`(`CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`) VALUES($1,$2)',
       params: ['John', true]
     });
   });
