@@ -420,6 +420,40 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds count', function() {
+    var sql = connector.buildCount('customer');
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT count(*) as "cnt" FROM `CUSTOMER` ',
+      params: []
+    });
+  });
+
+  it('builds count with WHERE', function() {
+    var sql = connector.buildCount('customer', {name: 'John'});
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT count(*) as "cnt" FROM `CUSTOMER` WHERE `CUSTOMER`.`NAME`=$1',
+      params: ['John']
+    });
+  });
+
+  it('builds count with WHERE and JOIN', function() {
+    var sql = connector.buildCount('customer', {
+      name: 'John',
+      orders: {
+        where: {
+          date: {between: ['2015-01-01', '2015-01-31']}
+        }
+      }
+    });
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT count(DISTINCT `CUSTOMER`.`NAME`) as "cnt" FROM `CUSTOMER` ' +
+        'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
+        '`ORDER`.`DATE` BETWEEN $1 AND $2 ORDER BY `ORDER`.`ID` ) AS `ORDER` ' +
+        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` WHERE `CUSTOMER`.`NAME`=$3',
+      params: ['2015-01-01', '2015-01-31', 'John']
+    });
+  });
+
   it('normalizes a SQL statement from string', function() {
     var sql = 'SELECT * FROM `CUSTOMER`';
     var stmt = new ParameterizedSQL(sql);
