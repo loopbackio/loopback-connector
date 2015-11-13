@@ -364,6 +364,29 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds SELECT with INNER JOIN and order by relation columns', function () {
+    var sql = connector.buildSelect('order', {
+      where: {
+        customer: {
+          fields: {
+            'name': true,
+            'vip': true
+          }
+        }
+      },
+      order: ['customer.vip DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT DISTINCT `ORDER`.`ID`,`ORDER`.`DATE`,`ORDER`.`CUSTOMER_NAME`,' +
+      '`ORDER`.`STORE_ID` FROM `ORDER` INNER JOIN ( SELECT `CUSTOMER`.`NAME`,' +
+      '`CUSTOMER`.`VIP` FROM `CUSTOMER` ORDER BY `CUSTOMER`.`NAME` ) AS `CUSTOMER`' +
+      ' ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`  ORDER BY ' +
+      '`CUSTOMER`.`VIP` DESC,`CUSTOMER`.`NAME` ASC',
+      params: []
+    });
+  });
+
   it('builds SELECT with multiple INNER JOIN', function () {
     var sql = connector.buildSelect('customer', {
       where: {
