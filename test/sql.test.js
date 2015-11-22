@@ -57,6 +57,12 @@ describe('sql connector', function() {
     Order.belongsTo(Customer, {as: 'customer', foreignKey: 'customer_name'});
     Order.belongsTo(Store, {as: 'store', foreignKey: 'store_id'});
     Store.hasMany(Order, {as: 'orders', foreignKey: 'store_id'});
+    Store.hasMany(Customer, {
+      as: 'customers',
+      through: Order,
+      foreignKey: 'store_id',
+      keyThrough: 'customer_name'
+    });
     Customer.belongsTo(Store, {as: 'favorite_store', foreignKey: 'favorite_store'});
     Store.hasMany(Customer, {as: 'customers_fav', foreignKey: 'favorite_store'});
   });
@@ -343,7 +349,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN', function () {
+  it('builds SELECT with INNER JOIN (1:n relation)', function () {
     var sql = connector.buildSelect('customer', {
       where: {
         orders: {
@@ -361,6 +367,28 @@ describe('sql connector', function() {
       '`ORDER`.`DATE` BETWEEN $1 AND $2 ORDER BY `ORDER`.`ID` ) AS `ORDER` ' +
       'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ORDER BY `CUSTOMER`.`NAME`',
       params: ['2015-01-01', '2015-01-31']
+    });
+  });
+
+  it('builds SELECT with INNER JOIN (n:n relation)', function () {
+    var sql = connector.buildSelect('store', {
+      where: {
+        customers: {
+          where: {
+            vip: true
+          }
+        }
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT DISTINCT `STORE`.`ID`,`STORE`.`STATE` FROM `STORE` INNER JOIN' +
+      ' ( SELECT `ORDER`.`CUSTOMER_NAME`,`ORDER`.`STORE_ID` FROM `ORDER` ' +
+      'ORDER BY `ORDER`.`ID` ) AS `ORDER` ON `STORE`.`ID`=`ORDER`.`STORE_ID` ' +
+      'INNER JOIN ( SELECT `CUSTOMER`.`NAME` FROM `CUSTOMER` WHERE ' +
+      '`CUSTOMER`.`VIP`=$1 ORDER BY `CUSTOMER`.`NAME` ) AS `CUSTOMER` ON ' +
+      '`ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`  ORDER BY `STORE`.`ID`',
+      params: [true]
     });
   });
 
