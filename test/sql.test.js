@@ -109,6 +109,14 @@ describe('sql connector', function() {
       params: ['John', 'Mary']
     });
   });
+  
+  it('builds where with inq ignoring options', function() {
+    var where = connector.buildWhere('customer', {name: {inq: ['John', 'Mary'], options: 'json'}});
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME` IN (?,?)',
+      params: ['John', 'Mary']
+    });
+  });
 
   it('builds where with or', function() {
     var where = connector.buildWhere('customer',
