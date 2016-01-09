@@ -281,7 +281,7 @@ describe('sql connector', function() {
   });
 
   it('builds UPDATE', function() {
-    var sql = connector._buildUpdate('customer', {name: 'John'}, {vip: false});
+    var sql = connector.buildUpdate('customer', {name: 'John'}, {vip: false});
     expect(sql.toJSON()).to.eql({
       sql: 'UPDATE `CUSTOMER` SET `VIP`=$1 WHERE `NAME`=$2',
       params: [false, 'John']
