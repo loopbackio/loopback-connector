@@ -13,13 +13,15 @@
   },
   "main": "index.js",
   "scripts": {
-    "pretest": "jshint .",
-    "test": "mocha"
+    "test": "mocha",
+    "posttest": "jshint ."
   },
   "license": "MIT",
   "dependencies": {
     "async": "^1.0.0",
-    "debug": "^2.2.0"
+    "bluebird": "^3.1.5",
+    "debug": "^2.2.0",
+    "qs": "^6.0.2"
   },
   "devDependencies": {
     "chai": "~2.3.0",
