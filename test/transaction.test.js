@@ -1,17 +1,15 @@
-var Transaction = require('../index').Transaction;
-
+var DataSource = require('..').DataSource;
 var expect = require('chai').expect;
 var testConnector = require('./connectors/test-sql-connector');
+var Transaction = require('../index').Transaction;
 
-var juggler = require('loopback-datasource-juggler');
-
-var db, Post;
+var db;
+var Post;
 var Review;
 
 describe('transactions', function() {
-
   before(function(done) {
-    db = new juggler.DataSource({
+    db = new DataSource({
       connector: testConnector,
       debug: true
     });

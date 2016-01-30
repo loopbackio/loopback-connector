@@ -1,8 +1,8 @@
+var DataSource = require('..').DataSource;
 var expect = require('chai').expect;
 var testConnector = require('./connectors/test-sql-connector');
 
-var juggler = require('loopback-datasource-juggler');
-var ds = new juggler.DataSource({
+var ds = new DataSource({
   connector: testConnector,
   debug: true
 });
