@@ -1,6 +1,5 @@
 var jdb = require('../');
 var DataSource = jdb.DataSource;
-var should = require('./init.js');
 
 describe('Memory connector with mocked discovery', function() {
   var ds;

@@ -1,5 +1,4 @@
 var DataSource = require('..').DataSource;
-var should = require('./init.js');
 
 describe('connectors.transient', function() {
   var db;

@@ -1,6 +1,3 @@
-// This test written in mocha+should.js
-var should = require('./init.js');
-
 var db = getSchema(), slave = getSchema(), Model, SlaveModel;
 
 describe('dataSource', function () {

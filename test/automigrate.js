@@ -1,6 +1,5 @@
 var DataSource = require('..').DataSource;
-var expect = require('chai').expect;
-var testConnector = require('./connectors/test-sql-connector');
+var testConnector = require('./mocks/sql-connector');
 
 var ds = new DataSource({
   connector: testConnector,

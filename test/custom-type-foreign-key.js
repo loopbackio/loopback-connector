@@ -1,7 +1,4 @@
-var should = require('./init.js');
-
-var jdb = require('../');
-var DataSource = jdb.DataSource;
+var DataSource = require('..').DataSource;
 
 var ds, Item, Variant;
 describe('Datasource-specific field types for foreign keys', function () {

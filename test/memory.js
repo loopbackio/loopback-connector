@@ -4,11 +4,10 @@ var path = require('path');
 var fs = require('fs');
 var assert = require('assert');
 var async = require('async');
-var should = require('./init.js');
 var Memory = require('../lib/connectors/memory').Memory;
 
 describe('Memory connector', function() {
-  var file = path.join(__dirname, 'memory.json');
+  var file = path.join(__dirname, '/fixtures/memory.json');
 
   function readModels(done) {
     fs.readFile(file, function(err, data) {

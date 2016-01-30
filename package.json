@@ -21,8 +21,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha",
-      "posttest": "npm run lint"
+    "test": "mocha -r test/configs"
   },
   "repository": {
     "type": "git",
