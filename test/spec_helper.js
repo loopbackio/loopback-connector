@@ -6,11 +6,11 @@
  }
  */
 
-var group_name = false, EXT_EXP;
+var groupName = false, EXT_EXP;
 function it(should, test_case) {
   check_external_exports();
-  if (group_name) {
-    EXT_EXP[group_name][should] = test_case;
+  if (groupName) {
+    EXT_EXP[groupName][should] = test_case;
   } else {
     EXT_EXP[should] = test_case;
   }
@@ -21,7 +21,7 @@ global.it = it;
 function context(name, tests) {
   check_external_exports();
   EXT_EXP[name] = {};
-  group_name = name;
+  groupName = name;
   tests({
     before: function (f) {
       it('setUp', f);
@@ -30,7 +30,7 @@ function context(name, tests) {
       it('tearDown', f);
     }
   });
-  group_name = false;
+  groupName = false;
 }
 
 global.context = context;

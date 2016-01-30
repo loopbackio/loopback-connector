@@ -1,31 +1,41 @@
 {
   "name": "loopback-connector",
   "version": "2.3.0",
-  "description": "Building blocks for LoopBack connectors",
-  "keywords": [
-    "StrongLoop",
-    "LoopBack",
-    "Connector"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/strongloop/loopback-connector"
-  },
+  "description": "Foundational components for LoopBack connectors.",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha",
-    "posttest": "jshint ."
-  },
-  "license": "MIT",
   "dependencies": {
-    "async": "^1.0.0",
+    "async": "^1.5.2",
     "bluebird": "^3.1.5",
     "debug": "^2.2.0",
-    "qs": "^6.0.2"
+    "loopback-model": "^1.0.0",
+    "loopback-model-persistence": "^1.0.0",
+    "qs": "^6.0.2",
+    "traverse": "^0.6.6"
   },
   "devDependencies": {
-    "chai": "~2.3.0",
-    "jshint": "^2.7.0",
-    "mocha": "^2.2.5"
-  }
+    "chai": "^2.3.0",
+    "eslint": "^1.10.3",
+    "eslint-config-loopback": "^1.0.0",
+    "mocha": "^2.3.4",
+    "should": "^8.2.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha",
+      "posttest": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/strongloop/loopback-connector.git"
+  },
+  "keywords": [
+    "loopback",
+    "connector"
+  ],
+  "author": "StrongLoop <callback@strongloop.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/strongloop/loopback-connector/issues"
+  },
+  "homepage": "https://github.com/strongloop/loopback-connector#readme"
 }
