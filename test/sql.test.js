@@ -401,6 +401,232 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds SELECT with INNER JOIN with or', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          orders: {
+            date: {between: ['2015-01-01', '2015-01-31']}
+          }
+        }, {
+          orders: {
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
+        'WHERE (`ORDER`.`DATE` BETWEEN $1 AND $2) ' +
+        'OR (`ORDER`.`DATE` BETWEEN $3 AND $4) ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with INNER JOIN with and', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        and: [{
+          orders: {
+            date: {between: ['2015-01-01', '2015-01-31']}
+          }
+        }, {
+          orders: {
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
+        'WHERE (`ORDER`.`DATE` BETWEEN $1 AND $2) ' +
+          'AND (`ORDER`.`DATE` BETWEEN $3 AND $4) ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with INNER JOIN with or and nested relation', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          orders: {
+            store: {
+              state: 'NY'
+            }
+          }
+        }, {
+          orders: {
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
+        'INNER JOIN `STORE` ' +
+          'ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
+        'WHERE (`STORE`.`STATE`=$1) ' +
+          'OR (`ORDER`.`DATE` BETWEEN $2 AND $3) ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        'NY',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with INNER JOIN with or and nested relation with non relation search', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          orders: {
+            date: {between: ['2015-01-01', '2015-01-31']},
+            store: {
+              state: 'NY'
+            }
+          }
+        }, {
+          orders: {
+            store: {
+              state: 'NY'
+            },
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
+        'INNER JOIN `STORE` ' +
+          'ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
+        'WHERE (`ORDER`.`DATE` BETWEEN $1 AND $2 AND `STORE`.`STATE`=$3) ' +
+          'OR (`ORDER`.`DATE` BETWEEN $4 AND $5 AND `STORE`.`STATE`=$6) ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        '2015-01-01',
+        '2015-01-31',
+        'NY',
+        '2015-02-01',
+        '2015-02-31',
+        'NY'
+      ]
+    });
+  });
+
+  it('builds SELECT with INNER JOIN with nested or', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          /*jshint camelcase:false */
+          favorite_store: {
+            state: 'NY',
+            or: [{
+              orders: {
+                date: {between: ['2015-01-01', '2015-01-31']}
+              }
+            }, {
+              orders: {
+                date: {between: ['2015-02-01', '2015-02-31']}
+              }
+            }]
+          }
+        }, {
+          /*jshint camelcase:false */
+          favorite_store: {
+            state: 'baz',
+            and: [{
+              orders: {
+                date: {between: ['2015-01-01', '2015-01-31']}
+              }
+            }, {
+              orders: {
+                date: {between: ['2015-02-01', '2015-02-31']}
+              }
+            }]
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `STORE` ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID` ' +
+        'INNER JOIN `ORDER` ON `STORE`.`ID`=`ORDER`.`STORE_ID`  ' +
+        'WHERE (' +
+          '`STORE`.`STATE`=$1 AND (' +
+            '`ORDER`.`DATE` BETWEEN $2 AND $3' +
+          ') ' +
+          'OR (`ORDER`.`DATE` BETWEEN $4 AND $5)' +
+        ') OR (' +
+          '`STORE`.`STATE`=$6 ' +
+          'AND (`ORDER`.`DATE` BETWEEN $7 AND $8) ' +
+          'AND (`ORDER`.`DATE` BETWEEN $9 AND $10)' +
+        ') ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        'NY',
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31',
+        'baz',
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
   it('builds SELECT with INNER JOIN and order by relation columns', function () {
     var sql = connector.buildSelect('order', {
       where: {
@@ -674,6 +900,38 @@ describe('sql connector', function() {
         'AND `ORDER`.`DATE` BETWEEN $1 AND $2  ' +
         'WHERE `CUSTOMER`.`NAME`=$3',
       params: ['2015-01-01', '2015-01-31', 'John']
+    });
+  });
+
+  it('builds count with WHERE and JOIN with or', function() {
+    var sql = connector.buildCount('customer', {
+      name: 'John',
+      or: [{
+        orders: {
+          date: {between: ['2015-01-01', '2015-01-31']}
+        }
+      }, {
+        orders: {
+          date: {between: ['2015-02-01', '2015-02-31']}
+        }
+      }]
+    });
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT count(DISTINCT `CUSTOMER`.`NAME`) as \"cnt\" ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
+        'WHERE `CUSTOMER`.`NAME`=$1 ' +
+        'AND (`ORDER`.`DATE` BETWEEN $2 AND $3) ' +
+        'OR (`ORDER`.`DATE` BETWEEN $4 AND $5)',
+      params: [
+        'John',
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
     });
   });
 
