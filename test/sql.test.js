@@ -340,7 +340,7 @@ describe('sql connector', function() {
   });
 
   it('builds INNER JOIN', function () {
-    var sql = connector.buildJoins('customer', {orders: {where: {id: 10}}});
+    var sql = connector.buildJoins('customer', {orders: {id: 10}});
     expect(sql.toJSON()).to.eql({
       sql:
         'INNER JOIN `ORDER` AS `orders` ' +
@@ -363,9 +363,7 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer', {
       where: {
         orders: {
-          where: {
-            date: {between: ['2015-01-01', '2015-01-31']}
-          }
+          date: {between: ['2015-01-01', '2015-01-31']}
         }
       }
     });
@@ -389,9 +387,7 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('store', {
       where: {
         customers: {
-          where: {
-            vip: true
-          }
+          vip: true
         }
       }
     });
@@ -429,9 +425,9 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql:
         'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
-                        '`CUSTOMER`.`VIP`,' +
-                        '`CUSTOMER`.`ADDRESS`,' +
-                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        '`CUSTOMER`.`VIP`,' +
+        '`CUSTOMER`.`ADDRESS`,' +
+        '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
         'LEFT JOIN `ORDER` AS `orders` ' +
           'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME`  ' +
@@ -468,9 +464,9 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql:
         'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
-                        '`CUSTOMER`.`VIP`,' +
-                        '`CUSTOMER`.`ADDRESS`,' +
-                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        '`CUSTOMER`.`VIP`,' +
+        '`CUSTOMER`.`ADDRESS`,' +
+        '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
         'LEFT JOIN `ORDER` AS `orders` ' +
           'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME`  ' +
@@ -648,14 +644,6 @@ describe('sql connector', function() {
 
   it('builds SELECT with JOIN and order by relation columns', function () {
     var sql = connector.buildSelect('order', {
-      where: {
-        customer: {
-          fields: {
-            'name': true,
-            'vip': true
-          }
-        }
-      },
       order: ['customer.vip DESC', 'customer.name ASC']
     });
 
@@ -744,14 +732,10 @@ describe('sql connector', function() {
       where: {
         date: {between: ['2015-01-01', '2015-01-31']},
         customer: {
-          where: {
-            name: 'foo',
-            /*jshint camelcase:false */
-            favorite_store: {
-              where: {
-                state: 'NY'
-              }
-            }
+          name: 'foo',
+          /*jshint camelcase:false */
+          favorite_store: {
+            state: 'NY'
           }
         }
       },
@@ -788,9 +772,7 @@ describe('sql connector', function() {
       where: {
         date: {between: ['2015-01-01', '2015-01-31']},
         customer: {
-          where: {
-            name: 'foo'
-          }
+          name: 'foo'
         }
       },
       order: ['customer.favorite_store.state DESC', 'customer.name ASC']
@@ -823,15 +805,11 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer', {
       where: {
         orders: {
-          where: {
-            date: {between: ['2015-01-01', '2015-01-31']}
-          }
+          date: {between: ['2015-01-01', '2015-01-31']}
         },
         /*jshint camelcase:false */
         favorite_store: {
-          where: {
-            state: 'NY'
-          }
+          state: 'NY'
         }
       }
     });
@@ -858,12 +836,8 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer', {
       where: {
         orders: {
-          where: {
-            store: {
-              where: {
-                state: 'NY'
-              }
-            }
+          store: {
+            state: 'NY'
           }
         }
       }
@@ -905,9 +879,7 @@ describe('sql connector', function() {
     var sql = connector.buildCount('customer', {
       name: 'John',
       orders: {
-        where: {
-          date: {between: ['2015-01-01', '2015-01-31']}
-        }
+        date: {between: ['2015-01-01', '2015-01-31']}
       }
     });
     expect(sql.toJSON()).to.eql({
