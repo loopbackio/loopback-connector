@@ -429,6 +429,151 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds SELECT with INNER JOIN and order by relation columns with where but no conditions', function () {
+    var sql = connector.buildSelect('order', {
+      where: {
+        customer: {}
+      },
+      order: ['customer.vip DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`   ' +
+        'ORDER BY `CUSTOMER`.`VIP` DESC,' +
+                 '`CUSTOMER`.`NAME` ASC',
+      params: []
+    });
+  });
+
+  it('builds SELECT with INNER JOIN and order by relation columns with any where', function () {
+    var sql = connector.buildSelect('order', {
+      order: ['customer.vip DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`   ' +
+        'ORDER BY `CUSTOMER`.`VIP` DESC,' +
+                 '`CUSTOMER`.`NAME` ASC',
+      params: []
+    });
+  });
+
+  it('builds SELECT with INNER JOIN and order by nested relation columns', function () {
+    var sql = connector.buildSelect('order', {
+      order: ['customer.favorite_store.state DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME` ' +
+        'INNER JOIN `STORE` ' +
+          'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID`   ' +
+        'ORDER BY `STORE`.`STATE` DESC,' +
+                 '`CUSTOMER`.`NAME` ASC',
+      params: []
+    });
+  });
+
+  it('builds SELECT with INNER JOIN and order by nested relation columns with where', function () {
+    var sql = connector.buildSelect('order', {
+      where: {
+        date: {between: ['2015-01-01', '2015-01-31']},
+        customer: {
+          where: {
+            name: 'foo',
+            /*jshint camelcase:false */
+            favorite_store: {
+              where: {
+                state: 'NY'
+              }
+            }
+          }
+        }
+      },
+      order: ['customer.favorite_store.state DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME` ' +
+          'AND `CUSTOMER`.`NAME`=$1 ' +
+        'INNER JOIN `STORE` ' +
+          'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID` ' +
+          'AND `STORE`.`STATE`=$2  ' +
+        'WHERE `ORDER`.`DATE` BETWEEN $3 AND $4 ' +
+          'ORDER BY `STORE`.`STATE` DESC,' +
+                   '`CUSTOMER`.`NAME` ASC',
+      params: [
+        'foo',
+        'NY',
+        '2015-01-01',
+        '2015-01-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with INNER JOIN and order by nested relation columns with partial where', function () {
+    var sql = connector.buildSelect('order', {
+      where: {
+        date: {between: ['2015-01-01', '2015-01-31']},
+        customer: {
+          where: {
+            name: 'foo'
+          }
+        }
+      },
+      order: ['customer.favorite_store.state DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME` ' +
+          'AND `CUSTOMER`.`NAME`=$1 ' +
+        'INNER JOIN `STORE` ' +
+          'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID`  ' +
+        'WHERE `ORDER`.`DATE` BETWEEN $2 AND $3 ' +
+          'ORDER BY `STORE`.`STATE` DESC,' +
+                   '`CUSTOMER`.`NAME` ASC',
+      params: [
+        'foo',
+        '2015-01-01',
+        '2015-01-31'
+      ]
+    });
+  });
+
   it('builds SELECT with multiple INNER JOIN', function () {
     var sql = connector.buildSelect('customer', {
       where: {
