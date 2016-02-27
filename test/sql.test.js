@@ -342,9 +342,9 @@ describe('sql connector', function() {
   it('builds INNER JOIN', function () {
     var sql = connector.buildJoins('customer', {orders: {where: {id: 10}}});
     expect(sql.toJSON()).to.eql({
-      sql: 'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-      '`ORDER`.`ID`=? ORDER BY `ORDER`.`ID` ) AS `ORDER` ON ' +
-      '`CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`',
+      sql:
+        'INNER JOIN `ORDER` ' +
+        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` AND `ORDER`.`ID`=? ',
       params: [10]
     });
   });
@@ -361,11 +361,16 @@ describe('sql connector', function() {
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
-      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` ' +
-      'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-      '`ORDER`.`DATE` BETWEEN $1 AND $2 ORDER BY `ORDER`.`ID` ) AS `ORDER` ' +
-      'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ORDER BY `CUSTOMER`.`NAME`',
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
+          'AND `ORDER`.`DATE` BETWEEN $1 AND $2   ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
       params: ['2015-01-01', '2015-01-31']
     });
   });
@@ -382,12 +387,16 @@ describe('sql connector', function() {
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `STORE`.`ID`,`STORE`.`STATE` FROM `STORE` INNER JOIN' +
-      ' ( SELECT `ORDER`.`CUSTOMER_NAME`,`ORDER`.`STORE_ID` FROM `ORDER` ' +
-      'ORDER BY `ORDER`.`ID` ) AS `ORDER` ON `STORE`.`ID`=`ORDER`.`STORE_ID` ' +
-      'INNER JOIN ( SELECT `CUSTOMER`.`NAME` FROM `CUSTOMER` WHERE ' +
-      '`CUSTOMER`.`VIP`=$1 ORDER BY `CUSTOMER`.`NAME` ) AS `CUSTOMER` ON ' +
-      '`ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`  ORDER BY `STORE`.`ID`',
+      sql:
+        'SELECT DISTINCT `STORE`.`ID`,' +
+                        '`STORE`.`STATE` ' +
+        'FROM `STORE` ' +
+        'INNER JOIN `ORDER` ' +
+          'ON `STORE`.`ID`=`ORDER`.`STORE_ID`  ' +
+        'INNER JOIN `CUSTOMER` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME` ' +
+          'AND `CUSTOMER`.`VIP`=$1   ' +
+        'ORDER BY `STORE`.`ID`',
       params: [true]
     });
   });
@@ -406,11 +415,16 @@ describe('sql connector', function() {
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `ORDER`.`ID`,`ORDER`.`DATE`,`ORDER`.`CUSTOMER_NAME`,' +
-      '`ORDER`.`STORE_ID` FROM `ORDER` INNER JOIN ( SELECT `CUSTOMER`.`NAME`,' +
-      '`CUSTOMER`.`VIP` FROM `CUSTOMER` ORDER BY `CUSTOMER`.`NAME` ) AS `CUSTOMER`' +
-      ' ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`  ORDER BY ' +
-      '`CUSTOMER`.`VIP` DESC,`CUSTOMER`.`NAME` ASC',
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`   ' +
+        'ORDER BY `CUSTOMER`.`VIP` DESC,' +
+                 '`CUSTOMER`.`NAME` ASC',
       params: []
     });
   });
@@ -433,13 +447,19 @@ describe('sql connector', function() {
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
-      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` ' +
-      'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-      '`ORDER`.`DATE` BETWEEN $1 AND $2 ORDER BY `ORDER`.`ID` ) AS `ORDER` ON ' +
-      '`CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` INNER JOIN ( SELECT `STORE`.`ID` ' +
-      'FROM `STORE` WHERE `STORE`.`STATE`=$3 ORDER BY `STORE`.`ID` ) AS `STORE` ' +
-      'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID`  ORDER BY `CUSTOMER`.`NAME`',
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
+          'AND `ORDER`.`DATE` BETWEEN $1 AND $2  ' +
+        'INNER JOIN `STORE` ' +
+          'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID` ' +
+          'AND `STORE`.`STATE`=$3   ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
       params: ['2015-01-01', '2015-01-31', 'NY']
     });
   });
@@ -460,13 +480,17 @@ describe('sql connector', function() {
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
-      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` ' +
-      'INNER JOIN ( SELECT DISTINCT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` ' +
-      'INNER JOIN ( SELECT `STORE`.`ID` FROM `STORE` WHERE `STORE`.`STATE`=$1 ' +
-      'ORDER BY `STORE`.`ID` ) AS `STORE` ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
-      'ORDER BY `ORDER`.`ID` ) AS `ORDER` ON `CUSTOMER`.`NAME`=`ORDER`.' +
-      '`CUSTOMER_NAME`  ORDER BY `CUSTOMER`.`NAME`',
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,'+
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
+        'INNER JOIN `STORE` ' +
+          'ON `ORDER`.`STORE_ID`=`STORE`.`ID` AND `STORE`.`STATE`=$1   ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
       params: ['NY']
     });
   });
@@ -497,10 +521,13 @@ describe('sql connector', function() {
       }
     });
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT count(DISTINCT `CUSTOMER`.`NAME`) as "cnt" FROM `CUSTOMER` ' +
-        'INNER JOIN ( SELECT `ORDER`.`CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-        '`ORDER`.`DATE` BETWEEN $1 AND $2 ORDER BY `ORDER`.`ID` ) AS `ORDER` ' +
-        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` WHERE `CUSTOMER`.`NAME`=$3',
+      sql:
+        'SELECT count(DISTINCT `CUSTOMER`.`NAME`) as \"cnt\" ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` ' +
+        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
+        'AND `ORDER`.`DATE` BETWEEN $1 AND $2  ' +
+        'WHERE `CUSTOMER`.`NAME`=$3',
       params: ['2015-01-01', '2015-01-31', 'John']
     });
   });
