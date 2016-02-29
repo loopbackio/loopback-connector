@@ -349,6 +349,16 @@ describe('sql connector', function() {
     });
   });
 
+  it('builds LEFT JOIN', function () {
+    var sql = connector.buildJoins('customer', {orders: {}});
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'LEFT JOIN `ORDER` ' +
+        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ',
+      params: []
+    });
+  });
+
   it('builds SELECT with INNER JOIN (1:n relation)', function () {
     var sql = connector.buildSelect('customer', {
       where: {
@@ -391,7 +401,7 @@ describe('sql connector', function() {
         'SELECT DISTINCT `STORE`.`ID`,' +
                         '`STORE`.`STATE` ' +
         'FROM `STORE` ' +
-        'INNER JOIN `ORDER` ' +
+        'LEFT JOIN `ORDER` ' +
           'ON `STORE`.`ID`=`ORDER`.`STORE_ID`  ' +
         'INNER JOIN `CUSTOMER` ' +
           'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME` ' +
@@ -401,7 +411,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN with or', function () {
+  it('builds SELECT with JOIN with or', function () {
     var sql = connector.buildSelect('customer', {
       where: {
         or: [{
@@ -423,9 +433,13 @@ describe('sql connector', function() {
                         '`CUSTOMER`.`ADDRESS`,' +
                         '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
-        'INNER JOIN `ORDER` ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
-        'WHERE (`ORDER`.`DATE` BETWEEN $1 AND $2) ' +
-        'OR (`ORDER`.`DATE` BETWEEN $3 AND $4) ' +
+        'LEFT JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
+        'WHERE (' +
+          '`ORDER`.`DATE` BETWEEN $1 AND $2' +
+        ') OR (' +
+          '`ORDER`.`DATE` BETWEEN $3 AND $4' +
+        ') ' +
         'ORDER BY `CUSTOMER`.`NAME`',
       params: [
         '2015-01-01',
@@ -436,7 +450,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN with and', function () {
+  it('builds SELECT with JOIN with and', function () {
     var sql = connector.buildSelect('customer', {
       where: {
         and: [{
@@ -458,7 +472,7 @@ describe('sql connector', function() {
                         '`CUSTOMER`.`ADDRESS`,' +
                         '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
-        'INNER JOIN `ORDER` ' +
+        'LEFT JOIN `ORDER` ' +
           'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
         'WHERE (`ORDER`.`DATE` BETWEEN $1 AND $2) ' +
           'AND (`ORDER`.`DATE` BETWEEN $3 AND $4) ' +
@@ -472,7 +486,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN with or and nested relation', function () {
+  it('builds SELECT with JOIN with or and nested relation', function () {
     var sql = connector.buildSelect('customer', {
       where: {
         or: [{
@@ -496,9 +510,9 @@ describe('sql connector', function() {
                         '`CUSTOMER`.`ADDRESS`,' +
                         '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
-        'INNER JOIN `ORDER` ' +
+        'LEFT JOIN `ORDER` ' +
           'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
-        'INNER JOIN `STORE` ' +
+        'LEFT JOIN `STORE` ' +
           'ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
         'WHERE (`STORE`.`STATE`=$1) ' +
           'OR (`ORDER`.`DATE` BETWEEN $2 AND $3) ' +
@@ -511,7 +525,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN with or and nested relation with non relation search', function () {
+  it('builds SELECT with JOIN with or and nested relation with non relation search', function () {
     var sql = connector.buildSelect('customer', {
       where: {
         or: [{
@@ -539,9 +553,9 @@ describe('sql connector', function() {
                         '`CUSTOMER`.`ADDRESS`,' +
                         '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
-        'INNER JOIN `ORDER` ' +
+        'LEFT JOIN `ORDER` ' +
           'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
-        'INNER JOIN `STORE` ' +
+        'LEFT JOIN `STORE` ' +
           'ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
         'WHERE (`ORDER`.`DATE` BETWEEN $1 AND $2 AND `STORE`.`STATE`=$3) ' +
           'OR (`ORDER`.`DATE` BETWEEN $4 AND $5 AND `STORE`.`STATE`=$6) ' +
@@ -557,7 +571,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN with nested or', function () {
+  it('builds SELECT with JOIN with nested or', function () {
     var sql = connector.buildSelect('customer', {
       where: {
         or: [{
@@ -599,8 +613,8 @@ describe('sql connector', function() {
                         '`CUSTOMER`.`ADDRESS`,' +
                         '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
-        'INNER JOIN `STORE` ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID` ' +
-        'INNER JOIN `ORDER` ON `STORE`.`ID`=`ORDER`.`STORE_ID`  ' +
+        'LEFT JOIN `STORE` ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID` ' +
+        'LEFT JOIN `ORDER` ON `STORE`.`ID`=`ORDER`.`STORE_ID`  ' +
         'WHERE (' +
           '`STORE`.`STATE`=$1 AND (' +
             '`ORDER`.`DATE` BETWEEN $2 AND $3' +
@@ -627,7 +641,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN and order by relation columns', function () {
+  it('builds SELECT with JOIN and order by relation columns', function () {
     var sql = connector.buildSelect('order', {
       where: {
         customer: {
@@ -647,7 +661,7 @@ describe('sql connector', function() {
                         '`ORDER`.`CUSTOMER_NAME`,' +
                         '`ORDER`.`STORE_ID` ' +
         'FROM `ORDER` ' +
-        'INNER JOIN `CUSTOMER` ' +
+        'LEFT JOIN `CUSTOMER` ' +
           'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`   ' +
         'ORDER BY `CUSTOMER`.`VIP` DESC,' +
                  '`CUSTOMER`.`NAME` ASC',
@@ -655,7 +669,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN and order by relation columns with where but no conditions', function () {
+  it('builds SELECT with JOIN and order by relation columns with where but no conditions', function () {
     var sql = connector.buildSelect('order', {
       where: {
         customer: {}
@@ -670,7 +684,7 @@ describe('sql connector', function() {
                         '`ORDER`.`CUSTOMER_NAME`,' +
                         '`ORDER`.`STORE_ID` ' +
         'FROM `ORDER` ' +
-        'INNER JOIN `CUSTOMER` ' +
+        'LEFT JOIN `CUSTOMER` ' +
           'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`   ' +
         'ORDER BY `CUSTOMER`.`VIP` DESC,' +
                  '`CUSTOMER`.`NAME` ASC',
@@ -678,7 +692,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN and order by relation columns with any where', function () {
+  it('builds SELECT with JOIN and order by relation columns with any where', function () {
     var sql = connector.buildSelect('order', {
       order: ['customer.vip DESC', 'customer.name ASC']
     });
@@ -690,7 +704,7 @@ describe('sql connector', function() {
                         '`ORDER`.`CUSTOMER_NAME`,' +
                         '`ORDER`.`STORE_ID` ' +
         'FROM `ORDER` ' +
-        'INNER JOIN `CUSTOMER` ' +
+        'LEFT JOIN `CUSTOMER` ' +
           'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`   ' +
         'ORDER BY `CUSTOMER`.`VIP` DESC,' +
                  '`CUSTOMER`.`NAME` ASC',
@@ -698,7 +712,7 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with INNER JOIN and order by nested relation columns', function () {
+  it('builds SELECT with JOIN and order by nested relation columns', function () {
     var sql = connector.buildSelect('order', {
       order: ['customer.favorite_store.state DESC', 'customer.name ASC']
     });
@@ -710,9 +724,9 @@ describe('sql connector', function() {
                         '`ORDER`.`CUSTOMER_NAME`,' +
                         '`ORDER`.`STORE_ID` ' +
         'FROM `ORDER` ' +
-        'INNER JOIN `CUSTOMER` ' +
+        'LEFT JOIN `CUSTOMER` ' +
           'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME` ' +
-        'INNER JOIN `STORE` ' +
+        'LEFT JOIN `STORE` ' +
           'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID`   ' +
         'ORDER BY `STORE`.`STATE` DESC,' +
                  '`CUSTOMER`.`NAME` ASC',
@@ -787,7 +801,7 @@ describe('sql connector', function() {
         'INNER JOIN `CUSTOMER` ' +
           'ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME` ' +
           'AND `CUSTOMER`.`NAME`=$1 ' +
-        'INNER JOIN `STORE` ' +
+        'LEFT JOIN `STORE` ' +
           'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID`  ' +
         'WHERE `ORDER`.`DATE` BETWEEN $2 AND $3 ' +
           'ORDER BY `STORE`.`STATE` DESC,' +
@@ -857,7 +871,7 @@ describe('sql connector', function() {
                         '`CUSTOMER`.`ADDRESS`,'+
                         '`CUSTOMER`.`FAVORITE_STORE` ' +
         'FROM `CUSTOMER` ' +
-        'INNER JOIN `ORDER` ' +
+        'LEFT JOIN `ORDER` ' +
           'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` ' +
         'INNER JOIN `STORE` ' +
           'ON `ORDER`.`STORE_ID`=`STORE`.`ID` AND `STORE`.`STATE`=$1   ' +
@@ -920,11 +934,11 @@ describe('sql connector', function() {
       sql:
         'SELECT count(DISTINCT `CUSTOMER`.`NAME`) as \"cnt\" ' +
         'FROM `CUSTOMER` ' +
-        'INNER JOIN `ORDER` ' +
-        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
+        'LEFT JOIN `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ' +
         'WHERE `CUSTOMER`.`NAME`=$1 ' +
-        'AND (`ORDER`.`DATE` BETWEEN $2 AND $3) ' +
-        'OR (`ORDER`.`DATE` BETWEEN $4 AND $5)',
+          'AND (`ORDER`.`DATE` BETWEEN $2 AND $3) ' +
+          'OR (`ORDER`.`DATE` BETWEEN $4 AND $5)',
       params: [
         'John',
         '2015-01-01',
