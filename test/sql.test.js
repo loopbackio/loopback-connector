@@ -337,7 +337,7 @@ describe('sql connector', function() {
     var fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true});
     expect(fields.toJSON()).to.eql({
-      sql: 'SET `CUSTOMER`.`VIP`=?',
+      sql: 'SET `VIP`=?',
       params: [true]
     });
   });
@@ -346,7 +346,7 @@ describe('sql connector', function() {
     var fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true}, false);
     expect(fields.toJSON()).to.eql({
-      sql: 'SET `CUSTOMER`.`NAME`=?,`CUSTOMER`.`VIP`=?',
+      sql: 'SET `NAME`=?,`VIP`=?',
       params: ['John', true]
     });
   });
@@ -383,7 +383,7 @@ describe('sql connector', function() {
   it('builds UPDATE', function() {
     var sql = connector.buildUpdate('customer', {name: 'John'}, {vip: false});
     expect(sql.toJSON()).to.eql({
-      sql: 'UPDATE `CUSTOMER` SET `CUSTOMER`.`VIP`=$1 WHERE `CUSTOMER`.`NAME`=$2',
+      sql: 'UPDATE `CUSTOMER` SET `VIP`=$1 WHERE `NAME`=$2',
       params: [false, 'John']
     });
   });
