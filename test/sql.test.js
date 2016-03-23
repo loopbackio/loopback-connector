@@ -19,56 +19,41 @@ describe('sql connector', function() {
     connector = ds.connector;
     connector._tables = {};
     connector._models = {};
-    Customer = ds.createModel('customer',
-      {
-        name: {
-          id: true,
-          type: String,
-          testdb: {
-            column: 'NAME',
-            dataType: 'VARCHAR',
-            dataLength: 32
-          }
-        },
-        vip: {
-          type: Boolean,
-          testdb: {
-            column: 'VIP'
-          }
-        },
-        address: String
+    Customer = ds.createModel('customer', {
+      name: {
+        id: true,
+        type: String,
+        testdb: {
+          column: 'NAME',
+          dataType: 'VARCHAR',
+          dataLength: 32
+        }
       },
-      {testdb: {table: 'CUSTOMER'}}
-    );
+      vip: {
+        type: Boolean,
+        testdb: {
+          column: 'VIP'
+        }
+      },
+      address: String
+    }, {
+      testdb: {table: 'CUSTOMER'}
+    });
 
-    Order = ds.createModel('order',
-      {
-        id: {
-          id: true
-        },
-        date: Date
-      }
-    );
+    Order = ds.createModel('order', {
+      id: {id: true, type: String},
+      date: Date
+    });
 
-    Store = ds.createModel('store',
-      {
-        id: {
-          id: true,
-          type: String
-        },
-        state: String
-      }
-    );
+    Store = ds.createModel('store', {
+      id: {id: true, type: String},
+      state: String
+    });
 
-    Retailer = ds.createModel('retailer',
-      {
-        id: {
-          id: true,
-          type: String
-        },
-        name: String
-      }
-    );
+    Retailer = ds.createModel('retailer', {
+      id: {id: true, type: String},
+      name: String
+    });
 
     // Relations
     Customer.hasMany(Order, {as: 'orders', foreignKey: 'customer_id'});
