@@ -19,7 +19,6 @@ describe('sql connector', function() {
     connector = ds.connector;
     connector._tables = {};
     connector._models = {};
-
     Customer = ds.createModel('customer', {
       name: {
         id: true,
