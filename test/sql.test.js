@@ -412,7 +412,7 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
       '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
-      ' LEFT OUTER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' LEFT JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
       ' ORDER BY `STORE`.`STATE` LIMIT 5',
       params: []
     });
@@ -449,7 +449,7 @@ describe('sql connector', function() {
       sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
       '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
       ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
-      ' LEFT OUTER JOIN `RETAILER` ON `STORE`.`RETAILER_ID`=`RETAILER`.`ID`' +
+      ' LEFT JOIN `RETAILER` ON `STORE`.`RETAILER_ID`=`RETAILER`.`ID`' +
       ' WHERE `STORE`.`STATE`=$1 ORDER BY `RETAILER`.`NAME` LIMIT 5',
       params: ['NY']
     });
