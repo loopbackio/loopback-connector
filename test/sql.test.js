@@ -47,6 +47,7 @@ describe('sql connector', function() {
 
     Store = ds.createModel('store', {
       id: {id: true, type: String},
+      name: String,
       state: String
     });
 
@@ -194,6 +195,15 @@ describe('sql connector', function() {
     expect(where.toJSON()).to.eql({
       sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND (`STORE`.`STATE`=?)',
       params: ['John', 'NY']
+    });
+  });
+
+  it('builds where with and + 2 same  relations', function() {
+    var where = connector.buildWhere('customer',
+      {and: [{name: 'John'}, {store: {state: 'NY'}}, {store: {name: 'oxxo'}}]}, true);
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND (`STORE`.`STATE`=?) AND (`STORE`.`NAME`=?)',
+      params: ['John', 'NY', 'oxxo']
     });
   });
 
@@ -402,13 +412,13 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
       '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
-      ' LEFT OUTER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' LEFT JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
       ' ORDER BY `STORE`.`STATE` LIMIT 5',
       params: []
     });
   });
 
-  it('builds SELECT with left inner join because on search by relation', function() {
+  it('builds SELECT with left inner join', function() {
     var sql = connector.buildSelect('customer',
       {where: {store: {state: 'NY'}}, order: {store: 'state'}, limit: 5});
     expect(sql.toJSON()).to.eql({
@@ -420,14 +430,26 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds SELECT with left inner and outer joins because', function() {
+  it('builds SELECT with 1 left inner join even if relation is met 2 times', function() {
+    var sql = connector.buildSelect('customer',
+      {where: {and: [{store: {state: 'NY'}}, {store: {name: 'oxxo'}}]}, order: {store: 'state'}, limit: 5});
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' WHERE (`STORE`.`STATE`=$1) AND (`STORE`.`NAME`=$2) ORDER BY `STORE`.`STATE` LIMIT 5',
+      params: ['NY', 'oxxo']
+    });
+  });
+
+  it('builds SELECT with left inner and outer joins', function() {
     var sql = connector.buildSelect('customer',
       {where: {store: {state: 'NY'}}, order: {store: {retailer: 'name'}}, limit: 5});
     expect(sql.toJSON()).to.eql({
       sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
       '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
       ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
-      ' LEFT OUTER JOIN `RETAILER` ON `STORE`.`RETAILER_ID`=`RETAILER`.`ID`' +
+      ' LEFT JOIN `RETAILER` ON `STORE`.`RETAILER_ID`=`RETAILER`.`ID`' +
       ' WHERE `STORE`.`STATE`=$1 ORDER BY `RETAILER`.`NAME` LIMIT 5',
       params: ['NY']
     });
