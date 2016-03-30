@@ -108,11 +108,6 @@ describe('sql connector', function() {
 
   it('should find escaped column name', function() {
     var column = connector.columnEscaped('customer', 'vip');
-    expect(column).to.eql('`VIP`');
-  });
-
-  it('should find escaped qualified column name', function() {
-    var column = connector.qualifiedColumnEscaped('customer', 'vip');
     expect(column).to.eql('`CUSTOMER`.`VIP`');
   });
 
@@ -124,7 +119,7 @@ describe('sql connector', function() {
   it('builds where', function() {
     var where = connector.buildWhere('customer', {name: 'John'});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME`=?',
+      sql: 'WHERE `CUSTOMER`.`NAME`=?',
       params: ['John']
     });
   });
@@ -132,7 +127,7 @@ describe('sql connector', function() {
   it('builds where with null', function() {
     var where = connector.buildWhere('customer', {name: null});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` IS NULL',
+      sql: 'WHERE `CUSTOMER`.`NAME` IS NULL',
       params: []
     });
   });
@@ -140,7 +135,7 @@ describe('sql connector', function() {
   it('builds where with inq', function() {
     var where = connector.buildWhere('customer', {name: {inq: ['John', 'Mary']}});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` IN (?,?)',
+      sql: 'WHERE `CUSTOMER`.`NAME` IN (?,?)',
       params: ['John', 'Mary']
     });
   });
@@ -149,7 +144,7 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {or: [{name: 'John'}, {name: 'Mary'}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) OR (`NAME`=?)',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) OR (`CUSTOMER`.`NAME`=?)',
       params: ['John', 'Mary']
     });
   });
@@ -158,7 +153,7 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {vip: true}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND (`VIP`=?)',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND (`CUSTOMER`.`VIP`=?)',
       params: ['John', true]
     });
   });
@@ -170,7 +165,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: ['^J']
     });
   });
@@ -182,7 +177,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: ['^J/i']
     });
   });
@@ -194,7 +189,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/]
     });
   });
@@ -206,7 +201,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/i]
     });
   });
@@ -218,7 +213,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/]
     });
   });
@@ -230,7 +225,7 @@ describe('sql connector', function() {
       }
     });
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [new RegExp(/^J/i)]
     });
   });
@@ -239,31 +234,31 @@ describe('sql connector', function() {
     var where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {or: [{vip: true}, {address: null}]}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND ((`VIP`=?) OR ' +
-        '(`ADDRESS` IS NULL))',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND ((`CUSTOMER`.`VIP`=?) OR ' +
+        '(`CUSTOMER`.`ADDRESS` IS NULL))',
       params: ['John', true]
     });
   });
 
   it('builds order by with one field', function() {
     var orderBy = connector.buildOrderBy('customer', 'name');
-    expect(orderBy).to.eql('ORDER BY `NAME`');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME`');
   });
 
   it('builds order by with two fields', function() {
     var orderBy = connector.buildOrderBy('customer', ['name', 'vip']);
-    expect(orderBy).to.eql('ORDER BY `NAME`,`VIP`');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`');
   });
 
   it('builds order by with two fields and dirs', function() {
     var orderBy = connector.buildOrderBy('customer', ['name ASC', 'vip DESC']);
-    expect(orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME` ASC,`CUSTOMER`.`VIP` DESC');
   });
 
   it('builds fields for columns', function() {
     var fields = connector.buildFields('customer',
       {name: 'John', vip: true, unknown: 'Random'});
-    expect(fields.names).to.eql(['`NAME`', '`VIP`']);
+    expect(fields.names).to.eql(['`CUSTOMER`.`NAME`', '`CUSTOMER`.`VIP`']);
     expect(fields.columnValues[0].toJSON()).to.eql(
       {sql: '?', params: ['John']});
     expect(fields.columnValues[1].toJSON()).to.eql(
@@ -274,7 +269,7 @@ describe('sql connector', function() {
     var fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true});
     expect(fields.toJSON()).to.eql({
-      sql: 'SET `VIP`=?',
+      sql: 'SET `CUSTOMER`.`VIP`=?',
       params: [true]
     });
   });
@@ -283,36 +278,36 @@ describe('sql connector', function() {
     var fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true}, false);
     expect(fields.toJSON()).to.eql({
-      sql: 'SET `NAME`=?,`VIP`=?',
+      sql: 'SET `CUSTOMER`.`NAME`=?,`CUSTOMER`.`VIP`=?',
       params: ['John', true]
     });
   });
 
   it('builds column names for SELECT', function() {
     var cols = connector.buildColumnNames('customer');
-    expect(cols).to.eql('`NAME`,`VIP`,' +
-      '`ADDRESS`,`FAVORITE_STORE`');
+    expect(cols).to.eql('`CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,' +
+      '`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', {fields: {name: true}});
-    expect(cols).to.eql('`NAME`');
+    expect(cols).to.eql('`CUSTOMER`.`NAME`');
   });
 
   it('builds column names with false fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', {fields: {name: false}});
-    expect(cols).to.eql('`VIP`,`ADDRESS`,`FAVORITE_STORE`');
+    expect(cols).to.eql('`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`FAVORITE_STORE`');
   });
 
   it('builds column names with array fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', {fields: ['name']});
-    expect(cols).to.eql('`NAME`');
+    expect(cols).to.eql('`CUSTOMER`.`NAME`');
   });
 
   it('builds DELETE', function() {
     var sql = connector.buildDelete('customer', {name: 'John'});
     expect(sql.toJSON()).to.eql({
-      sql: 'DELETE FROM `CUSTOMER` WHERE `NAME`=$1',
+      sql: 'DELETE FROM `CUSTOMER` WHERE `CUSTOMER`.`NAME`=$1',
       params: ['John']
     });
   });
@@ -320,7 +315,7 @@ describe('sql connector', function() {
   it('builds UPDATE', function() {
     var sql = connector.buildUpdate('customer', {name: 'John'}, {vip: false});
     expect(sql.toJSON()).to.eql({
-      sql: 'UPDATE `CUSTOMER` SET `VIP`=$1 WHERE `NAME`=$2',
+      sql: 'UPDATE `CUSTOMER` SET `CUSTOMER`.`VIP`=$1 WHERE `CUSTOMER`.`NAME`=$2',
       params: [false, 'John']
     });
   });
@@ -329,9 +324,9 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer',
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`VIP`,`ADDRESS`,' +
-        '`FAVORITE_STORE` FROM `CUSTOMER` WHERE `NAME`=$1 ' +
-        'ORDER BY `NAME` LIMIT 5',
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+        '`CUSTOMER`.`FAVORITE_STORE` FROM `CUSTOMER` WHERE `CUSTOMER`.`NAME`=$1 ' +
+        'ORDER BY `CUSTOMER`.`NAME` LIMIT 5',
       params: ['John']
     });
   });
@@ -339,18 +334,28 @@ describe('sql connector', function() {
   it('builds INSERT', function() {
     var sql = connector.buildInsert('customer', {name: 'John', vip: true});
     expect(sql.toJSON()).to.eql({
-      sql: 'INSERT INTO `CUSTOMER`(`NAME`,`VIP`) VALUES($1,$2)',
+      sql: 'INSERT INTO `CUSTOMER`(`CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`) VALUES($1,$2)',
       params: ['John', true]
     });
   });
 
   it('builds INNER JOIN', function () {
-    var sql = connector.buildJoins('customer', {orders: {where: {id: 10}}});
+    var sql = connector.buildJoins('customer', {orders: {id: 10}});
     expect(sql.toJSON()).to.eql({
-      sql: 'INNER JOIN ( SELECT `CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-      '`ID`=? ORDER BY `ID` ) AS `ORDER` ON ' +
-      '`CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`',
+      sql:
+        'INNER JOIN `ORDER` AS `orders` ' +
+        'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` AND `orders`.`ID`=? ',
       params: [10]
+    });
+  });
+
+  it('builds LEFT JOIN', function () {
+    var sql = connector.buildJoins('customer', {orders: {}});
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'LEFT JOIN `ORDER` AS `orders` ' +
+        'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` ',
+      params: []
     });
   });
 
@@ -358,19 +363,22 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer', {
       where: {
         orders: {
-          where: {
-            date: {between: ['2015-01-01', '2015-01-31']}
-          }
+          date: {between: ['2015-01-01', '2015-01-31']}
         }
       }
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `NAME`,`VIP`,' +
-      '`ADDRESS`,`FAVORITE_STORE` FROM `CUSTOMER` ' +
-      'INNER JOIN ( SELECT `CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-      '`DATE` BETWEEN $1 AND $2 ORDER BY `ID` ) AS `ORDER` ' +
-      'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ORDER BY `NAME`',
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` ' +
+          'AND `orders`.`DATE` BETWEEN $1 AND $2   ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
       params: ['2015-01-01', '2015-01-31']
     });
   });
@@ -379,44 +387,417 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('store', {
       where: {
         customers: {
-          where: {
-            vip: true
-          }
+          vip: true
         }
       }
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `ID`,`STATE` FROM `STORE` INNER JOIN' +
-      ' ( SELECT `CUSTOMER_NAME`,`STORE_ID` FROM `ORDER` ' +
-      'ORDER BY `ID` ) AS `ORDER` ON `STORE`.`ID`=`ORDER`.`STORE_ID` ' +
-      'INNER JOIN ( SELECT `NAME` FROM `CUSTOMER` WHERE ' +
-      '`VIP`=$1 ORDER BY `NAME` ) AS `CUSTOMER` ON ' +
-      '`ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`  ORDER BY `ID`',
+      sql:
+        'SELECT DISTINCT `STORE`.`ID`,' +
+                        '`STORE`.`STATE` ' +
+        'FROM `STORE` ' +
+        'LEFT JOIN `ORDER` AS `customers_though` ' +
+          'ON `STORE`.`ID`=`customers_though`.`STORE_ID`  ' +
+        'INNER JOIN `CUSTOMER` AS `customers` ' +
+          'ON `customers_though`.`CUSTOMER_NAME`=`customers`.`NAME` ' +
+          'AND `customers`.`VIP`=$1   ' +
+        'ORDER BY `STORE`.`ID`',
       params: [true]
     });
   });
 
-  it('builds SELECT with INNER JOIN and order by relation columns', function () {
+  it('builds SELECT with JOIN with or', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          orders: {
+            date: {between: ['2015-01-01', '2015-01-31']}
+          }
+        }, {
+          orders: {
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+        '`CUSTOMER`.`VIP`,' +
+        '`CUSTOMER`.`ADDRESS`,' +
+        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'LEFT JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME`  ' +
+        'WHERE (' +
+          '`orders`.`DATE` BETWEEN $1 AND $2' +
+        ') OR (' +
+          '`orders`.`DATE` BETWEEN $3 AND $4' +
+        ') ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with JOIN with and', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        and: [{
+          orders: {
+            date: {between: ['2015-01-01', '2015-01-31']}
+          }
+        }, {
+          orders: {
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+        '`CUSTOMER`.`VIP`,' +
+        '`CUSTOMER`.`ADDRESS`,' +
+        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'LEFT JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME`  ' +
+        'WHERE (' +
+          '`orders`.`DATE` BETWEEN $1 AND $2' +
+        ') AND (' +
+          '`orders`.`DATE` BETWEEN $3 AND $4' +
+        ') ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with JOIN with or and nested relation', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          orders: {
+            store: {
+              state: 'NY'
+            }
+          }
+        }, {
+          orders: {
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'LEFT JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` ' +
+        'LEFT JOIN `STORE` AS `orders_store` ' +
+          'ON `orders`.`STORE_ID`=`orders_store`.`ID`  ' +
+        'WHERE (`orders_store`.`STATE`=$1) ' +
+          'OR (`orders`.`DATE` BETWEEN $2 AND $3) ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        'NY',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with JOIN with or and nested relation with non relation search', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          orders: {
+            date: {between: ['2015-01-01', '2015-01-31']},
+            store: {
+              state: 'NY'
+            }
+          }
+        }, {
+          orders: {
+            store: {
+              state: 'NY'
+            },
+            date: {between: ['2015-02-01', '2015-02-31']}
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'LEFT JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` ' +
+        'LEFT JOIN `STORE` AS `orders_store` ' +
+          'ON `orders`.`STORE_ID`=`orders_store`.`ID`  ' +
+        'WHERE (`orders`.`DATE` BETWEEN $1 AND $2 AND `orders_store`.`STATE`=$3) ' +
+          'OR (`orders`.`DATE` BETWEEN $4 AND $5 AND `orders_store`.`STATE`=$6) ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        '2015-01-01',
+        '2015-01-31',
+        'NY',
+        '2015-02-01',
+        '2015-02-31',
+        'NY'
+      ]
+    });
+  });
+
+  it('builds SELECT with JOIN with nested or', function () {
+    var sql = connector.buildSelect('customer', {
+      where: {
+        or: [{
+          /*jshint camelcase:false */
+          favorite_store: {
+            state: 'NY',
+            or: [{
+              orders: {
+                date: {between: ['2015-01-01', '2015-01-31']}
+              }
+            }, {
+              orders: {
+                date: {between: ['2015-02-01', '2015-02-31']}
+              }
+            }]
+          }
+        }, {
+          /*jshint camelcase:false */
+          favorite_store: {
+            state: 'baz',
+            and: [{
+              orders: {
+                date: {between: ['2015-01-01', '2015-01-31']}
+              }
+            }, {
+              orders: {
+                date: {between: ['2015-02-01', '2015-02-31']}
+              }
+            }]
+          }
+        }]
+      }
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'LEFT JOIN `STORE` AS `favorite_store` ' +
+          'ON `CUSTOMER`.`FAVORITE_STORE`=`favorite_store`.`ID` ' +
+        'LEFT JOIN `ORDER` AS `favorite_store_orders` ' +
+          'ON `favorite_store`.`ID`=`favorite_store_orders`.`STORE_ID`  ' +
+        'WHERE (' +
+          '`favorite_store`.`STATE`=$1 AND (' +
+            '`orders`.`DATE` BETWEEN $2 AND $3' +
+          ') ' +
+          'OR (`orders`.`DATE` BETWEEN $4 AND $5)' +
+        ') OR (' +
+          '`favorite_store`.`STATE`=$6 ' +
+          'AND (`orders`.`DATE` BETWEEN $7 AND $8) ' +
+          'AND (`orders`.`DATE` BETWEEN $9 AND $10)' +
+        ') ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
+      params: [
+        'NY',
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31',
+        'baz',
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with JOIN and order by relation columns', function () {
+    var sql = connector.buildSelect('order', {
+      order: ['customer.vip DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'LEFT JOIN `CUSTOMER` AS `customer` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`customer`.`NAME`   ' +
+        'ORDER BY `customer`.`VIP` DESC,' +
+                 '`customer`.`NAME` ASC',
+      params: []
+    });
+  });
+
+  it('builds SELECT with JOIN and order by relation columns with where but no conditions', function () {
     var sql = connector.buildSelect('order', {
       where: {
-        customer: {
-          fields: {
-            'name': true,
-            'vip': true
-          }
-        }
+        customer: {}
       },
       order: ['customer.vip DESC', 'customer.name ASC']
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `ID`,`DATE`,`CUSTOMER_NAME`,' +
-      '`STORE_ID` FROM `ORDER` INNER JOIN ( SELECT `NAME`,' +
-      '`VIP` FROM `CUSTOMER` ORDER BY `NAME` ) AS `CUSTOMER`' +
-      ' ON `ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`  ORDER BY ' +
-      '`VIP` DESC,`NAME` ASC',
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'LEFT JOIN `CUSTOMER` AS `customer` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`customer`.`NAME`   ' +
+        'ORDER BY `customer`.`VIP` DESC,' +
+                 '`customer`.`NAME` ASC',
       params: []
+    });
+  });
+
+  it('builds SELECT with JOIN and order by relation columns with any where', function () {
+    var sql = connector.buildSelect('order', {
+      order: ['customer.vip DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'LEFT JOIN `CUSTOMER` AS `customer` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`customer`.`NAME`   ' +
+        'ORDER BY `customer`.`VIP` DESC,' +
+                 '`customer`.`NAME` ASC',
+      params: []
+    });
+  });
+
+  it('builds SELECT with JOIN and order by nested relation columns', function () {
+    var sql = connector.buildSelect('order', {
+      order: ['customer.favorite_store.state DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'LEFT JOIN `CUSTOMER` AS `customer` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`customer`.`NAME` ' +
+        'LEFT JOIN `STORE` AS `customer_favorite_store` ' +
+          'ON `customer`.`FAVORITE_STORE`=`customer_favorite_store`.`ID`   ' +
+        'ORDER BY `customer_favorite_store`.`STATE` DESC,' +
+                 '`customer`.`NAME` ASC',
+      params: []
+    });
+  });
+
+  it('builds SELECT with INNER JOIN and order by nested relation columns with where', function () {
+    var sql = connector.buildSelect('order', {
+      where: {
+        date: {between: ['2015-01-01', '2015-01-31']},
+        customer: {
+          name: 'foo',
+          /*jshint camelcase:false */
+          favorite_store: {
+            state: 'NY'
+          }
+        }
+      },
+      order: ['customer.favorite_store.state DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` AS `customer` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`customer`.`NAME` ' +
+          'AND `customer`.`NAME`=$1 ' +
+        'INNER JOIN `STORE` AS `customer_favorite_store` ' +
+          'ON `customer`.`FAVORITE_STORE`=`customer_favorite_store`.`ID` ' +
+          'AND `customer_favorite_store`.`STATE`=$2  ' +
+        'WHERE `ORDER`.`DATE` BETWEEN $3 AND $4 ' +
+          'ORDER BY `customer_favorite_store`.`STATE` DESC,' +
+                   '`customer`.`NAME` ASC',
+      params: [
+        'foo',
+        'NY',
+        '2015-01-01',
+        '2015-01-31'
+      ]
+    });
+  });
+
+  it('builds SELECT with INNER JOIN and order by nested relation columns with partial where', function () {
+    var sql = connector.buildSelect('order', {
+      where: {
+        date: {between: ['2015-01-01', '2015-01-31']},
+        customer: {
+          name: 'foo'
+        }
+      },
+      order: ['customer.favorite_store.state DESC', 'customer.name ASC']
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT DISTINCT `ORDER`.`ID`,' +
+                        '`ORDER`.`DATE`,' +
+                        '`ORDER`.`CUSTOMER_NAME`,' +
+                        '`ORDER`.`STORE_ID` ' +
+        'FROM `ORDER` ' +
+        'INNER JOIN `CUSTOMER` AS `customer` ' +
+          'ON `ORDER`.`CUSTOMER_NAME`=`customer`.`NAME` ' +
+          'AND `customer`.`NAME`=$1 ' +
+        'LEFT JOIN `STORE` AS `customer_favorite_store` ' +
+          'ON `customer`.`FAVORITE_STORE`=`customer_favorite_store`.`ID`  ' +
+        'WHERE `ORDER`.`DATE` BETWEEN $2 AND $3 ' +
+          'ORDER BY `customer_favorite_store`.`STATE` DESC,' +
+                   '`customer`.`NAME` ASC',
+      params: [
+        'foo',
+        '2015-01-01',
+        '2015-01-31'
+      ]
     });
   });
 
@@ -424,27 +805,29 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer', {
       where: {
         orders: {
-          where: {
-            date: {between: ['2015-01-01', '2015-01-31']}
-          }
+          date: {between: ['2015-01-01', '2015-01-31']}
         },
         /*jshint camelcase:false */
         favorite_store: {
-          where: {
-            state: 'NY'
-          }
+          state: 'NY'
         }
       }
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `NAME`,`VIP`,' +
-      '`ADDRESS`,`FAVORITE_STORE` FROM `CUSTOMER` ' +
-      'INNER JOIN ( SELECT `CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-      '`DATE` BETWEEN $1 AND $2 ORDER BY `ID` ) AS `ORDER` ON ' +
-      '`CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` INNER JOIN ( SELECT `ID` ' +
-      'FROM `STORE` WHERE `STATE`=$3 ORDER BY `ID` ) AS `STORE` ' +
-      'ON `CUSTOMER`.`FAVORITE_STORE`=`STORE`.`ID`  ORDER BY `NAME`',
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,' +
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` ' +
+          'AND `orders`.`DATE` BETWEEN $1 AND $2  ' +
+        'INNER JOIN `STORE` AS `favorite_store` ' +
+          'ON `CUSTOMER`.`FAVORITE_STORE`=`favorite_store`.`ID` ' +
+          'AND `favorite_store`.`STATE`=$3   ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
       params: ['2015-01-01', '2015-01-31', 'NY']
     });
   });
@@ -453,25 +836,25 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer', {
       where: {
         orders: {
-          where: {
-            store: {
-              where: {
-                state: 'NY'
-              }
-            }
+          store: {
+            state: 'NY'
           }
         }
       }
     });
 
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT DISTINCT `NAME`,`VIP`,' +
-      '`ADDRESS`,`FAVORITE_STORE` FROM `CUSTOMER` ' +
-      'INNER JOIN ( SELECT DISTINCT `CUSTOMER_NAME` FROM `ORDER` ' +
-      'INNER JOIN ( SELECT `ID` FROM `STORE` WHERE `STATE`=$1 ' +
-      'ORDER BY `ID` ) AS `STORE` ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
-      'ORDER BY `ID` ) AS `ORDER` ON `CUSTOMER`.`NAME`=`ORDER`.' +
-      '`CUSTOMER_NAME`  ORDER BY `NAME`',
+      sql:
+        'SELECT DISTINCT `CUSTOMER`.`NAME`,' +
+                        '`CUSTOMER`.`VIP`,' +
+                        '`CUSTOMER`.`ADDRESS`,'+
+                        '`CUSTOMER`.`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` ' +
+        'LEFT JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` ' +
+        'INNER JOIN `STORE` AS `orders_store` ' +
+          'ON `orders`.`STORE_ID`=`orders_store`.`ID` AND `orders_store`.`STATE`=$1   ' +
+        'ORDER BY `CUSTOMER`.`NAME`',
       params: ['NY']
     });
   });
@@ -487,7 +870,7 @@ describe('sql connector', function() {
   it('builds count with WHERE', function() {
     var sql = connector.buildCount('customer', {name: 'John'});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT count(*) as "cnt" FROM `CUSTOMER` WHERE `NAME`=$1',
+      sql: 'SELECT count(*) as "cnt" FROM `CUSTOMER` WHERE `CUSTOMER`.`NAME`=$1',
       params: ['John']
     });
   });
@@ -496,17 +879,50 @@ describe('sql connector', function() {
     var sql = connector.buildCount('customer', {
       name: 'John',
       orders: {
-        where: {
-          date: {between: ['2015-01-01', '2015-01-31']}
-        }
+        date: {between: ['2015-01-01', '2015-01-31']}
       }
     });
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT count(DISTINCT `NAME`) as "cnt" FROM `CUSTOMER` ' +
-        'INNER JOIN ( SELECT `CUSTOMER_NAME` FROM `ORDER` WHERE ' +
-        '`DATE` BETWEEN $1 AND $2 ORDER BY `ID` ) AS `ORDER` ' +
-        'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` WHERE `NAME`=$3',
+      sql:
+        'SELECT count(DISTINCT `CUSTOMER`.`NAME`) as \"cnt\" ' +
+        'FROM `CUSTOMER` ' +
+        'INNER JOIN `ORDER` AS `orders` ' +
+        'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME` ' +
+        'AND `orders`.`DATE` BETWEEN $1 AND $2  ' +
+        'WHERE `CUSTOMER`.`NAME`=$3',
       params: ['2015-01-01', '2015-01-31', 'John']
+    });
+  });
+
+  it('builds count with WHERE and JOIN with or', function() {
+    var sql = connector.buildCount('customer', {
+      name: 'John',
+      or: [{
+        orders: {
+          date: {between: ['2015-01-01', '2015-01-31']}
+        }
+      }, {
+        orders: {
+          date: {between: ['2015-02-01', '2015-02-31']}
+        }
+      }]
+    });
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT count(DISTINCT `CUSTOMER`.`NAME`) as \"cnt\" ' +
+        'FROM `CUSTOMER` ' +
+        'LEFT JOIN `ORDER` AS `orders` ' +
+          'ON `CUSTOMER`.`NAME`=`orders`.`CUSTOMER_NAME`  ' +
+        'WHERE `CUSTOMER`.`NAME`=$1 ' +
+          'AND (`orders`.`DATE` BETWEEN $2 AND $3) ' +
+          'OR (`orders`.`DATE` BETWEEN $4 AND $5)',
+      params: [
+        'John',
+        '2015-01-01',
+        '2015-01-31',
+        '2015-02-01',
+        '2015-02-31'
+      ]
     });
   });
 
