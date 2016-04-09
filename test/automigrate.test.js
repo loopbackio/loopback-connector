@@ -43,5 +43,4 @@ describe('sql connector', function() {
       done();
     });
   });
-
 });

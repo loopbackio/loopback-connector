@@ -8,8 +8,10 @@ var ds = new juggler.DataSource({
   connector: testConnector,
   debug: true,
 });
+/* eslint-disable one-var */
 var connector;
 var Customer;
+/* eslint-enable one-var */
 
 describe('sql connector', function() {
   before(function() {

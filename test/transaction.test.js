@@ -4,12 +4,8 @@ var expect = require('chai').expect;
 var testConnector = require('./connectors/test-sql-connector');
 
 var juggler = require('loopback-datasource-juggler');
-
-var db, Post;
-var Review;
-
+var db, Post, Review;
 describe('transactions', function() {
-
   before(function(done) {
     db = new juggler.DataSource({
       connector: testConnector,
@@ -108,7 +104,6 @@ describe('transactions', function() {
   }
 
   describe('commit', function() {
-
     var post = { title: 't1', content: 'c1' };
     before(createPostInTx(post));
 
@@ -135,7 +130,6 @@ describe('transactions', function() {
   });
 
   describe('rollback', function() {
-
     before(function() {
       // Reset the collection
       db.connector.data = {};
@@ -167,7 +161,6 @@ describe('transactions', function() {
   });
 
   describe('timeout', function() {
-
     before(function() {
       // Reset the collection
       db.connector.data = {};
@@ -194,6 +187,5 @@ describe('transactions', function() {
         done();
       });
     });
-
   });
 });

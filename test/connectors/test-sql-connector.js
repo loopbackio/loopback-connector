@@ -214,8 +214,7 @@ TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
       debug('INSERT', transaction.connection.data, sql,
         transaction.connection.name);
       callback(null, 1);
-    }
-    else {
+    } else {
       debug('SELECT', transaction.connection.data, sql,
         transaction.connection.name);
       callback(null, transaction.connection.data[model] || []);

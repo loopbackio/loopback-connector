@@ -13,7 +13,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "pretest": "eslint .",
+    "lint": "eslint .",
+    "posttest": "npm run lint",
     "test": "mocha"
   },
   "license": "MIT",
