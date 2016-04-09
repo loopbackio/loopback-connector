@@ -4,7 +4,7 @@ var testConnector = require('./connectors/test-sql-connector');
 var juggler = require('loopback-datasource-juggler');
 var ds = new juggler.DataSource({
   connector: testConnector,
-  debug: true
+  debug: true,
 });
 
 describe('sql connector', function() {

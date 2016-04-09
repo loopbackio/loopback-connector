@@ -13,18 +13,18 @@ describe('transactions', function() {
   before(function(done) {
     db = new juggler.DataSource({
       connector: testConnector,
-      debug: true
+      debug: true,
     });
     db.once('connected', function() {
       Post = db.define('PostTX', {
-        title: {type: String, length: 255, index: true},
-        content: {type: String}
+        title: { type: String, length: 255, index: true },
+        content: { type: String },
       });
       Review = db.define('ReviewTX', {
         author: String,
-        content: {type: String}
+        content: { type: String },
       });
-      Post.hasMany(Review, {as: 'reviews', foreignKey: 'postId'});
+      Post.hasMany(Review, { as: 'reviews', foreignKey: 'postId' });
       done();
     });
   });
@@ -36,9 +36,9 @@ describe('transactions', function() {
     return function(done) {
       // Transaction.begin(db.connector, Transaction.READ_COMMITTED,
       Post.beginTransaction({
-          isolationLevel: Transaction.READ_COMMITTED,
-          timeout: timeout
-        },
+        isolationLevel: Transaction.READ_COMMITTED,
+        timeout: timeout,
+      },
         function(err, tx) {
           if (err) return done(err);
           expect(typeof tx.id).to.eql('string');
@@ -60,15 +60,15 @@ describe('transactions', function() {
             next();
           });
           currentTx = tx;
-          Post.create(post, {transaction: tx, model: 'Post'},
+          Post.create(post, { transaction: tx, model: 'Post' },
             function(err, p) {
               if (err) {
                 done(err);
               } else {
                 p.reviews.create({
-                    author: 'John',
-                    content: 'Review for ' + p.title
-                  }, {transaction: tx, model: 'Review'},
+                  author: 'John',
+                  content: 'Review for ' + p.title,
+                }, { transaction: tx, model: 'Review' },
                   function(err, c) {
                     done(err);
                   });
@@ -82,11 +82,11 @@ describe('transactions', function() {
   // records to equal to the count
   function expectToFindPosts(where, count, inTx) {
     return function(done) {
-      var options = {model: 'Post'};
+      var options = { model: 'Post' };
       if (inTx) {
         options.transaction = currentTx;
       }
-      Post.find({where: where}, options,
+      Post.find({ where: where }, options,
         function(err, posts) {
           if (err) return done(err);
           expect(posts.length).to.be.eql(count);
@@ -109,7 +109,7 @@ describe('transactions', function() {
 
   describe('commit', function() {
 
-    var post = {title: 't1', content: 'c1'};
+    var post = { title: 't1', content: 'c1' };
     before(createPostInTx(post));
 
     it('should not see the uncommitted insert', expectToFindPosts(post, 0));
@@ -141,7 +141,7 @@ describe('transactions', function() {
       db.connector.data = {};
     });
 
-    var post = {title: 't2', content: 'c2'};
+    var post = { title: 't2', content: 'c2' };
     before(createPostInTx(post));
 
     it('should not see the uncommitted insert', expectToFindPosts(post, 0));
@@ -173,12 +173,12 @@ describe('transactions', function() {
       db.connector.data = {};
     });
 
-    var post = {title: 't3', content: 'c3'};
+    var post = { title: 't3', content: 'c3' };
     before(createPostInTx(post, 50));
 
     it('should report timeout', function(done) {
       setTimeout(function() {
-        Post.find({where: {title: 't3'}}, {transaction: currentTx},
+        Post.find({ where: { title: 't3' }}, { transaction: currentTx },
           function(err, posts) {
             if (err) return done(err);
             expect(posts.length).to.be.eql(1);
