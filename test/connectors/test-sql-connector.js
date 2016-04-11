@@ -210,12 +210,11 @@ TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
     if (sql.indexOf('INSERT') === 0) {
       transaction.connection.data[model] =
         transaction.connection.data[model] || [];
-      transaction.connection.data[model].push({sql: sql, params: params});
+      transaction.connection.data[model].push({ sql: sql, params: params });
       debug('INSERT', transaction.connection.data, sql,
         transaction.connection.name);
       callback(null, 1);
-    }
-    else {
+    } else {
       debug('SELECT', transaction.connection.data, sql,
         transaction.connection.name);
       callback(null, transaction.connection.data[model] || []);
@@ -223,7 +222,7 @@ TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
   } else {
     if (sql.indexOf('INSERT') === 0) {
       this.data[model] = this.data[model] || [];
-      this.data[model].push({sql: sql, params: params});
+      this.data[model].push({ sql: sql, params: params });
       debug('INSERT', this.data, sql);
       callback(null, 1);
     } else {
