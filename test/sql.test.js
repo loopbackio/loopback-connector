@@ -16,6 +16,9 @@ var ds = new juggler.DataSource({
 /* eslint-disable one-var */
 var connector;
 var Customer;
+var Order;
+var Store;
+var Retailer;
 /* eslint-enable one-var */
 
 describe('sql connector', function() {
@@ -23,25 +26,54 @@ describe('sql connector', function() {
     connector = ds.connector;
     connector._tables = {};
     connector._models = {};
-    Customer = ds.createModel('customer',
-      {
-        name: {
-          id: true,
-          type: String,
-          testdb: {
-            column: 'NAME',
-            dataType: 'VARCHAR',
-            dataLength: 32,
-          },
-        }, vip: {
-          type: Boolean,
-          testdb: {
-            column: 'VIP',
-          },
+
+    Customer = ds.createModel('customer', {
+      name: {
+        id: true,
+        type: String,
+        testdb: {
+          column: 'NAME',
+          dataType: 'VARCHAR',
+          dataLength: 32,
         },
-        address: String,
       },
-      { testdb: { table: 'CUSTOMER' }});
+      vip: {
+        type: Boolean,
+        testdb: {
+          column: 'VIP',
+        },
+      },
+      address: String,
+    },
+    { testdb: { table: 'CUSTOMER' }});
+
+
+    Order = ds.createModel('order', {
+      id: { id: true, type: String },
+      date: Date,
+    });
+
+    Store = ds.createModel('store', {
+      id: { id: true, type: String },
+      name: String,
+      state: String,
+    });
+
+    Retailer = ds.createModel('retailer', {
+      id: { id: true, type: String },
+      name: String,
+    });
+
+    // Relations
+    Customer.hasMany(Order, { as: 'orders', foreignKey: 'customer_id' });
+    Order.belongsTo(Customer, { as: 'customer', foreignKey: 'customer_id' });
+    Order.belongsTo(Store, { as: 'store', foreignKey: 'store_id' });
+    Store.hasMany(Order, { as: 'orders', foreignKey: 'store_id' });
+    Store.hasMany(Customer, { as: 'customers', through: Order, foreignKey: 'store_id',
+      keyThrough: 'customer_id' });
+    Customer.belongsTo(Store, { as: 'store', foreignKey: 'store_id' });
+    Store.hasMany(Customer, { as: 'customers', foreignKey: 'store_id' });
+    Store.belongsTo(Retailer, { as: 'retailer', foreignKey: 'retailer_id' });
   });
 
   it('should map table name', function() {
@@ -88,6 +120,11 @@ describe('sql connector', function() {
     expect(column).to.eql('`VIP`');
   });
 
+  it('should find qualified column name', function() {
+    var column = connector.columnEscaped('customer', 'vip', true);
+    expect(column).to.eql('`CUSTOMER`.`VIP`');
+  });
+
   it('should convert to escaped id column value', function() {
     var column = connector.idColumnValue('customer', 'John');
     expect(column).to.eql('John');
@@ -101,37 +138,82 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds where with null', function() {
-    var where = connector.buildWhere('customer', { name: null });
+  it('builds where', function() {
+    var where = connector.buildWhere('order', { customer: { name: 'John' }}, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` IS NULL',
+      sql: 'WHERE `CUSTOMER`.`NAME`=?',
+      params: ['John'],
+    });
+  });
+
+  it('builds qualified where', function() {
+    var where = connector.buildWhere('customer', { name: 'John' }, true);
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `CUSTOMER`.`NAME`=?',
+      params: ['John'],
+    });
+  });
+
+  it('builds where with null', function() {
+    var where = connector.buildWhere('customer', { name: null }, true);
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `CUSTOMER`.`NAME` IS NULL',
       params: [],
     });
   });
 
   it('builds where with inq', function() {
-    var where = connector.buildWhere('customer', { name: { inq: ['John', 'Mary'] }});
+    var where = connector.buildWhere('customer',
+      { name: { inq: ['John', 'Mary'] }}, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` IN (?,?)',
+      sql: 'WHERE `CUSTOMER`.`NAME` IN (?,?)',
       params: ['John', 'Mary'],
     });
   });
 
   it('builds where with or', function() {
     var where = connector.buildWhere('customer',
-      { or: [{ name: 'John' }, { name: 'Mary' }] });
+      { or: [{ name: 'John' }, { name: 'Mary' }] }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) OR (`NAME`=?)',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) OR (`CUSTOMER`.`NAME`=?)',
       params: ['John', 'Mary'],
+    });
+  });
+
+  it('builds where with or and relation', function() {
+    var where = connector.buildWhere('customer',
+      { or: [{ name: 'John' }, { store: { state: 'NY' }}] }, true);
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) OR (`STORE`.`STATE`=?)',
+      params: ['John', 'NY'],
     });
   });
 
   it('builds where with and', function() {
     var where = connector.buildWhere('customer',
-      { and: [{ name: 'John' }, { vip: true }] });
+      { and: [{ name: 'John' }, { vip: true }] }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND (`VIP`=?)',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND (`CUSTOMER`.`VIP`=?)',
       params: ['John', true],
+    });
+  });
+
+  it('builds where with and + relation', function() {
+    var where = connector.buildWhere('customer',
+      { and: [{ name: 'John' }, { store: { state: 'NY' }}] }, true);
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND (`STORE`.`STATE`=?)',
+      params: ['John', 'NY'],
+    });
+  });
+
+  it('builds where with and + 2 same  relations', function() {
+    var where = connector.buildWhere('customer',
+      { and: [{ name: 'John' }, { store: { state: 'NY' }},
+        { store: { name: 'oxxo' }}] }, true);
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND (`STORE`.`STATE`=?) AND (`STORE`.`NAME`=?)',
+      params: ['John', 'NY', 'oxxo'],
     });
   });
 
@@ -140,9 +222,9 @@ describe('sql connector', function() {
       name: {
         regexp: '^J',
       },
-    });
+    }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: ['^J'],
     });
   });
@@ -152,9 +234,9 @@ describe('sql connector', function() {
       name: {
         regexp: '^J/i',
       },
-    });
+    }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: ['^J/i'],
     });
   });
@@ -164,9 +246,9 @@ describe('sql connector', function() {
       name: {
         regexp: /^J/,
       },
-    });
+    }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/],
     });
   });
@@ -176,9 +258,9 @@ describe('sql connector', function() {
       name: {
         regexp: /^J/i,
       },
-    });
+    }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/i],
     });
   });
@@ -188,9 +270,9 @@ describe('sql connector', function() {
       name: {
         regexp: new RegExp(/^J/),
       },
-    });
+    }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [/^J/],
     });
   });
@@ -200,41 +282,58 @@ describe('sql connector', function() {
       name: {
         regexp: new RegExp(/^J/i),
       },
-    });
+    }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE `NAME` REGEXP ?',
+      sql: 'WHERE `CUSTOMER`.`NAME` REGEXP ?',
       params: [new RegExp(/^J/i)],
     });
   });
 
   it('builds where with nesting and/or', function() {
     var where = connector.buildWhere('customer',
-      { and: [{ name: 'John' }, { or: [{ vip: true }, { address: null }] }] });
+      { and: [{ name: 'John' }, { or: [{ vip: true }, { address: null }] }] }, true);
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND ((`VIP`=?) OR (`ADDRESS` IS NULL))',
+      sql: 'WHERE (`CUSTOMER`.`NAME`=?) AND ((`CUSTOMER`.`VIP`=?) OR' +
+        ' (`CUSTOMER`.`ADDRESS` IS NULL))',
       params: ['John', true],
     });
   });
 
   it('builds order by with one field', function() {
     var orderBy = connector.buildOrderBy('customer', 'name');
-    expect(orderBy).to.eql('ORDER BY `NAME`');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME`');
   });
 
   it('builds order by with two fields', function() {
     var orderBy = connector.buildOrderBy('customer', ['name', 'vip']);
-    expect(orderBy).to.eql('ORDER BY `NAME`,`VIP`');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`');
   });
 
   it('builds order by with two fields and dirs', function() {
     var orderBy = connector.buildOrderBy('customer', ['name ASC', 'vip DESC']);
-    expect(orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
+    expect(orderBy).to.eql('ORDER BY `CUSTOMER`.`NAME` ASC,`CUSTOMER`.`VIP` DESC');
+  });
+
+  it('builds order by with relation field', function() {
+    var orderBy = connector.buildOrderBy('customer', { 'store': 'state' });
+    expect(orderBy).to.eql('ORDER BY `STORE`.`STATE`');
+  });
+
+  it('builds order by with multiple relation fields', function() {
+    var orderBy = connector.buildOrderBy('customer', { 'store': ['state', 'id'] });
+    expect(orderBy).to.eql('ORDER BY `STORE`.`STATE`,`STORE`.`ID`');
+  });
+
+  it('builds order by with deep relation field', function() {
+    var orderBy = connector.buildOrderBy('customer', { 'store': { 'retailer': 'name' }});
+    expect(orderBy).to.eql('ORDER BY `RETAILER`.`NAME`');
   });
 
   it('builds fields for columns', function() {
     var fields = connector.buildFields('customer',
-      { name: 'John', vip: true, unknown: 'Random' });
-    expect(fields.names).to.eql(['`NAME`', '`VIP`']);
+      { name: 'John', vip: true, unknown: 'Random' }, false, true);
+    expect(fields.names).to.eql(['`CUSTOMER`.`NAME`', '`CUSTOMER`.`VIP`',
+      '`CUSTOMER`.`UNKNOWN`']);
     expect(fields.columnValues[0].toJSON()).to.eql(
       { sql: '?', params: ['John'] });
     expect(fields.columnValues[1].toJSON()).to.eql(
@@ -260,23 +359,25 @@ describe('sql connector', function() {
   });
 
   it('builds column names for SELECT', function() {
-    var cols = connector.buildColumnNames('customer');
-    expect(cols).to.eql('`NAME`,`VIP`,`ADDRESS`');
+    var cols = connector.buildColumnNames('customer', {}, true);
+    expect(cols).to
+      .eql('`CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+          '`CUSTOMER`.`STORE_ID`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
-    var cols = connector.buildColumnNames('customer', { fields: { name: true }});
-    expect(cols).to.eql('`NAME`');
+    var cols = connector.buildColumnNames('customer', { fields: { name: true }}, true);
+    expect(cols).to.eql('`CUSTOMER`.`NAME`');
   });
 
   it('builds column names with false fields filter for SELECT', function() {
-    var cols = connector.buildColumnNames('customer', { fields: { name: false }});
-    expect(cols).to.eql('`VIP`,`ADDRESS`');
+    var cols = connector.buildColumnNames('customer', { fields: { name: false }}, true);
+    expect(cols).to.eql('`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,`CUSTOMER`.`STORE_ID`');
   });
 
   it('builds column names with array fields filter for SELECT', function() {
-    var cols = connector.buildColumnNames('customer', { fields: ['name'] });
-    expect(cols).to.eql('`NAME`');
+    var cols = connector.buildColumnNames('customer', { fields: ['name'] }, true);
+    expect(cols).to.eql('`CUSTOMER`.`NAME`');
   });
 
   it('builds DELETE', function() {
@@ -299,9 +400,87 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer',
       { order: 'name', limit: 5, where: { name: 'John' }});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`VIP`,`ADDRESS` FROM `CUSTOMER`' +
-      ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' WHERE `CUSTOMER`.`NAME`=$1 ORDER BY `CUSTOMER`.`NAME` LIMIT 5',
       params: ['John'],
+    });
+  });
+
+  it('builds SELECT with inner join', function() {
+    var sql = connector.buildSelect('customer',
+      { order: 'name', limit: 5, where: { store: { state: 'NY' }}});
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' WHERE `STORE`.`STATE`=$1 ORDER BY `CUSTOMER`.`NAME` LIMIT 5',
+      params: ['NY'],
+    });
+  });
+
+  it('builds SELECT with left outer join', function() {
+    var sql = connector.buildSelect('customer',
+      { order: { store: 'state' }, limit: 5 });
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' LEFT JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' ORDER BY `STORE`.`STATE` LIMIT 5',
+      params: [],
+    });
+  });
+
+  it('builds SELECT with left inner join', function() {
+    var sql = connector.buildSelect('customer',
+      { where: { store: { state: 'NY' }}, order: { store: 'state' }, limit: 5 });
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' WHERE `STORE`.`STATE`=$1 ORDER BY `STORE`.`STATE` LIMIT 5',
+      params: ['NY'],
+    });
+  });
+
+  it('builds SELECT with 1 left inner join even if relation is met 2 times', function() {
+    var sql = connector.buildSelect('customer',
+      { where: { and: [{ store: { state: 'NY' }}, { store: { name: 'oxxo' }}] },
+        order: { store: 'state' }, limit: 5 });
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' WHERE (`STORE`.`STATE`=$1) AND (`STORE`.`NAME`=$2)' +
+      ' ORDER BY `STORE`.`STATE` LIMIT 5',
+      params: ['NY', 'oxxo'],
+    });
+  });
+
+  it('builds SELECT with left inner and outer joins', function() {
+    var sql = connector.buildSelect('customer',
+      { where: { store: { state: 'NY' }}, order: { store: { retailer: 'name' }},
+        limit: 5 });
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' LEFT JOIN `RETAILER` ON `STORE`.`RETAILER_ID`=`RETAILER`.`ID`' +
+      ' WHERE `STORE`.`STATE`=$1 ORDER BY `RETAILER`.`NAME` LIMIT 5',
+      params: ['NY'],
+    });
+  });
+
+  it('builds SELECT with deep inner join', function() {
+    var sql = connector.buildSelect('customer',
+      { order: 'name', limit: 5, where: { store: { retailer: { name: 'oxxo' }}}});
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT `CUSTOMER`.`NAME`,`CUSTOMER`.`VIP`,`CUSTOMER`.`ADDRESS`,' +
+      '`CUSTOMER`.`STORE_ID` FROM `CUSTOMER`' +
+      ' INNER JOIN `STORE` ON `CUSTOMER`.`STORE_ID`=`STORE`.`ID`' +
+      ' INNER JOIN `RETAILER` ON `STORE`.`RETAILER_ID`=`RETAILER`.`ID`' +
+      ' WHERE `RETAILER`.`NAME`=$1 ORDER BY `CUSTOMER`.`NAME` LIMIT 5',
+      params: ['oxxo'],
     });
   });
 
