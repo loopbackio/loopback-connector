@@ -1,3 +1,41 @@
+2016-06-29, Version 2.4.0
+=========================
+
+ * update copyright notices and license (Ryan Graham)
+
+ * Fix linting errors (Amir Jafarian)
+
+ * Auto-update by eslint --fix (Amir Jafarian)
+
+ * Add eslint infrastructure (Amir Jafarian)
+
+ * fixed build of where statement when filter contains non-existing column (Maor Hayun)
+
+ * change replace to replaceById (Amir Jafarian)
+
+ * Remove underscore from _buildReplaceFields (Amir Jafarian)
+
+ * Change _buildReplace  to buildReplace (Amir Jafarian)
+
+ * Change _buildUpdate to buildUpdate (Amir Jafarian)
+
+ * Apply feedback (Amir Jafarian)
+
+ * call execute directly for _replace (Amir Jafarian)
+
+ * Implement replaceAttributes (Amir Jafarian)
+
+ * Removed filterWhere option (eugene-frb)
+
+ * 1. Error logging. 2. Options argument of model's include function to pass filter.where object. (eugene-frb)
+
+ * Refer to licenses with a link (Sam Roberts)
+
+ * Fixed typo. (Matteo Padovano)
+
+ * Use strongloop conventions for licensing (Sam Roberts)
+
+
 2015-07-29, Version 2.3.0
 =========================
 
