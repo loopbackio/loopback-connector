@@ -3,6 +3,9 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+var SG = require('strong-globalize');
+SG.SetRootDir(__dirname);
+
 exports.Connector = require('./lib/connector');
 // Set up SqlConnector as an alias to SQLConnector
 exports.SQLConnector = exports.SqlConnector = require('./lib/sql');
