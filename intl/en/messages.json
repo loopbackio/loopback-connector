@@ -1,0 +1,15 @@
+{
+  "8dc8fd7cc38a39896c03663cca38aad5": "execute() must be implemented by the connector",
+  "06c539e08213828e62e7f5339fb255ec": "{{getPlaceholderForValue()}} must be implemented by the connector",
+  "2b051e39b1efd1f2106b155495087b0f": "id value is required",
+  "30a4fa7fc115109b8cd096d895e9869e": "{{getPlaceholderForIdentifier()}} must be implemented by the connector",
+  "4cbf9bb7e7347b86c1dba4e54163c4ea": "{{getCountForAffectedRows()}} must be implemented by the connector",
+  "871b10e82a2dc1d0659571c5dee8fa95": "{{executeSQL()}} must be implemented by the connector",
+  "956ede286087599213bc112b5a76408b": "{{applyPagination()}} must be implemented by the connector",
+  "bca74e4fbb2859c22381fb531a0f896d": "{{getInsertedId()}} must be implemented by the connector",
+  "c491cd5577a54bf265d407ddaa20ffcb": "{{escapeValue()}} must be implemented by the connector",
+  "e54d944c2a2c85a23caa86027ae307cf": "Cannot migrate models not attached to this datasource: {0}",
+  "f3e021460b7a6f5991fca890b786a11b": "{{escapeName()}} must be implemented by the connector",
+  "fe1c27354af9f4c88bf9c1d246e41230": "{{toColumnValue()}} must be implemented by the connector",
+  "fe914555563f5f566adfc0c5db8445db": "{{fromColumnValue()}} must be implemented by the connector"
+}
