@@ -1,6 +1,6 @@
 {
   "name": "loopback-connector",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Building blocks for LoopBack connectors",
   "keywords": [
     "StrongLoop",
@@ -20,7 +20,8 @@
   "license": "MIT",
   "dependencies": {
     "async": "^1.0.0",
-    "debug": "^2.2.0"
+    "debug": "^2.2.0",
+    "strong-globalize": "^2.5.8"
   },
   "devDependencies": {
     "chai": "~2.3.0",
