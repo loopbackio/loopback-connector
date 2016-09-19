@@ -1,0 +1,16 @@
+{
+  "8dc8fd7cc38a39896c03663cca38aad5": "Il connettore deve implementare execute()",
+  "06c539e08213828e62e7f5339fb255ec": "Il connettore deve implementare {{getPlaceholderForValue()}}",
+  "2b051e39b1efd1f2106b155495087b0f": "richiesto valore id",
+  "30a4fa7fc115109b8cd096d895e9869e": "Il connettore deve implementare {{getPlaceholderForIdentifier()}}",
+  "4cbf9bb7e7347b86c1dba4e54163c4ea": "Il connettore deve implementare {{getCountForAffectedRows()}}",
+  "871b10e82a2dc1d0659571c5dee8fa95": "Il connettore deve implementare {{executeSQL()}}",
+  "956ede286087599213bc112b5a76408b": "Il connettore deve implementare {{applyPagination()}}",
+  "bca74e4fbb2859c22381fb531a0f896d": "Il connettore deve implementare {{getInsertedId()}}",
+  "c491cd5577a54bf265d407ddaa20ffcb": "Il connettore deve implementare {{escapeValue()}}",
+  "e54d944c2a2c85a23caa86027ae307cf": "Impossibile migrare i modelli non allegati a questa origine dati: {0}",
+  "f3e021460b7a6f5991fca890b786a11b": "Il connettore deve implementare {{escapeName()}}",
+  "fe1c27354af9f4c88bf9c1d246e41230": "Il connettore deve implementare {{toColumnValue()}}",
+  "fe914555563f5f566adfc0c5db8445db": "Il connettore deve implementare {{fromColumnValue()}}"
+}
+

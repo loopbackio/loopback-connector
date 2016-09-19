@@ -1,0 +1,16 @@
+{
+  "8dc8fd7cc38a39896c03663cca38aad5": "커넥터가 execute()를 구현해야 함",
+  "06c539e08213828e62e7f5339fb255ec": "커넥터가 {{getPlaceholderForValue()}}을(를) 구현해야 함",
+  "2b051e39b1efd1f2106b155495087b0f": "ID 값은 필수임",
+  "30a4fa7fc115109b8cd096d895e9869e": "커넥터가 {{getPlaceholderForIdentifier()}}을(를) 구현해야 함",
+  "4cbf9bb7e7347b86c1dba4e54163c4ea": "커넥터가 {{getCountForAffectedRows()}}을(를) 구현해야 함",
+  "871b10e82a2dc1d0659571c5dee8fa95": "커넥터가 {{executeSQL()}}을(를) 구현해야 함",
+  "956ede286087599213bc112b5a76408b": "커넥터가 {{applyPagination()}}을(를) 구현해야 함",
+  "bca74e4fbb2859c22381fb531a0f896d": "커넥터가 {{getInsertedId()}}을(를) 구현해야 함",
+  "c491cd5577a54bf265d407ddaa20ffcb": "커넥터가 {{escapeValue()}}을(를) 구현해야 함",
+  "e54d944c2a2c85a23caa86027ae307cf": "이 데이터 소스에 첨부되지 않은 모델은 마이그레이션할 수 없음: {0}",
+  "f3e021460b7a6f5991fca890b786a11b": "커넥터가 {{escapeName()}}을(를) 구현해야 함",
+  "fe1c27354af9f4c88bf9c1d246e41230": "커넥터가 {{toColumnValue()}}을(를) 구현해야 함",
+  "fe914555563f5f566adfc0c5db8445db": "커넥터가 {{fromColumnValue()}}을(를) 구현해야 함"
+}
+
