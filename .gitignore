@@ -13,6 +13,3 @@
 node_modules
 checkstyle.xml
 loopback-connector-*.tgz
-!intl/
-intl/*
-!intl/en/

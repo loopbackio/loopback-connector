@@ -1,0 +1,16 @@
+{
+  "8dc8fd7cc38a39896c03663cca38aad5": "execute() moet door connector worden geïmplementeerd",
+  "06c539e08213828e62e7f5339fb255ec": "{{getPlaceholderForValue()}} moet geïmplementeerd worden door de connector",
+  "2b051e39b1efd1f2106b155495087b0f": "ID-waarde is verplicht",
+  "30a4fa7fc115109b8cd096d895e9869e": "{{getPlaceholderForIdentifier()}} moet geïmplementeerd worden door de connector",
+  "4cbf9bb7e7347b86c1dba4e54163c4ea": "{{getCountForAffectedRows()}} moet geïmplementeerd worden door de connector",
+  "871b10e82a2dc1d0659571c5dee8fa95": "{{executeSQL()}} moet geïmplementeerd worden door de connector",
+  "956ede286087599213bc112b5a76408b": "{{applyPagination()}} moet geïmplementeerd worden door de connector",
+  "bca74e4fbb2859c22381fb531a0f896d": "{{getInsertedId()}} moet geïmplementeerd worden door de connector",
+  "c491cd5577a54bf265d407ddaa20ffcb": "{{escapeValue()}} moet geïmplementeerd worden door de connector",
+  "e54d944c2a2c85a23caa86027ae307cf": "Kan geen modellen migreren die niet zijn gekoppeld aan deze gegevensbron: {0}",
+  "f3e021460b7a6f5991fca890b786a11b": "{{escapeName()}} moet geïmplementeerd worden door de connector",
+  "fe1c27354af9f4c88bf9c1d246e41230": "{{toColumnValue()}} moet geïmplementeerd worden door de connector",
+  "fe914555563f5f566adfc0c5db8445db": "{{fromColumnValue()}} moet geïmplementeerd worden door de connector"
+}
+
