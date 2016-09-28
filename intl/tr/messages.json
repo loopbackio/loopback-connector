@@ -1,0 +1,16 @@
+{
+  "8dc8fd7cc38a39896c03663cca38aad5": "execute() bağlayıcı tarafından gerçekleştirilmelidir",
+  "06c539e08213828e62e7f5339fb255ec": "{{getPlaceholderForValue()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "2b051e39b1efd1f2106b155495087b0f": "tanıtıcı değeri zorunludur",
+  "30a4fa7fc115109b8cd096d895e9869e": "{{getPlaceholderForIdentifier()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "4cbf9bb7e7347b86c1dba4e54163c4ea": "{{getCountForAffectedRows()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "871b10e82a2dc1d0659571c5dee8fa95": "{{executeSQL()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "956ede286087599213bc112b5a76408b": "{{applyPagination()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "bca74e4fbb2859c22381fb531a0f896d": "{{getInsertedId()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "c491cd5577a54bf265d407ddaa20ffcb": "{{escapeValue()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "e54d944c2a2c85a23caa86027ae307cf": "Bu veri kaynağına eklenmemiş modeller geçirilemez: {0}",
+  "f3e021460b7a6f5991fca890b786a11b": "{{escapeName()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "fe1c27354af9f4c88bf9c1d246e41230": "{{toColumnValue()}} bağlayıcı tarafından gerçekleştirilmelidir",
+  "fe914555563f5f566adfc0c5db8445db": "{{fromColumnValue()}} bağlayıcı tarafından gerçekleştirilmelidir"
+}
+

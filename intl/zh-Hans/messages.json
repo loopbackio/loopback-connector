@@ -8,7 +8,7 @@
   "956ede286087599213bc112b5a76408b": "连接器必须实施 {{applyPagination()}}",
   "bca74e4fbb2859c22381fb531a0f896d": "连接器必须实施 {{getInsertedId()}}",
   "c491cd5577a54bf265d407ddaa20ffcb": "连接器必须实施 {{escapeValue()}}",
-  "e54d944c2a2c85a23caa86027ae307cf": "无法将未连接的模型迁移到此数据源：{0}",
+  "e54d944c2a2c85a23caa86027ae307cf": "无法迁移未附加到此数据源的模型：{0}",
   "f3e021460b7a6f5991fca890b786a11b": "连接器必须实施 {{escapeName()}}",
   "fe1c27354af9f4c88bf9c1d246e41230": "连接器必须实施 {{toColumnValue()}}",
   "fe914555563f5f566adfc0c5db8445db": "连接器必须实施 {{fromColumnValue()}}"
