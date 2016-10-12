@@ -1,3 +1,19 @@
+2016-10-12, Version 2.5.0
+=========================
+
+ * Update translation files - round#2 (#62) (Candy)
+
+ * Add translated files (Amir Jafarian)
+
+ * Update deps to LB 3.0.0 RC (Miroslav Bajtoš)
+
+ * Run CI with juggler3 (Loay)
+
+ * Add globalization (Candy)
+
+ * Update URLs in CONTRIBUTING.md (#53) (Ryan Graham)
+
+
 2016-06-29, Version 2.4.0
 =========================
 
