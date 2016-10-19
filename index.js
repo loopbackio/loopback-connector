@@ -16,3 +16,4 @@ exports.createPromiseCallback = require('./lib/utils').createPromiseCallback;
 
 // KeyValue helpers
 exports.ModelKeyComposer = require('./lib/model-key-composer');
+exports.BinaryPacker = require('./lib/binary-packer');
