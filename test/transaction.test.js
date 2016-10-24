@@ -182,7 +182,7 @@ describe('transactions', function() {
             expect(posts.length).to.be.eql(1);
             done();
           });
-      }, 100);
+      }, 300);
       done();
     });
 
