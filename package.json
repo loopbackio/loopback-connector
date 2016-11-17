@@ -1,6 +1,9 @@
 {
   "name": "loopback-connector",
   "version": "2.7.1",
+  "publishConfig": {
+    "tag": "lts"
+  },
   "description": "Building blocks for LoopBack connectors",
   "keywords": [
     "StrongLoop",
