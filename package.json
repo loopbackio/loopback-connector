@@ -1,7 +1,10 @@
 {
   "name": "loopback-connector",
-  "version": "2.7.1",
+  "version": "3.0.0-alpha.1",
   "description": "Building blocks for LoopBack connectors",
+  "engines": {
+    "node": ">=4"
+  },
   "keywords": [
     "StrongLoop",
     "LoopBack",
