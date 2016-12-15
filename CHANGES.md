@@ -1,3 +1,25 @@
+2016-11-10, Version 2.7.1
+=========================
+
+ * Export JSONStringPacker (Masu Lin)
+
+
+2016-11-08, Version 2.7.0
+=========================
+
+ * Add JSONStringPacker (Masu Lin)
+
+
+2016-10-24, Version 2.6.0
+=========================
+
+ * Increase delay in tests to stop intermittent fails (Miroslav Bajtoš)
+
+ * Add BinaryPacker from kv-redis connector (Miroslav Bajtoš)
+
+ * Add ModelKeyComposer from kv-redis connector (Miroslav Bajtoš)
+
+
 2016-10-12, Version 2.5.0
 =========================
 

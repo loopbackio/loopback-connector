@@ -1,7 +1,10 @@
 {
   "name": "loopback-connector",
-  "version": "2.5.0",
+  "version": "3.0.0-alpha.1",
   "description": "Building blocks for LoopBack connectors",
+  "engines": {
+    "node": ">=4"
+  },
   "keywords": [
     "StrongLoop",
     "LoopBack",
@@ -20,7 +23,9 @@
   "license": "MIT",
   "dependencies": {
     "async": "^1.0.0",
+    "bluebird": "^3.4.6",
     "debug": "^2.2.0",
+    "msgpack5": "^3.4.1",
     "strong-globalize": "^2.5.8"
   },
   "devDependencies": {
