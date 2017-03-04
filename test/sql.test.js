@@ -40,6 +40,7 @@ describe('sql connector', function() {
           },
         },
         address: String,
+        objectField: Object,
       },
       { testdb: { table: 'CUSTOMER' }});
   });
@@ -132,6 +133,16 @@ describe('sql connector', function() {
     expect(where.toJSON()).to.eql({
       sql: 'WHERE (`NAME`=?) AND (`VIP`=?)',
       params: ['John', true],
+    });
+  });
+
+  it('builds where with object field', function() {
+    var objectValue = { some: 'value', something: 1 };
+    var where = connector.buildWhere('customer',
+        { objectField: objectValue  });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `OBJECTFIELD`=?',
+      params: [objectValue],
     });
   });
 
@@ -261,7 +272,7 @@ describe('sql connector', function() {
 
   it('builds column names for SELECT', function() {
     var cols = connector.buildColumnNames('customer');
-    expect(cols).to.eql('`NAME`,`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`NAME`,`VIP`,`ADDRESS`,`OBJECTFIELD`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
@@ -271,7 +282,7 @@ describe('sql connector', function() {
 
   it('builds column names with false fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', { fields: { name: false }});
-    expect(cols).to.eql('`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`VIP`,`ADDRESS`,`OBJECTFIELD`');
   });
 
   it('builds column names with array fields filter for SELECT', function() {
@@ -299,7 +310,7 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer',
       { order: 'name', limit: 5, where: { name: 'John' }});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`VIP`,`ADDRESS` FROM `CUSTOMER`' +
+      sql: 'SELECT `NAME`,`VIP`,`ADDRESS`,`OBJECTFIELD` FROM `CUSTOMER`' +
       ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
       params: ['John'],
     });
