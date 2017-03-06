@@ -37,7 +37,7 @@ describe('JSONStringPacker', function() {
   describe('roundtrip', function() {
     var TEST_CASES = {
       String: 'a-value',
-      Object: { a: 1, b: 2 },
+      Object: {a: 1, b: 2},
       Buffer: new Buffer([1, 2, 3]),
       Date: new Date('2016-08-03T11:53:03.470Z'),
       Integer: 12345,

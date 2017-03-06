@@ -3,6 +3,7 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+'use strict';
 /*
  * A mockup connector that extends SQL connector
  */
@@ -102,7 +103,7 @@ TestConnector.prototype._buildLimit = function(model, limit, offset) {
 
 TestConnector.prototype.applyPagination =
   function(model, stmt, filter) {
-    /*jshint unused:false */
+    /* jshint unused:false */
     var limitClause = this._buildLimit(model, filter.limit,
       filter.offset || filter.skip);
     return stmt.merge(limitClause);
@@ -155,7 +156,7 @@ TestConnector.prototype._buildLimit = function(model, limit, offset) {
 
 TestConnector.prototype.applyPagination =
   function(model, stmt, filter) {
-    /*jshint unused:false */
+    /* jshint unused:false */
     var limitClause = this._buildLimit(model, filter.limit,
       filter.offset || filter.skip);
     return stmt.merge(limitClause);
@@ -215,7 +216,7 @@ TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
     if (sql.indexOf('INSERT') === 0) {
       transaction.connection.data[model] =
         transaction.connection.data[model] || [];
-      transaction.connection.data[model].push({ sql: sql, params: params });
+      transaction.connection.data[model].push({sql: sql, params: params});
       debug('INSERT', transaction.connection.data, sql,
         transaction.connection.name);
       callback(null, 1);
@@ -227,7 +228,7 @@ TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
   } else {
     if (sql.indexOf('INSERT') === 0) {
       this.data[model] = this.data[model] || [];
-      this.data[model].push({ sql: sql, params: params });
+      this.data[model].push({sql: sql, params: params});
       debug('INSERT', this.data, sql);
       callback(null, 1);
     } else {
