@@ -1,3 +1,19 @@
+2017-03-06, Version 4.0.0
+=========================
+
+ * Update deps and fix styles (Raymond Feng)
+
+ * Add checkFieldAndIndex (#87) (Janny)
+
+ * Refactor SQL migration methods (ssh24)
+
+ * Fix replaceById for Oracle (Loay Gewily)
+
+ * Refactor SQL discovery methods (Loay)
+
+ * Fix replaceById unfound id bug (Loay Gewily)
+
+
 2016-12-21, Version 3.0.0
 =========================
 
