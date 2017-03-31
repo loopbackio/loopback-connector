@@ -1,3 +1,9 @@
+2017-03-31, Version 4.1.0
+=========================
+
+ * Extract getAddModifyColumns into base (#90) (Sakib Hasan)
+
+
 2017-03-06, Version 4.0.0
 =========================
 
