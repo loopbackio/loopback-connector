@@ -1,3 +1,11 @@
+2017-04-10, Version 4.2.0
+=========================
+
+ * Add generateUniqueId prototype (Tetsuo Seto)
+
+ * Add travis for CI (#91) (Sakib Hasan)
+
+
 2017-03-31, Version 4.1.0
 =========================
 
@@ -6,6 +14,11 @@
 
 2017-03-06, Version 4.0.0
 =========================
+
+
+
+2017-03-06, Version 3.x-latest
+==============================
 
  * Update deps and fix styles (Raymond Feng)
 
