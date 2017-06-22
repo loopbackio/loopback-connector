@@ -1,3 +1,13 @@
+2017-06-22, Version 4.2.1
+=========================
+
+ * Updated Italian translated strings Q2 2017 (Allen Boone)
+
+ * Update translated strings Q2 2017 (Allen Boone)
+
+ * Fix update bug when id not found (Loay Gewily)
+
+
 2017-04-10, Version 4.2.0
 =========================
 
