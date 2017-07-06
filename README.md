@@ -1,4 +1,4 @@
-# LoopBack Connector
+# LoopBack Connector 
 
 LoopBack Connector is a set of building blocks simplifying implementation
 of datasource-specific connectors like Oracle, MongoDB, REST.
