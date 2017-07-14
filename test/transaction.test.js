@@ -194,4 +194,45 @@ describe('transactions', function() {
       });
     });
   });
+
+  describe('transaction instance', function() {
+    function TestTransaction(connector, connection) {
+      this.connector = connector;
+      this.connection = connection;
+    }
+    Object.assign(TestTransaction.prototype, Transaction.prototype);
+    TestTransaction.prototype.foo = true;
+    function beginTransaction(isolationLevel, cb) {
+      return cb(null, new TestTransaction(testConnector, {}));
+    };
+
+    it('should do nothing when transaction is like a Transaction', function(done) {
+      testConnector.initialize(db, function(err, resultConnector) {
+        resultConnector.beginTransaction = beginTransaction;
+        Transaction.begin(resultConnector, Transaction.READ_COMMITTED,
+          function(err, result) {
+            if (err) done(err);
+            expect(result).to.be.instanceof(TestTransaction);
+            expect(result.foo).to.equal(true);
+            done();
+          });
+      });
+    });
+
+    it('should create new instance when transaction is not like a Transaction',
+      function(done) {
+        testConnector.initialize(db, function(err, resultConnector) {
+          resultConnector.beginTransaction = beginTransaction;
+          delete TestTransaction.prototype.commit;
+          Transaction.begin(resultConnector, Transaction.READ_COMMITTED,
+            function(err, result) {
+              if (err) done(err);
+              expect(result).to.not.be.instanceof(TestTransaction);
+              expect(result).to.be.instanceof(Transaction);
+              expect(result.foo).to.equal(undefined);
+              done();
+            });
+        });
+      });
+  });
 });
