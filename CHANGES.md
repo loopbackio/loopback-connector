@@ -1,3 +1,13 @@
+2017-07-17, Version 4.2.2
+=========================
+
+ * Fix transaction (Diana Lau)
+
+ * Fix comment lines (Quentin Presley)
+
+ * Fix API docs (#80) (Rand McKinney)
+
+
 2017-06-22, Version 4.2.1
 =========================
 
