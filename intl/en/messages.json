@@ -21,6 +21,7 @@
   "87431e613cf77076158f52a456cb0777": "Invalid key {0} - missing model-name prefix",
   "8dc8fd7cc38a39896c03663cca38aad5": "execute() must be implemented by the connector",
   "956ede286087599213bc112b5a76408b": "{{applyPagination()}} must be implemented by the connector",
+  "a0cf0e09c26df14283223e84e6a10f00": "Could not update attributes. {{Object}} with {{id}} {0} does not exist!",
   "aa7504db641c08e5f5c1525751aef044": "{{setDefaultOptions}} must be implemented bythe connector",
   "b71717c454bc1db796a4c5363d9fd078": "Could not replace. Object with id {0} does not exist!",
   "bca74e4fbb2859c22381fb531a0f896d": "{{getInsertedId()}} must be implemented by the connector",
