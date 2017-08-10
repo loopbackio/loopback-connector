@@ -21,6 +21,7 @@
   "87431e613cf77076158f52a456cb0777": "无效密钥 {0} - 缺少模型名称前缀",
   "8dc8fd7cc38a39896c03663cca38aad5": "连接器必须实施 execute()",
   "956ede286087599213bc112b5a76408b": "连接器必须实施 {{applyPagination()}}",
+  "a0cf0e09c26df14283223e84e6a10f00": "无法更新属性。包含 {{id}} {0} 的 {{Object}} 不存在！",
   "aa7504db641c08e5f5c1525751aef044": "{{setDefaultOptions}} 必须由连接器实施",
   "b71717c454bc1db796a4c5363d9fd078": "无法替换。不存在标识为 {0} 的对象！",
   "bca74e4fbb2859c22381fb531a0f896d": "连接器必须实施 {{getInsertedId()}}",

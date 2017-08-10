@@ -21,6 +21,7 @@
   "87431e613cf77076158f52a456cb0777": "Chiave non valida {0} - prefisso model-name mancante",
   "8dc8fd7cc38a39896c03663cca38aad5": "Il connettore deve implementare execute()",
   "956ede286087599213bc112b5a76408b": "Il connettore deve implementare {{applyPagination()}}",
+  "a0cf0e09c26df14283223e84e6a10f00": "Impossibile aggiornare gli attributi. {{Object}} con {{id}} {0} non esiste.",
   "aa7504db641c08e5f5c1525751aef044": "Il connettore deve implementare {{setDefaultOptions}}",
   "b71717c454bc1db796a4c5363d9fd078": "Impossibile sostituire. L'oggetto con ID {0} non esiste.",
   "bca74e4fbb2859c22381fb531a0f896d": "Il connettore deve implementare {{getInsertedId()}}",

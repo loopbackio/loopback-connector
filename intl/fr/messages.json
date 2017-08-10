@@ -21,6 +21,7 @@
   "87431e613cf77076158f52a456cb0777": "Clé {0} non valide - préfixe model-name manquant",
   "8dc8fd7cc38a39896c03663cca38aad5": "execute() doit être implémenté par le connecteur",
   "956ede286087599213bc112b5a76408b": "{{applyPagination()}} doit être implémenté par le connecteur",
+  "a0cf0e09c26df14283223e84e6a10f00": "Impossible de mettre à jour les attributs. {{Object}} avec {{id}} {0} n'existe pas !",
   "aa7504db641c08e5f5c1525751aef044": "{{setDefaultOptions}} doit être implémenté par le connecteur",
   "b71717c454bc1db796a4c5363d9fd078": "Remplacement impossible. L'objet avec l'ID {0} n'existe pas !",
   "bca74e4fbb2859c22381fb531a0f896d": "{{getInsertedId()}} doit être implémenté par le connecteur",
