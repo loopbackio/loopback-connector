@@ -212,28 +212,20 @@ TestConnector.prototype.rollback = function(tx, cb) {
 TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
   var transaction = options.transaction;
   var model = options.model;
-  if (transaction && transaction.connector === this && transaction.connection) {
-    if (sql.indexOf('INSERT') === 0) {
-      transaction.connection.data[model] =
-        transaction.connection.data[model] || [];
-      transaction.connection.data[model].push({sql: sql, params: params});
-      debug('INSERT', transaction.connection.data, sql,
-        transaction.connection.name);
-      callback(null, 1);
-    } else {
-      debug('SELECT', transaction.connection.data, sql,
-        transaction.connection.name);
-      callback(null, transaction.connection.data[model] || []);
-    }
+  var useTransaction = transaction && transaction.connector === this &&
+    transaction.connection;
+  var data = useTransaction ? transaction.connection.data : this.data;
+  var name = useTransaction ? transaction.connection.name : undefined;
+  if (sql.indexOf('INSERT') === 0) {
+    data[model] = data[model] || [];
+    data[model].push({sql: sql, params: params});
+    debug('INSERT', data, sql, name);
+    callback(null, 1);
   } else {
-    if (sql.indexOf('INSERT') === 0) {
-      this.data[model] = this.data[model] || [];
-      this.data[model].push({sql: sql, params: params});
-      debug('INSERT', this.data, sql);
-      callback(null, 1);
-    } else {
-      debug('SELECT', this.data, sql);
-      callback(null, this.data[model] || []);
-    }
+    debug('SELECT', data, sql, name);
+    var instances = data[model] || [];
+    var result = sql.indexOf('count(*) as "cnt"') !== -1 ?
+      [{cnt: instances.length}] : instances;
+    callback(null, result);
   }
 };
