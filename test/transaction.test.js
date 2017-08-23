@@ -92,19 +92,25 @@ describe('transactions', function() {
         function(err, posts) {
           if (err) return done(err);
           expect(posts.length).to.be.eql(count);
-          if (count) {
-            // Find related reviews
-            options.model = 'Review';
-            // Please note the empty {} is required, otherwise, the options
-            // will be treated as a filter
-            posts[0].reviews({}, options, function(err, reviews) {
+          // Make sure both find() and count() behave the same way
+          Post.count(where, options,
+            function(err, result) {
               if (err) return done(err);
-              expect(reviews.length).to.be.eql(count);
-              done();
+              expect(result).to.be.eql(count);
+              if (count) {
+                // Find related reviews
+                options.model = 'Review';
+                // Please note the empty {} is required, otherwise, the options
+                // will be treated as a filter
+                posts[0].reviews({}, options, function(err, reviews) {
+                  if (err) return done(err);
+                  expect(reviews.length).to.be.eql(count);
+                  done();
+                });
+              } else {
+                done();
+              }
             });
-          } else {
-            done();
-          }
         });
     };
   }
