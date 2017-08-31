@@ -26,7 +26,8 @@
     "bluebird": "^3.4.6",
     "debug": "^2.2.0",
     "msgpack5": "^3.4.1",
-    "strong-globalize": "^2.5.8"
+    "strong-globalize": "^2.5.8",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "chai": "~3.5.0",
