@@ -182,22 +182,18 @@ describe('transactions', function() {
     before(createPostInTx(post, 50));
 
     it('should report timeout', function(done) {
-      setTimeout(function() {
-        Post.find({where: {title: 't3'}}, {transaction: currentTx},
-          function(err, posts) {
-            if (err) return done(err);
-            expect(posts.length).to.be.eql(1);
-            done();
-          });
-      }, 300);
-      done();
-    });
-
-    it('should invoke the timeout hook', function(done) {
-      currentTx.observe('timeout', function(context, next) {
+      this.timeout(300);
+      function observer(context, next) {
+        // Prevent duplicate calls to this handler.
+        currentTx.removeObserver('timeout', observer);
         next();
         done();
-      });
+      }
+      currentTx.observe('timeout', observer);
+      setTimeout(function() {
+        Post.find({where: {title: 't3'}}, {transaction: currentTx},
+          function() {});
+      }, 300);
     });
   });
 
