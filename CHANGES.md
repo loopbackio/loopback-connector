@@ -1,3 +1,21 @@
+2017-09-01, Version 4.3.0
+=========================
+
+ * Transaction: Support moving timeout to connector (Jürg Lehni)
+
+ * Add support for transactions in count() (Jürg Lehni)
+
+ * Add stalebot configuration (Kevin Delisle)
+
+ * Create Issue and PR Templates (#113) (Sakib Hasan)
+
+ * Update translated strings Q3 2017 (Allen Boone)
+
+ * update messages.json (Diana Lau)
+
+ * Add CODEOWNER file (Diana Lau)
+
+
 2017-07-17, Version 4.2.2
 =========================
 
