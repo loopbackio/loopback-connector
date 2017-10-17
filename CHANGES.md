@@ -1,3 +1,11 @@
+2017-10-17, Version 4.4.0
+=========================
+
+ * update depdencies (Diana Lau)
+
+ * package: use loopback-datasource-juggler@3.12 (Kevin Delisle)
+
+
 2017-09-01, Version 4.3.0
 =========================
 
