@@ -34,7 +34,22 @@ describe('sql connector', function() {
             dataType: 'VARCHAR',
             dataLength: 32,
           },
-        }, vip: {
+        }, preferences: {
+          id: true,
+          type: 'JSON',
+          testdb: {
+            dataType: 'jsonb',
+          },
+        }, balance: {
+          id: true,
+          type: Number,
+          testdb: {
+            dataType: 'decimal',
+            dataLength: 18,
+            dataPrecision: 2,
+          },
+        },
+        vip: {
           type: Boolean,
           testdb: {
             column: 'VIP',
@@ -62,6 +77,21 @@ describe('sql connector', function() {
       dataType: 'VARCHAR',
       dataLength: 32,
     });
+  });
+
+  it('should respect user specified data type', function() {
+    var dataType = connector.columnDataType('customer', 'preferences');
+    expect(dataType).to.eql('JSONB');
+  });
+
+  it('should respect user specified data types with length', function() {
+    var dataType = connector.columnDataType('customer', 'name');
+    expect(dataType).to.eql('VARCHAR (32)');
+  });
+
+  it('should respect user specified data types with length & precision', function() {
+    var dataType = connector.columnDataType('customer', 'balance');
+    expect(dataType).to.eql('DECIMAL (18,2)');
   });
 
   it('should map property name', function() {
@@ -262,7 +292,7 @@ describe('sql connector', function() {
 
   it('builds column names for SELECT', function() {
     var cols = connector.buildColumnNames('customer');
-    expect(cols).to.eql('`NAME`,`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`NAME`,`PREFERENCES`,`BALANCE`,`VIP`,`ADDRESS`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
@@ -272,7 +302,7 @@ describe('sql connector', function() {
 
   it('builds column names with false fields filter for SELECT', function() {
     var cols = connector.buildColumnNames('customer', {fields: {name: false}});
-    expect(cols).to.eql('`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`PREFERENCES`,`BALANCE`,`VIP`,`ADDRESS`');
   });
 
   it('builds column names with array fields filter for SELECT', function() {
@@ -297,11 +327,12 @@ describe('sql connector', function() {
   });
 
   it('builds SELECT', function() {
+    var cols = connector.buildColumnNames('customer');
     var sql = connector.buildSelect('customer',
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`VIP`,`ADDRESS` FROM `CUSTOMER`' +
-      ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
+      sql: 'SELECT ' + cols +
+      ' FROM `CUSTOMER` WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
       params: ['John'],
     });
   });
