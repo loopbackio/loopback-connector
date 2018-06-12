@@ -41,42 +41,42 @@ describe('transactions', function() {
         isolationLevel: Transaction.READ_COMMITTED,
         timeout: timeout,
       },
-        function(err, tx) {
-          if (err) return done(err);
-          expect(typeof tx.id).to.eql('string');
-          hooks = [];
-          tx.observe('before commit', function(context, next) {
-            hooks.push('before commit');
-            next();
-          });
-          tx.observe('after commit', function(context, next) {
-            hooks.push('after commit');
-            next();
-          });
-          tx.observe('before rollback', function(context, next) {
-            hooks.push('before rollback');
-            next();
-          });
-          tx.observe('after rollback', function(context, next) {
-            hooks.push('after rollback');
-            next();
-          });
-          currentTx = tx;
-          Post.create(post, {transaction: tx, model: 'Post'},
-            function(err, p) {
-              if (err) {
-                done(err);
-              } else {
-                p.reviews.create({
-                  author: 'John',
-                  content: 'Review for ' + p.title,
-                }, {transaction: tx, model: 'Review'},
-                  function(err, c) {
-                    done(err);
-                  });
-              }
-            });
+      function(err, tx) {
+        if (err) return done(err);
+        expect(typeof tx.id).to.eql('string');
+        hooks = [];
+        tx.observe('before commit', function(context, next) {
+          hooks.push('before commit');
+          next();
         });
+        tx.observe('after commit', function(context, next) {
+          hooks.push('after commit');
+          next();
+        });
+        tx.observe('before rollback', function(context, next) {
+          hooks.push('before rollback');
+          next();
+        });
+        tx.observe('after rollback', function(context, next) {
+          hooks.push('after rollback');
+          next();
+        });
+        currentTx = tx;
+        Post.create(post, {transaction: tx, model: 'Post'},
+          function(err, p) {
+            if (err) {
+              done(err);
+            } else {
+              p.reviews.create({
+                author: 'John',
+                content: 'Review for ' + p.title,
+              }, {transaction: tx, model: 'Review'},
+              function(err, c) {
+                done(err);
+              });
+            }
+          });
+      });
     };
   }
 
