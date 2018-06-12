@@ -3,7 +3,7 @@
   "version": "4.4.0",
   "description": "Building blocks for LoopBack connectors",
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "keywords": [
     "StrongLoop",
