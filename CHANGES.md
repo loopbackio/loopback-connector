@@ -1,3 +1,23 @@
+2018-06-14, Version 4.5.0
+=========================
+
+ * Update msgpack5 to 4.x (Miroslav Bajtoš)
+
+ * Update strong-globalize to 4.x (Miroslav Bajtoš)
+
+ * Update Mocha and Chai to latest (Miroslav Bajtoš)
+
+ * Update eslint + config to latest (Miroslav Bajtoš)
+
+ * Disable package-lock feature of npm (Miroslav Bajtoš)
+
+ * Travis: add Node.js 8.x + 10.x to the build matrix (Miroslav Bajtoš)
+
+ * Drop support for Node 4.x (Miroslav Bajtoš)
+
+ * chore:update license (Diana Lau)
+
+
 2017-10-17, Version 4.4.0
 =========================
 
