@@ -41,42 +41,42 @@ describe('transactions', function() {
         isolationLevel: Transaction.READ_COMMITTED,
         timeout: timeout,
       },
-        function(err, tx) {
-          if (err) return done(err);
-          expect(typeof tx.id).to.eql('string');
-          hooks = [];
-          tx.observe('before commit', function(context, next) {
-            hooks.push('before commit');
-            next();
-          });
-          tx.observe('after commit', function(context, next) {
-            hooks.push('after commit');
-            next();
-          });
-          tx.observe('before rollback', function(context, next) {
-            hooks.push('before rollback');
-            next();
-          });
-          tx.observe('after rollback', function(context, next) {
-            hooks.push('after rollback');
-            next();
-          });
-          currentTx = tx;
-          Post.create(post, {transaction: tx, model: 'Post'},
-            function(err, p) {
-              if (err) {
-                done(err);
-              } else {
-                p.reviews.create({
-                  author: 'John',
-                  content: 'Review for ' + p.title,
-                }, {transaction: tx, model: 'Review'},
-                  function(err, c) {
-                    done(err);
-                  });
-              }
-            });
+      function(err, tx) {
+        if (err) return done(err);
+        expect(typeof tx.id).to.eql('string');
+        hooks = [];
+        tx.observe('before commit', function(context, next) {
+          hooks.push('before commit');
+          next();
         });
+        tx.observe('after commit', function(context, next) {
+          hooks.push('after commit');
+          next();
+        });
+        tx.observe('before rollback', function(context, next) {
+          hooks.push('before rollback');
+          next();
+        });
+        tx.observe('after rollback', function(context, next) {
+          hooks.push('after rollback');
+          next();
+        });
+        currentTx = tx;
+        Post.create(post, {transaction: tx, model: 'Post'},
+          function(err, p) {
+            if (err) {
+              done(err);
+            } else {
+              p.reviews.create({
+                author: 'John',
+                content: 'Review for ' + p.title,
+              }, {transaction: tx, model: 'Review'},
+              function(err, c) {
+                done(err);
+              });
+            }
+          });
+      });
     };
   }
 
@@ -173,24 +173,26 @@ describe('transactions', function() {
   });
 
   describe('timeout', function() {
+    const TIMEOUT = 50;
     before(function() {
       // Reset the collection
       db.connector.data = {};
     });
 
     var post = {title: 't3', content: 'c3'};
-    before(createPostInTx(post, 50));
+    beforeEach(createPostInTx(post, TIMEOUT));
 
     it('should report timeout', function(done) {
-      setTimeout(function() {
+      // wait until the "create post" transaction times out
+      setTimeout(runTheTest, TIMEOUT * 3);
+
+      function runTheTest() {
         Post.find({where: {title: 't3'}}, {transaction: currentTx},
           function(err, posts) {
-            if (err) return done(err);
-            expect(posts.length).to.be.eql(1);
+            expect(err).to.match(/transaction.*not active/);
             done();
           });
-      }, 300);
-      done();
+      }
     });
 
     it('should invoke the timeout hook', function(done) {
@@ -198,6 +200,10 @@ describe('transactions', function() {
         next();
         done();
       });
+
+      // If the event is not fired quickly enough, then the test can
+      // quickly fail - no need to wait full two seconds (Mocha's default)
+      this.timeout(TIMEOUT * 3);
     });
   });
 
