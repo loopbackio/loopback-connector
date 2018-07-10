@@ -416,4 +416,22 @@ describe('sql connector', function() {
       done(err, results);
     });
   });
+
+  it('builds UPDATE with ids', function() {
+    var set = {vip: false, name: 'Harry'};
+    var sql = connector.buildUpdate('customer', {name: 'John'}, set, {excludeIds: false});
+    expect(sql.toJSON()).to.eql({
+      sql: 'UPDATE `CUSTOMER` SET `VIP`=$1,`NAME`=$2 WHERE `NAME`=$3',
+      params: [false, 'Harry', 'John'],
+    });
+  });
+
+  it('builds UPDATE without ids', function() {
+    var set = {vip: false, name: 'Harry'};
+    var sql = connector.buildUpdate('customer', {name: 'John'}, set, {excludeIds: true});
+    expect(sql.toJSON()).to.eql({
+      sql: 'UPDATE `CUSTOMER` SET `VIP`=$1 WHERE `NAME`=$2',
+      params: [false, 'John'],
+    });
+  });
 });
