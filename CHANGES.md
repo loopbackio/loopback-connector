@@ -1,3 +1,11 @@
+2018-07-16, Version 4.5.1
+=========================
+
+ * allow schema or owner (Raymond Feng)
+
+ * [WebFM] cs/pl/ru translation (candytangnb)
+
+
 2018-06-14, Version 4.5.0
 =========================
 
