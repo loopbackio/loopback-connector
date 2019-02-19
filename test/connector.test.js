@@ -96,12 +96,17 @@ describe('Connector', () => {
       expect(propDefinition.type).to.equal(Date);
     });
 
-    it('should fail for non-existing properties', () => {
-      expect(() =>
-        connector.getPropertyDefinition(
-          'MyModel',
-          'non.existing.property'
-        )).to.throw(/Invalid property path/);
+    it('should return undefined for non-existing nested property', () => {
+      const definition = connector.getPropertyDefinition('MyModel',
+        'someProp.innerArray.foo');
+      // eslint-disable-next-line no-unused-expressions
+      expect(definition).to.be.undefined;
+    });
+
+    it('should preserve backward-compatibility for non-existing property', () => {
+      const definition = connector.getPropertyDefinition('MyModel', 'idontexist');
+      // eslint-disable-next-line no-unused-expressions
+      expect(definition).to.be.undefined;
     });
   });
 });
