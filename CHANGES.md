@@ -1,9 +1,3 @@
-2019-02-19, Version 4.6.0
-=========================
-
- * feat: retrieve nested property definitions (Piero Maltese)
-
-
 2018-07-16, Version 4.5.1
 =========================
 
