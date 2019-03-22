@@ -1,3 +1,15 @@
+2019-03-22, Version 4.5.2
+=========================
+
+ * fix: make prop def getter backward-compatible (biniam)
+
+ * chore: update CODEOWNERS (Diana Lau)
+
+ * Revert "4.6.0" (biniam)
+
+ * feat: retrieve nested property definitions (Piero Maltese)
+
+
 2018-07-16, Version 4.5.1
 =========================
 
