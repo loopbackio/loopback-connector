@@ -6,7 +6,10 @@ of datasource-specific connectors like Oracle, MongoDB, REST.
 **For full documentation, see the official StrongLoop documentation**:
  * [Data sources and connectors](http://docs.strongloop.com/display/public/LB/Database+connectors)
 
+
 ## Installation
+
+In your application root directory, enter this command to install the connector:
 
     npm install loopback-connector
 
