@@ -5,6 +5,7 @@
   "engines": {
     "node": ">=6"
   },
+  "author": "IBM Corp.",
   "keywords": [
     "StrongLoop",
     "LoopBack",
