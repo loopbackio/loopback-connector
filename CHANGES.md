@@ -1,3 +1,14 @@
+2019-05-03, Version 4.7.0
+=========================
+
+ * feat: map property name to table column name (Samarpan Bhattacharya)
+
+ * chore: update copyrights years (Diana Lau)
+
+
+2019-03-22, Version 4.6.2
+=========================
+
 
 
 2019-03-22, Version 4.5.2
