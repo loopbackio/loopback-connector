@@ -34,11 +34,26 @@ describe('sql connector', function() {
             dataType: 'VARCHAR',
             dataLength: 32,
           },
+        }, middleName: {
+          type: Boolean,
+          name: 'middle_name',
+          postgresql: {
+            column: 'MIDDLENAME',
+          },
+        }, lastName: {
+          type: Boolean,
+          name: 'last_name',
+          testdb: {
+            column: 'LASTNAME',
+          },
         }, vip: {
           type: Boolean,
           testdb: {
             column: 'VIP',
           },
+        }, primaryAddress: {
+          type: String,
+          name: 'primary_address',
         },
         address: String,
       },
@@ -53,6 +68,21 @@ describe('sql connector', function() {
   it('should map column name', function() {
     var column = connector.column('customer', 'name');
     expect(column).to.eql('NAME');
+  });
+
+  it('should map column name from name attribute', function() {
+    var column = connector.column('customer', 'primaryAddress');
+    expect(column).to.eql('primary_address');
+  });
+
+  it('prefers database-specific column name over property name', function() {
+    var column = connector.column('customer', 'lastName');
+    expect(column).to.eql('LASTNAME');
+  });
+
+  it('prefers property name when database is different', function() {
+    var column = connector.column('customer', 'middleName');
+    expect(column).to.eql('middle_name');
   });
 
   it('should find column metadata', function() {
@@ -262,7 +292,8 @@ describe('sql connector', function() {
 
   it('builds column names for SELECT', function() {
     var cols = connector.buildColumnNames('customer');
-    expect(cols).to.eql('`NAME`,`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`NAME`,`middle_name`,`LASTNAME`,`VIP`,' +
+      '`primary_address`,`ADDRESS`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
@@ -271,7 +302,14 @@ describe('sql connector', function() {
   });
 
   it('builds column names with false fields filter for SELECT', function() {
-    var cols = connector.buildColumnNames('customer', {fields: {name: false}});
+    var cols = connector.buildColumnNames('customer', {
+      fields: {
+        name: false,
+        primaryAddress: false,
+        lastName: false,
+        middleName: false,
+      },
+    });
     expect(cols).to.eql('`VIP`,`ADDRESS`');
   });
 
@@ -300,7 +338,8 @@ describe('sql connector', function() {
     var sql = connector.buildSelect('customer',
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`VIP`,`ADDRESS` FROM `CUSTOMER`' +
+      sql: 'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,`ADDRESS`' +
+      ' FROM `CUSTOMER`' +
       ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
       params: ['John'],
     });
