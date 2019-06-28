@@ -1,3 +1,9 @@
+2019-06-28, Version 4.8.0
+=========================
+
+ * chore: add promise support (Biniam Admikew)
+
+
 2019-05-03, Version 4.7.0
 =========================
 
