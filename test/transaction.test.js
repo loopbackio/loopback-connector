@@ -6,7 +6,10 @@
 'use strict';
 var Transaction = require('../index').Transaction;
 
-var expect = require('chai').expect;
+const chai = require('chai');
+chai.use(require('chai-as-promised'));
+const {expect} = chai;
+const chaiAsPromised = require('chai-as-promised');
 var testConnector = require('./connectors/test-sql-connector');
 
 var juggler = require('loopback-datasource-juggler');
@@ -246,5 +249,33 @@ describe('transactions', function() {
             });
         });
       });
+  });
+
+  it('can return promise for commit', function() {
+    const connectorObject = {};
+    connectorObject.commit = function(connection, cb) {
+      return cb(null, 'committed');
+    };
+    const transactionInstance = new Transaction(connectorObject, {});
+    return expect(transactionInstance.commit()).to.eventually.equal('committed');
+  });
+
+  it('can return promise for rollback', function() {
+    const connectorObject = {};
+    connectorObject.rollback = function(connection, cb) {
+      return cb(null, 'rolledback');
+    };
+    const transactionInstance = new Transaction(connectorObject, {});
+    return expect(transactionInstance.rollback()).to.eventually.equal('rolledback');
+  });
+
+  it('can return promise for begin', function() {
+    const connectorObject = {};
+    connectorObject.beginTransaction = function(connection, cb) {
+      return cb(null, 'begun');
+    };
+
+    return expect(Transaction.begin(connectorObject, '')
+    ).to.eventually.be.instanceOf(Transaction);
   });
 });
