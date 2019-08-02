@@ -4,11 +4,11 @@
 // License text available at https://opensource.org/licenses/MIT
 
 'use strict';
-var expect = require('chai').expect;
-var testConnector = require('./connectors/test-sql-connector');
+const expect = require('chai').expect;
+const testConnector = require('./connectors/test-sql-connector');
 
-var juggler = require('loopback-datasource-juggler');
-var ds = new juggler.DataSource({
+const juggler = require('loopback-datasource-juggler');
+const ds = new juggler.DataSource({
   connector: testConnector,
   debug: true,
 });

@@ -4,8 +4,8 @@
 // License text available at https://opensource.org/licenses/MIT
 
 'use strict';
-var assert = require('assert');
-var connector = require('../');
+const assert = require('assert');
+const connector = require('../');
 
 describe('loopback-connector', function() {
   it('exports Connector', function() {
