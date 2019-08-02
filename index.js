@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 'use strict';
-var SG = require('strong-globalize');
+const SG = require('strong-globalize');
 SG.SetRootDir(__dirname);
 
 exports.Connector = require('./lib/connector');

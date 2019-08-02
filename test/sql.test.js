@@ -4,19 +4,19 @@
 // License text available at https://opensource.org/licenses/MIT
 
 'use strict';
-var expect = require('chai').expect;
-var SQLConnector = require('../lib/sql');
-var ParameterizedSQL = SQLConnector.ParameterizedSQL;
-var testConnector = require('./connectors/test-sql-connector');
+const expect = require('chai').expect;
+const SQLConnector = require('../lib/sql');
+const ParameterizedSQL = SQLConnector.ParameterizedSQL;
+const testConnector = require('./connectors/test-sql-connector');
 
-var juggler = require('loopback-datasource-juggler');
-var ds = new juggler.DataSource({
+const juggler = require('loopback-datasource-juggler');
+const ds = new juggler.DataSource({
   connector: testConnector,
   debug: true,
 });
 /* eslint-disable one-var */
-var connector;
-var Customer;
+let connector;
+let Customer;
 /* eslint-enable one-var */
 
 describe('sql connector', function() {
@@ -61,32 +61,32 @@ describe('sql connector', function() {
   });
 
   it('should map table name', function() {
-    var table = connector.table('customer');
+    const table = connector.table('customer');
     expect(table).to.eql('CUSTOMER');
   });
 
   it('should map column name', function() {
-    var column = connector.column('customer', 'name');
+    const column = connector.column('customer', 'name');
     expect(column).to.eql('NAME');
   });
 
   it('should map column name from name attribute', function() {
-    var column = connector.column('customer', 'primaryAddress');
+    const column = connector.column('customer', 'primaryAddress');
     expect(column).to.eql('primary_address');
   });
 
   it('prefers database-specific column name over property name', function() {
-    var column = connector.column('customer', 'lastName');
+    const column = connector.column('customer', 'lastName');
     expect(column).to.eql('LASTNAME');
   });
 
   it('prefers property name when database is different', function() {
-    var column = connector.column('customer', 'middleName');
+    const column = connector.column('customer', 'middleName');
     expect(column).to.eql('middle_name');
   });
 
   it('should find column metadata', function() {
-    var column = connector.columnMetadata('customer', 'name');
+    const column = connector.columnMetadata('customer', 'name');
     expect(column).to.eql({
       column: 'NAME',
       dataType: 'VARCHAR',
@@ -95,37 +95,37 @@ describe('sql connector', function() {
   });
 
   it('should map property name', function() {
-    var prop = connector.propertyName('customer', 'NAME');
+    const prop = connector.propertyName('customer', 'NAME');
     expect(prop).to.eql('name');
   });
 
   it('should map id column name', function() {
-    var idCol = connector.idColumn('customer');
+    const idCol = connector.idColumn('customer');
     expect(idCol).to.eql('NAME');
   });
 
   it('should find escaped id column name', function() {
-    var idCol = connector.idColumnEscaped('customer');
+    const idCol = connector.idColumnEscaped('customer');
     expect(idCol).to.eql('`NAME`');
   });
 
   it('should find escaped table name', function() {
-    var table = connector.tableEscaped('customer');
+    const table = connector.tableEscaped('customer');
     expect(table).to.eql('`CUSTOMER`');
   });
 
   it('should find escaped column name', function() {
-    var column = connector.columnEscaped('customer', 'vip');
+    const column = connector.columnEscaped('customer', 'vip');
     expect(column).to.eql('`VIP`');
   });
 
   it('should convert to escaped id column value', function() {
-    var column = connector.idColumnValue('customer', 'John');
+    const column = connector.idColumnValue('customer', 'John');
     expect(column).to.eql('John');
   });
 
   it('builds where', function() {
-    var where = connector.buildWhere('customer', {name: 'John'});
+    const where = connector.buildWhere('customer', {name: 'John'});
     expect(where.toJSON()).to.eql({
       sql: 'WHERE `NAME`=?',
       params: ['John'],
@@ -133,7 +133,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with null', function() {
-    var where = connector.buildWhere('customer', {name: null});
+    const where = connector.buildWhere('customer', {name: null});
     expect(where.toJSON()).to.eql({
       sql: 'WHERE `NAME` IS NULL',
       params: [],
@@ -141,7 +141,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with inq', function() {
-    var where = connector.buildWhere('customer', {name: {inq: ['John', 'Mary']}});
+    const where = connector.buildWhere('customer', {name: {inq: ['John', 'Mary']}});
     expect(where.toJSON()).to.eql({
       sql: 'WHERE `NAME` IN (?,?)',
       params: ['John', 'Mary'],
@@ -149,7 +149,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with or', function() {
-    var where = connector.buildWhere('customer',
+    const where = connector.buildWhere('customer',
       {or: [{name: 'John'}, {name: 'Mary'}]});
     expect(where.toJSON()).to.eql({
       sql: 'WHERE (`NAME`=?) OR (`NAME`=?)',
@@ -158,7 +158,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with and', function() {
-    var where = connector.buildWhere('customer',
+    const where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {vip: true}]});
     expect(where.toJSON()).to.eql({
       sql: 'WHERE (`NAME`=?) AND (`VIP`=?)',
@@ -167,7 +167,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with a regexp string that does not have flags', function() {
-    var where = connector.buildWhere('customer', {
+    const where = connector.buildWhere('customer', {
       name: {
         regexp: '^J',
       },
@@ -179,7 +179,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with a regexp string that has flags', function() {
-    var where = connector.buildWhere('customer', {
+    const where = connector.buildWhere('customer', {
       name: {
         regexp: '^J/i',
       },
@@ -191,7 +191,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with a regexp literal that does not have flags', function() {
-    var where = connector.buildWhere('customer', {
+    const where = connector.buildWhere('customer', {
       name: {
         regexp: /^J/,
       },
@@ -203,7 +203,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with a regexp literal that has flags', function() {
-    var where = connector.buildWhere('customer', {
+    const where = connector.buildWhere('customer', {
       name: {
         regexp: /^J/i,
       },
@@ -215,7 +215,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with a regexp object that does not have flags', function() {
-    var where = connector.buildWhere('customer', {
+    const where = connector.buildWhere('customer', {
       name: {
         regexp: new RegExp(/^J/),
       },
@@ -227,7 +227,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with a regexp object that has flags', function() {
-    var where = connector.buildWhere('customer', {
+    const where = connector.buildWhere('customer', {
       name: {
         regexp: new RegExp(/^J/i),
       },
@@ -239,7 +239,7 @@ describe('sql connector', function() {
   });
 
   it('builds where with nesting and/or', function() {
-    var where = connector.buildWhere('customer',
+    const where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {or: [{vip: true}, {address: null}]}]});
     expect(where.toJSON()).to.eql({
       sql: 'WHERE (`NAME`=?) AND ((`VIP`=?) OR (`ADDRESS` IS NULL))',
@@ -248,32 +248,34 @@ describe('sql connector', function() {
   });
 
   it('builds order by with one field', function() {
-    var orderBy = connector.buildOrderBy('customer', 'name');
+    const orderBy = connector.buildOrderBy('customer', 'name');
     expect(orderBy).to.eql('ORDER BY `NAME`');
   });
 
   it('builds order by with two fields', function() {
-    var orderBy = connector.buildOrderBy('customer', ['name', 'vip']);
+    const orderBy = connector.buildOrderBy('customer', ['name', 'vip']);
     expect(orderBy).to.eql('ORDER BY `NAME`,`VIP`');
   });
 
   it('builds order by with two fields and dirs', function() {
-    var orderBy = connector.buildOrderBy('customer', ['name ASC', 'vip DESC']);
+    const orderBy = connector.buildOrderBy('customer', ['name ASC', 'vip DESC']);
     expect(orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
   });
 
   it('builds fields for columns', function() {
-    var fields = connector.buildFields('customer',
+    const fields = connector.buildFields('customer',
       {name: 'John', vip: true, unknown: 'Random'});
     expect(fields.names).to.eql(['`NAME`', '`VIP`']);
     expect(fields.columnValues[0].toJSON()).to.eql(
-      {sql: '?', params: ['John']});
+      {sql: '?', params: ['John']}
+    );
     expect(fields.columnValues[1].toJSON()).to.eql(
-      {sql: '?', params: [true]});
+      {sql: '?', params: [true]}
+    );
   });
 
   it('builds fields for UPDATE without ids', function() {
-    var fields = connector.buildFieldsForUpdate('customer',
+    const fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true});
     expect(fields.toJSON()).to.eql({
       sql: 'SET `VIP`=?',
@@ -282,7 +284,7 @@ describe('sql connector', function() {
   });
 
   it('builds fields for UPDATE with ids', function() {
-    var fields = connector.buildFieldsForUpdate('customer',
+    const fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true}, false);
     expect(fields.toJSON()).to.eql({
       sql: 'SET `NAME`=?,`VIP`=?',
@@ -291,18 +293,18 @@ describe('sql connector', function() {
   });
 
   it('builds column names for SELECT', function() {
-    var cols = connector.buildColumnNames('customer');
+    const cols = connector.buildColumnNames('customer');
     expect(cols).to.eql('`NAME`,`middle_name`,`LASTNAME`,`VIP`,' +
       '`primary_address`,`ADDRESS`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
-    var cols = connector.buildColumnNames('customer', {fields: {name: true}});
+    const cols = connector.buildColumnNames('customer', {fields: {name: true}});
     expect(cols).to.eql('`NAME`');
   });
 
   it('builds column names with false fields filter for SELECT', function() {
-    var cols = connector.buildColumnNames('customer', {
+    const cols = connector.buildColumnNames('customer', {
       fields: {
         name: false,
         primaryAddress: false,
@@ -314,12 +316,12 @@ describe('sql connector', function() {
   });
 
   it('builds column names with array fields filter for SELECT', function() {
-    var cols = connector.buildColumnNames('customer', {fields: ['name']});
+    const cols = connector.buildColumnNames('customer', {fields: ['name']});
     expect(cols).to.eql('`NAME`');
   });
 
   it('builds DELETE', function() {
-    var sql = connector.buildDelete('customer', {name: 'John'});
+    const sql = connector.buildDelete('customer', {name: 'John'});
     expect(sql.toJSON()).to.eql({
       sql: 'DELETE FROM `CUSTOMER` WHERE `NAME`=$1',
       params: ['John'],
@@ -327,7 +329,7 @@ describe('sql connector', function() {
   });
 
   it('builds UPDATE', function() {
-    var sql = connector.buildUpdate('customer', {name: 'John'}, {vip: false});
+    const sql = connector.buildUpdate('customer', {name: 'John'}, {vip: false});
     expect(sql.toJSON()).to.eql({
       sql: 'UPDATE `CUSTOMER` SET `VIP`=$1 WHERE `NAME`=$2',
       params: [false, 'John'],
@@ -335,7 +337,7 @@ describe('sql connector', function() {
   });
 
   it('builds SELECT', function() {
-    var sql = connector.buildSelect('customer',
+    const sql = connector.buildSelect('customer',
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
       sql: 'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,`ADDRESS`' +
@@ -346,7 +348,7 @@ describe('sql connector', function() {
   });
 
   it('builds INSERT', function() {
-    var sql = connector.buildInsert('customer', {name: 'John', vip: true});
+    const sql = connector.buildInsert('customer', {name: 'John', vip: true});
     expect(sql.toJSON()).to.eql({
       sql: 'INSERT INTO `CUSTOMER`(`NAME`,`VIP`) VALUES($1,$2)',
       params: ['John', true],
@@ -354,51 +356,53 @@ describe('sql connector', function() {
   });
 
   it('normalizes a SQL statement from string', function() {
-    var sql = 'SELECT * FROM `CUSTOMER`';
-    var stmt = new ParameterizedSQL(sql);
+    const sql = 'SELECT * FROM `CUSTOMER`';
+    const stmt = new ParameterizedSQL(sql);
     expect(stmt.toJSON()).to.eql({sql: sql, params: []});
   });
 
   it('normalizes a SQL statement from object without params', function() {
-    var sql = {sql: 'SELECT * FROM `CUSTOMER`'};
-    var stmt = new ParameterizedSQL(sql);
+    const sql = {sql: 'SELECT * FROM `CUSTOMER`'};
+    const stmt = new ParameterizedSQL(sql);
     expect(stmt.toJSON()).to.eql({sql: sql.sql, params: []});
   });
 
   it('normalizes a SQL statement from object with params', function() {
-    var sql =
+    const sql =
     {sql: 'SELECT * FROM `CUSTOMER` WHERE `NAME`=?', params: ['John']};
-    var stmt = new ParameterizedSQL(sql);
+    const stmt = new ParameterizedSQL(sql);
     expect(stmt.toJSON()).to.eql({sql: sql.sql, params: ['John']});
   });
 
   it('should throw if the statement is not a string or object', function() {
     expect(function() {
       /* jshint unused:false */
-      var stmt = new ParameterizedSQL(true);
+      const stmt = new ParameterizedSQL(true);
     }).to.throw('sql must be a string');
   });
 
   it('concats SQL statements', function() {
-    var stmt1 = {sql: 'SELECT * from `CUSTOMER`'};
-    var where = {sql: 'WHERE `NAME`=?', params: ['John']};
+    let stmt1 = {sql: 'SELECT * from `CUSTOMER`'};
+    const where = {sql: 'WHERE `NAME`=?', params: ['John']};
     stmt1 = ParameterizedSQL.append(stmt1, where);
     expect(stmt1.toJSON()).to.eql(
-      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']});
+      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']}
+    );
   });
 
   it('concats string SQL statements', function() {
-    var stmt1 = 'SELECT * from `CUSTOMER`';
-    var where = {sql: 'WHERE `NAME`=?', params: ['John']};
+    let stmt1 = 'SELECT * from `CUSTOMER`';
+    const where = {sql: 'WHERE `NAME`=?', params: ['John']};
     stmt1 = ParameterizedSQL.append(stmt1, where);
     expect(stmt1.toJSON()).to.eql(
-      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']});
+      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']}
+    );
   });
 
   it('should throw if params does not match placeholders', function() {
     expect(function() {
-      var stmt1 = 'SELECT * from `CUSTOMER`';
-      var where = {sql: 'WHERE `NAME`=?', params: ['John', 'Mary']};
+      let stmt1 = 'SELECT * from `CUSTOMER`';
+      const where = {sql: 'WHERE `NAME`=?', params: ['John', 'Mary']};
       stmt1 = ParameterizedSQL.append(stmt1, where);
     }).to.throw('must match the number of params');
   });
@@ -438,7 +442,7 @@ describe('sql connector', function() {
   });
 
   it('should invoke hooks', function(done) {
-    var events = [];
+    const events = [];
     connector.observe('before execute', function(ctx, next) {
       expect(ctx.req.sql).be.a('string');
       expect(ctx.req.params).be.a('array');

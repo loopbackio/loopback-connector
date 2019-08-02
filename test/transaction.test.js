@@ -4,16 +4,16 @@
 // License text available at https://opensource.org/licenses/MIT
 
 'use strict';
-var Transaction = require('../index').Transaction;
+const Transaction = require('../index').Transaction;
 
 const chai = require('chai');
 chai.use(require('chai-as-promised'));
 const {expect} = chai;
 const chaiAsPromised = require('chai-as-promised');
-var testConnector = require('./connectors/test-sql-connector');
+const testConnector = require('./connectors/test-sql-connector');
 
-var juggler = require('loopback-datasource-juggler');
-var db, Post, Review;
+const juggler = require('loopback-datasource-juggler');
+let db, Post, Review;
 describe('transactions', function() {
   before(function(done) {
     db = new juggler.DataSource({
@@ -34,8 +34,8 @@ describe('transactions', function() {
     });
   });
 
-  var currentTx;
-  var hooks = [];
+  let currentTx;
+  let hooks = [];
   // Return an async function to start a transaction and create a post
   function createPostInTx(post, timeout) {
     return function(done) {
@@ -87,7 +87,7 @@ describe('transactions', function() {
   // records to equal to the count
   function expectToFindPosts(where, count, inTx) {
     return function(done) {
-      var options = {model: 'Post'};
+      const options = {model: 'Post'};
       if (inTx) {
         options.transaction = currentTx;
       }
@@ -119,7 +119,7 @@ describe('transactions', function() {
   }
 
   describe('commit', function() {
-    var post = {title: 't1', content: 'c1'};
+    const post = {title: 't1', content: 'c1'};
     before(createPostInTx(post));
 
     it('should not see the uncommitted insert', expectToFindPosts(post, 0));
@@ -150,7 +150,7 @@ describe('transactions', function() {
       db.connector.data = {};
     });
 
-    var post = {title: 't2', content: 'c2'};
+    const post = {title: 't2', content: 'c2'};
     before(createPostInTx(post));
 
     it('should not see the uncommitted insert', expectToFindPosts(post, 0));
@@ -182,7 +182,7 @@ describe('transactions', function() {
       db.connector.data = {};
     });
 
-    var post = {title: 't3', content: 'c3'};
+    const post = {title: 't3', content: 'c3'};
     beforeEach(createPostInTx(post, TIMEOUT));
 
     it('should report timeout', function(done) {
@@ -219,7 +219,7 @@ describe('transactions', function() {
     TestTransaction.prototype.foo = true;
     function beginTransaction(isolationLevel, cb) {
       return cb(null, new TestTransaction(testConnector, {}));
-    };
+    }
 
     it('should do nothing when transaction is like a Transaction', function(done) {
       testConnector.initialize(db, function(err, resultConnector) {
@@ -275,7 +275,8 @@ describe('transactions', function() {
       return cb(null, 'begun');
     };
 
-    return expect(Transaction.begin(connectorObject, '')
+    return expect(
+      Transaction.begin(connectorObject, ''),
     ).to.eventually.be.instanceOf(Transaction);
   });
 });

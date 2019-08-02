@@ -5,9 +5,9 @@
 
 'use strict';
 
-var composer = require('../lib/model-key-composer');
-var expect = require('chai').expect;
-var Promise = require('bluebird');
+const composer = require('../lib/model-key-composer');
+const expect = require('chai').expect;
+const Promise = require('bluebird');
 
 describe('ModelKeyComposer', function() {
   describe('compose()', function() {
@@ -66,7 +66,8 @@ describe('ModelKeyComposer', function() {
         },
         function onError(err) {
           expect(err).to.have.property('code', 'NO_MODEL_PREFIX');
-        });
+        }
+      );
     });
 
     it('supports invocation with a callback', function(done) {

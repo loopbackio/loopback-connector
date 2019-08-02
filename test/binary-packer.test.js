@@ -5,11 +5,11 @@
 
 'use strict';
 
-var BinaryPacker = require('../lib/binary-packer');
-var expect = require('chai').expect;
+const BinaryPacker = require('../lib/binary-packer');
+const expect = require('chai').expect;
 
 describe('BinaryPacker', function() {
-  var packer;
+  let packer;
 
   beforeEach(function createPacker() {
     packer = new BinaryPacker();
@@ -35,7 +35,7 @@ describe('BinaryPacker', function() {
   });
 
   describe('roundtrip', function() {
-    var TEST_CASES = {
+    const TEST_CASES = {
       String: 'a-value',
       Object: {a: 1, b: 2},
       Buffer: new Buffer([1, 2, 3]),
@@ -47,7 +47,7 @@ describe('BinaryPacker', function() {
 
     Object.keys(TEST_CASES).forEach(function(tc) {
       it('works for ' + tc + ' values', function() {
-        var value = TEST_CASES[tc];
+        const value = TEST_CASES[tc];
         return encodeAndDecode(value)
           .then(function(result) {
             expect(result).to.eql(value);
