@@ -459,4 +459,40 @@ describe('sql connector', function() {
       done(err, results);
     });
   });
+
+  it('should throw if the event listener limit is reached', function() {
+    ds.connected = false;
+    function runExecute() {
+      return connector.execute('SELECT * FROM `CUSTOMER`', function(err) {
+        throw err;
+      });
+    }
+
+    for (let i = 0; i < 16; i++) {
+      runExecute();
+    }
+
+    expect(function() { runExecute(); }).to.throw(
+      'Event listener limit reached. ' +
+        'Increase maxOfflineRequests value in datasources.json.',
+    );
+    ds.connected = true;
+    ds.removeAllListeners(['connected']);
+  });
+
+  it('should not throw if the event listener limit is not reached', function() {
+    ds.connected = false;
+    function runExecute() {
+      return connector.execute('SELECT * FROM `CUSTOMER`', function(err) {
+        throw err;
+      });
+    }
+
+    for (let i = 0; i < 15; i++) {
+      runExecute();
+    }
+
+    expect(function() { runExecute(); }).to.not.throw();
+    ds.connected = true;
+  });
 });
