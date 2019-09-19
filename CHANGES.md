@@ -1,3 +1,15 @@
+2019-09-19, Version 4.9.0
+=========================
+
+ * fix: prevent adding listeners past limit (Dominique Emond)
+
+ * chore: update deps and fix lint violations (Nora)
+
+ * drop support for node.js 6 (Nora)
+
+ * chore: add node 12 (Nora)
+
+
 2019-06-28, Version 4.8.0
 =========================
 
