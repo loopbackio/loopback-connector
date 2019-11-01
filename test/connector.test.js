@@ -47,14 +47,14 @@ describe('Connector', () => {
     it('supports retrieving first level properties definitions', () => {
       const propDefinition1 = connector.getPropertyDefinition(
         'MyModel',
-        'phoneList'
+        'phoneList',
       );
 
       expect(propDefinition1.type).to.be.an('array');
 
       const propDefinition2 = connector.getPropertyDefinition(
         'MyModel',
-        'firstname'
+        'firstname',
       );
 
       expect(propDefinition2.type).to.be.equal(String);
@@ -63,7 +63,7 @@ describe('Connector', () => {
     it('supports first level nested array property definitions', () => {
       const propDefinition = connector.getPropertyDefinition(
         'MyModel',
-        'phoneList.number'
+        'phoneList.number',
       );
 
       expect(propDefinition.type).to.equal(Number);
@@ -72,7 +72,7 @@ describe('Connector', () => {
     it('supports second level nested array property definitions', () => {
       const propDefinition = connector.getPropertyDefinition(
         'MyModel',
-        'phoneList.label.title'
+        'phoneList.label.title',
       );
 
       expect(propDefinition.type).to.equal(String);
@@ -81,7 +81,7 @@ describe('Connector', () => {
     it('supports nested property definitions on objects', () => {
       const propDefinition = connector.getPropertyDefinition(
         'MyModel',
-        'address.line1'
+        'address.line1',
       );
 
       expect(propDefinition.type).to.equal(String);
@@ -90,7 +90,7 @@ describe('Connector', () => {
     it('supports nested property definitions on array within object', () => {
       const propDefinition = connector.getPropertyDefinition(
         'MyModel',
-        'someProp.innerArray.date'
+        'someProp.innerArray.date',
       );
 
       expect(propDefinition.type).to.equal(Date);

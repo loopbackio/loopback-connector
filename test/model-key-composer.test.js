@@ -66,7 +66,7 @@ describe('ModelKeyComposer', function() {
         },
         function onError(err) {
           expect(err).to.have.property('code', 'NO_MODEL_PREFIX');
-        }
+        },
       );
     });
 
