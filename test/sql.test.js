@@ -275,10 +275,10 @@ describe('sql connector', function() {
       {name: 'John', vip: true, unknown: 'Random'});
     expect(fields.names).to.eql(['`NAME`', '`VIP`']);
     expect(fields.columnValues[0].toJSON()).to.eql(
-      {sql: '?', params: ['John']}
+      {sql: '?', params: ['John']},
     );
     expect(fields.columnValues[1].toJSON()).to.eql(
-      {sql: '?', params: [true]}
+      {sql: '?', params: [true]},
     );
   });
 
@@ -394,7 +394,7 @@ describe('sql connector', function() {
     const where = {sql: 'WHERE `NAME`=?', params: ['John']};
     stmt1 = ParameterizedSQL.append(stmt1, where);
     expect(stmt1.toJSON()).to.eql(
-      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']}
+      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']},
     );
   });
 
@@ -403,7 +403,7 @@ describe('sql connector', function() {
     const where = {sql: 'WHERE `NAME`=?', params: ['John']};
     stmt1 = ParameterizedSQL.append(stmt1, where);
     expect(stmt1.toJSON()).to.eql(
-      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']}
+      {sql: 'SELECT * from `CUSTOMER` WHERE `NAME`=?', params: ['John']},
     );
   });
 
