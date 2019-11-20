@@ -270,6 +270,21 @@ describe('sql connector', function() {
     expect(orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
   });
 
+  it('builds order by with non existent field filtered out', function() {
+    const orderBy = connector.buildOrderBy('customer', ['nam?e', 'name']);
+    expect(orderBy).to.eql('ORDER BY `NAME`');
+  });
+
+  it('builds order by with non existent field with direction filtered out', function() {
+    const orderBy = connector.buildOrderBy('customer', ['nam?e ASC', 'name']);
+    expect(orderBy).to.eql('ORDER BY `NAME`');
+  });
+
+  it('builds order by with only non existent fields', function() {
+    const orderBy = connector.buildOrderBy('customer', ['nam?e', 'n?ame', '?name DESC']);
+    expect(orderBy).to.eql('');
+  });
+
   it('builds fields for columns', function() {
     const fields = connector.buildFields('customer',
       {name: 'John', vip: true, unknown: 'Random'});
@@ -502,5 +517,9 @@ describe('sql connector', function() {
 
     expect(function() { runExecute(); }).to.not.throw();
     ds.connected = true;
+  });
+
+  it('should not throw if invalid sql statement is created by all', function(done) {
+    connector.all('customer', {order: 'n?ame'}, {}, done);
   });
 });
