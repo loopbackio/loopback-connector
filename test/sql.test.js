@@ -247,12 +247,18 @@ describe('sql connector', function() {
     });
   });
 
-  it('builds where and ignores invalid clauses in or', function() {
-    const where = connector.buildWhere('customer', {
-      name: 'icecream',
-      or: [{notAColumnName: ''}, {notAColumnNameEither: ''}],
-    });
-    expect(where.sql).to.not.match(/ AND $/);
+  it('builds where and throws if invalid clauses in or', function() {
+    let errorThrown = false;
+    try {
+      connector.buildWhere('customer', {
+        name: 'icecream',
+        or: [{notAColumnName: ''}, {notAColumnNameEither: ''}],
+      });
+    } catch (e) {
+      errorThrown = true;
+      expect(e.message).to.eql('Unknown property notAColumnName used for model customer');
+    }
+    expect(errorThrown).to.eql(true);
   });
 
   it('builds order by with one field', function() {
@@ -270,19 +276,37 @@ describe('sql connector', function() {
     expect(orderBy).to.eql('ORDER BY `NAME` ASC,`VIP` DESC');
   });
 
-  it('builds order by with non existent field filtered out', function() {
-    const orderBy = connector.buildOrderBy('customer', ['nam?e', 'name']);
-    expect(orderBy).to.eql('ORDER BY `NAME`');
+  it('builds order by with non existent field throws', function() {
+    let errorThrown = false;
+    try {
+      connector.buildOrderBy('customer', ['nam?e', 'name']);
+    } catch (e) {
+      errorThrown = true;
+      expect(e.message).to.eql('Unknown property nam?e is used for model customer');
+    }
+    expect(errorThrown).to.eql(true);
   });
 
-  it('builds order by with non existent field with direction filtered out', function() {
-    const orderBy = connector.buildOrderBy('customer', ['nam?e ASC', 'name']);
-    expect(orderBy).to.eql('ORDER BY `NAME`');
+  it('builds order by with non existent field with direction throws', function() {
+    let errorThrown = false;
+    try {
+      connector.buildOrderBy('customer', ['nam?e ASC', 'name']);
+    } catch (e) {
+      errorThrown = true;
+      expect(e.message).to.eql('Unknown property nam?e is used for model customer');
+    }
+    expect(errorThrown).to.eql(true);
   });
 
-  it('builds order by with only non existent fields', function() {
-    const orderBy = connector.buildOrderBy('customer', ['nam?e', 'n?ame', '?name DESC']);
-    expect(orderBy).to.eql('');
+  it('builds order by with only non existent fields throws', function() {
+    let errorThrown = false;
+    try {
+      connector.buildOrderBy('customer', ['nam?e', 'n?ame', '?name DESC']);
+    } catch (e) {
+      errorThrown = true;
+      expect(e.message).to.eql('Unknown property nam?e is used for model customer');
+    }
+    expect(errorThrown).to.eql(true);
   });
 
   it('builds fields for columns', function() {
@@ -519,7 +543,39 @@ describe('sql connector', function() {
     ds.connected = true;
   });
 
-  it('should not throw if invalid sql statement is created by all', function(done) {
-    connector.all('customer', {order: 'n?ame'}, {}, done);
+  it('should throw if invalid order by statement is used by all', function(done) {
+    connector.all('customer', {order: 'n?ame'}, {}, (err) => {
+      expect(err.message).to.eql(
+        'Unknown property n?ame is used for model customer',
+      );
+      done();
+    });
+  });
+
+  it('should throw if invalid where statement is used by count', function(done) {
+    connector.count('customer', {'n?ame': 1}, {}, (err) => {
+      expect(err.message).to.eql(
+        'Unknown property n?ame used for model customer',
+      );
+      done();
+    });
+  });
+
+  it('should throw if invalid where statement is used by update', function(done) {
+    connector.update('customer', {'n?ame': 1}, {name: 5}, {}, (err) => {
+      expect(err.message).to.eql(
+        'Unknown property n?ame used for model customer',
+      );
+      done();
+    });
+  });
+
+  it('should throw if invalid where statement is used by destroyAll', function(done) {
+    connector.destroyAll('customer', {'n?ame': 1}, {}, (err) => {
+      expect(err.message).to.eql(
+        'Unknown property n?ame used for model customer',
+      );
+      done();
+    });
   });
 });
