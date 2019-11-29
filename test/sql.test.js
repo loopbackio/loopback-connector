@@ -253,7 +253,12 @@ describe('sql connector', function() {
         name: 'icecream',
         or: [{notAColumnName: ''}, {notAColumnNameEither: ''}],
       });
-    }).to.throw('Unknown property notAColumnName is used for model customer');
+    }).to.throw('Unknown property notAColumnName is used for model customer')
+      .to.include({
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
   });
 
   it('builds order by with one field', function() {
@@ -274,19 +279,34 @@ describe('sql connector', function() {
   it('builds order by with non existent field throws', function() {
     expect(() => {
       connector.buildOrderBy('customer', ['nam?e', 'name']);
-    }).to.throw('Unknown property nam?e is used for model customer');
+    }).to.throw('Unknown property nam?e is used for model customer')
+      .to.include({
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
   });
 
   it('builds order by with non existent field with direction throws', function() {
     expect(() => {
       connector.buildOrderBy('customer', ['nam?e ASC', 'name']);
-    }).to.throw('Unknown property nam?e is used for model customer');
+    }).to.throw('Unknown property nam?e is used for model customer')
+      .to.include({
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
   });
 
   it('builds order by with only non existent fields throws', function() {
     expect(() => {
       connector.buildOrderBy('customer', ['nam?e', 'n?ame', '?name DESC']);
-    }).to.throw('Unknown property nam?e is used for model customer');
+    }).to.throw('Unknown property nam?e is used for model customer')
+      .to.include({
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
   });
 
   it('builds fields for columns', function() {
@@ -525,36 +545,48 @@ describe('sql connector', function() {
 
   it('should throw if invalid order by statement is used by all', function(done) {
     connector.all('customer', {order: 'n?ame'}, {}, (err) => {
-      expect(err.message).to.eql(
-        'Unknown property n?ame is used for model customer',
-      );
+      expect(err).to.include({
+        message: 'Unknown property n?ame is used for model customer',
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
       done();
     });
   });
 
   it('should throw if invalid where statement is used by count', function(done) {
     connector.count('customer', {'n?ame': 1}, {}, (err) => {
-      expect(err.message).to.eql(
-        'Unknown property n?ame is used for model customer',
-      );
+      expect(err).to.include({
+        message: 'Unknown property n?ame is used for model customer',
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
       done();
     });
   });
 
   it('should throw if invalid where statement is used by update', function(done) {
     connector.update('customer', {'n?ame': 1}, {name: 5}, {}, (err) => {
-      expect(err.message).to.eql(
-        'Unknown property n?ame is used for model customer',
-      );
+      expect(err).to.include({
+        message: 'Unknown property n?ame is used for model customer',
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
       done();
     });
   });
 
   it('should throw if invalid where statement is used by destroyAll', function(done) {
     connector.destroyAll('customer', {'n?ame': 1}, {}, (err) => {
-      expect(err.message).to.eql(
-        'Unknown property n?ame is used for model customer',
-      );
+      expect(err).to.include({
+        message: 'Unknown property n?ame is used for model customer',
+        code: 'UNKNWON_PROPERTY',
+        statusCode: 400,
+        status: 400,
+      });
       done();
     });
   });
