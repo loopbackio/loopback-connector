@@ -14,16 +14,24 @@ const ds = new juggler.DataSource({
   connector: testConnector,
   debug: true,
 });
+const dsWithIgnore = new juggler.DataSource({
+  connector: testConnector,
+  debug: true,
+  ignoreUnknownProperties: true,
+});
 /* eslint-disable one-var */
 let connector;
+let connectorWithIgnore;
+let connectorNoSkipProp;
 let Customer;
 /* eslint-enable one-var */
 
 describe('sql connector', function() {
   before(function() {
     connector = ds.connector;
-    connector._tables = {};
-    connector._models = {};
+    connectorWithIgnore = dsWithIgnore.connector;
+    connectorWithIgnore._tables = connector._tables = {};
+    connectorWithIgnore._models = connector._models = {};
     Customer = ds.createModel('customer',
       {
         name: {
@@ -261,6 +269,15 @@ describe('sql connector', function() {
       });
   });
 
+  it('builds where and ignores if invalid clauses in or', function() {
+    expect(() => {
+      connectorWithIgnore.buildWhere('customer', {
+        name: 'icecream',
+        or: [{notAColumnName: ''}, {notAColumnNameEither: ''}],
+      });
+    }).to.not.throw();
+  });
+
   it('builds order by with one field', function() {
     const orderBy = connector.buildOrderBy('customer', 'name');
     expect(orderBy).to.eql('ORDER BY `NAME`');
@@ -307,6 +324,24 @@ describe('sql connector', function() {
         statusCode: 400,
         status: 400,
       });
+  });
+
+  it('builds order by with non existent field ignores', function() {
+    expect(() => {
+      connectorWithIgnore.buildOrderBy('customer', ['nam?e', 'name']);
+    }).to.not.throw();
+  });
+
+  it('builds order by with non existent field with direction ignores', function() {
+    expect(() => {
+      connectorWithIgnore.buildOrderBy('customer', ['nam?e ASC', 'name']);
+    }).to.not.throw();
+  });
+
+  it('builds order by with only non existent fields ignores', function() {
+    expect(() => {
+      connectorWithIgnore.buildOrderBy('customer', ['nam?e', 'n?ame', '?name DESC']);
+    }).to.not.throw();
   });
 
   it('builds fields for columns', function() {
@@ -589,5 +624,21 @@ describe('sql connector', function() {
       });
       done();
     });
+  });
+
+  it('should ignore if invalid order by statement is used by all', function(done) {
+    connectorWithIgnore.all('customer', {order: 'n?ame'}, {}, done);
+  });
+
+  it('should ignore if invalid where statement is used by count', function(done) {
+    connectorWithIgnore.count('customer', {'n?ame': 1}, {}, done);
+  });
+
+  it('should ignore if invalid where statement is used by update', function(done) {
+    connectorWithIgnore.update('customer', {'n?ame': 1}, {name: 5}, {}, done);
+  });
+
+  it('should ignore if invalid where statement is used by destroyAll', function(done) {
+    connectorWithIgnore.destroyAll('customer', {'n?ame': 1}, {}, done);
   });
 });

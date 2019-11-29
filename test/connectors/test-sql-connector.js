@@ -209,6 +209,10 @@ TestConnector.prototype.rollback = function(tx, cb) {
   tx.rollback(cb);
 };
 
+TestConnector.prototype.getCountForAffectedRows = function() {
+  return 1;
+};
+
 TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
   const transaction = options.transaction;
   const model = options.model;
