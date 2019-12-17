@@ -1,3 +1,23 @@
+2019-12-17, Version 4.10.0
+==========================
+
+ * chore: disable security issue reporting (Nora)
+
+ * Remove loopback-connector-ibmi from downstream (Miroslav Bajtoš)
+
+ * Remove unstable connectors from downstream list (Miroslav Bajtoš)
+
+ * Introduce issue templates for bugs, features, etc. (Miroslav Bajtoš)
+
+ * Improve PULL_REQUEST_TEMPLATE (Miroslav Bajtoš)
+
+ * Fix eslint violations (Miroslav Bajtoš)
+
+ * Remove Biniam from CODEOWNERS (Miroslav Bajtoš)
+
+ * Fix SqlConnector to ignore empty WHERE statements (Marvin Irwin)
+
+
 2019-09-19, Version 4.9.0
 =========================
 
