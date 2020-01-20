@@ -210,6 +210,32 @@ describe('transactions', function() {
     });
   });
 
+  describe('isActive', function() {
+    it('returns true when connection is active', function(done) {
+      Post.beginTransaction({
+        isolationLevel: Transaction.READ_COMMITTED,
+        timeout: 1000,
+      },
+      function(err, tx) {
+        if (err) return done(err);
+        expect(tx.isActive()).to.equal(true);
+        return done();
+      });
+    });
+    it('returns false when connection is not active', function(done) {
+      Post.beginTransaction({
+        isolationLevel: Transaction.READ_COMMITTED,
+        timeout: 1000,
+      },
+      function(err, tx) {
+        if (err) return done(err);
+        delete tx.connection;
+        expect(tx.isActive()).to.equal(false);
+        return done();
+      });
+    });
+  });
+
   describe('transaction instance', function() {
     function TestTransaction(connector, connection) {
       this.connector = connector;
