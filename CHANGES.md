@@ -1,3 +1,11 @@
+2020-01-20, Version 4.10.1
+==========================
+
+ * feat: add isactive check for transaction (#164) (Janny)
+
+ * Remove "good first issue" from stalebot (Miroslav Bajtoš)
+
+
 2019-12-17, Version 4.10.0
 ==========================
 
