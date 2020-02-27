@@ -17,6 +17,7 @@ const ds = new juggler.DataSource({
 /* eslint-disable one-var */
 let connector;
 let Customer;
+let Order;
 /* eslint-enable one-var */
 
 describe('sql connector', function() {
@@ -58,6 +59,24 @@ describe('sql connector', function() {
         address: String,
       },
       {testdb: {table: 'CUSTOMER'}});
+    Order = ds.createModel('order',
+      {
+        id: {
+          id: true,
+          type: Number,
+          testdb: {
+            column: 'orderId',
+            dataType: 'INTEGER',
+          },
+        }, des: {
+          type: String,
+          name: 'des',
+          testdb: {
+            column: 'description',
+          },
+        },
+      },
+      {testdb: {table: 'ORDER'}});
   });
 
   it('should map table name', function() {
@@ -78,6 +97,12 @@ describe('sql connector', function() {
   it('prefers database-specific column name over property name', function() {
     const column = connector.column('customer', 'lastName');
     expect(column).to.eql('LASTNAME');
+  });
+
+  it('uses database-specific column name over property name even if the column name \
+  does not follow the connector-specific configuration (UPPERCASE)', function() {
+    const column = connector.column('order', 'des');
+    expect(column).to.eql('description');
   });
 
   it('prefers property name when database is different', function() {
@@ -102,6 +127,13 @@ describe('sql connector', function() {
   it('should map id column name', function() {
     const idCol = connector.idColumn('customer');
     expect(idCol).to.eql('NAME');
+  });
+
+  it('should map id column name even if the column name does not \
+  follow the connector-specific configuration (UPPERCASE)', function() {
+    const idCol = connector.idColumn('order');
+    // shouldn't be converted to ORDERID
+    expect(idCol).to.eql('orderId');
   });
 
   it('should find escaped id column name', function() {
