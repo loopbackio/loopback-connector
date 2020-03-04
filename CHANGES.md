@@ -1,5 +1,11 @@
-2020-01-20, Version 4.10.1
+2020-03-04, Version 4.10.2
 ==========================
+
+ * fix the way it gets column name for id property (Agnes Lin)
+
+ * chore: update copyright year (Diana Lau)
+
+ * test: add tests for isactive (#165) (Janny)
 
  * feat: add isactive check for transaction (#164) (Janny)
 
