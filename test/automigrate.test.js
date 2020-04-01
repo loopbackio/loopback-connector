@@ -18,11 +18,13 @@ describe('sql connector', function() {
     ds.connector._tables = {};
     ds.connector._models = {};
     ds.createModel('m1', {});
+    ds.createModel('m2', {});
   });
 
   it('automigrate all models', function(done) {
     ds.automigrate(function(err) {
       expect(ds.connector._tables).have.property('m1');
+      expect(ds.connector._tables).have.property('m2');
       done(err);
     });
   });
@@ -42,10 +44,17 @@ describe('sql connector', function() {
   });
 
   it('automigrate reports errors for models not attached', function(done) {
-    ds.automigrate(['m1', 'm2'], function(err) {
+    ds.automigrate(['m1', 'm3'], function(err) {
       expect(err).to.be.an.instanceOf(Error);
       expect(ds.connector._tables).to.not.have.property('m1');
-      expect(ds.connector._tables).to.not.have.property('m2');
+      expect(ds.connector._tables).to.not.have.property('m3');
+      done();
+    });
+  });
+
+  it('automigrate tables in series', function(done) {
+    ds.automigrate(['m1', 'm2'], function(err) {
+      expect(Object.keys(ds.connector._tables)).to.deep.equal(['m1', 'm2']);
       done();
     });
   });
