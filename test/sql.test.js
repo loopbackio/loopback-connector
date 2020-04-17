@@ -79,35 +79,11 @@ describe('sql connector', function() {
       {testdb: {table: 'ORDER'}});
   });
 
+  // tests for column names mapping are moved to name-mapping.test.js
+
   it('should map table name', function() {
     const table = connector.table('customer');
     expect(table).to.eql('CUSTOMER');
-  });
-
-  it('should map column name', function() {
-    const column = connector.column('customer', 'name');
-    expect(column).to.eql('NAME');
-  });
-
-  it('should map column name from name attribute', function() {
-    const column = connector.column('customer', 'primaryAddress');
-    expect(column).to.eql('primary_address');
-  });
-
-  it('prefers database-specific column name over property name', function() {
-    const column = connector.column('customer', 'lastName');
-    expect(column).to.eql('LASTNAME');
-  });
-
-  it('uses database-specific column name over property name even if the column name \
-  does not follow the connector-specific configuration (UPPERCASE)', function() {
-    const column = connector.column('order', 'des');
-    expect(column).to.eql('description');
-  });
-
-  it('prefers property name when database is different', function() {
-    const column = connector.column('customer', 'middleName');
-    expect(column).to.eql('middle_name');
   });
 
   it('should find column metadata', function() {
@@ -122,18 +98,6 @@ describe('sql connector', function() {
   it('should map property name', function() {
     const prop = connector.propertyName('customer', 'NAME');
     expect(prop).to.eql('name');
-  });
-
-  it('should map id column name', function() {
-    const idCol = connector.idColumn('customer');
-    expect(idCol).to.eql('NAME');
-  });
-
-  it('should map id column name even if the column name does not \
-  follow the connector-specific configuration (UPPERCASE)', function() {
-    const idCol = connector.idColumn('order');
-    // shouldn't be converted to ORDERID
-    expect(idCol).to.eql('orderId');
   });
 
   it('should find escaped id column name', function() {
