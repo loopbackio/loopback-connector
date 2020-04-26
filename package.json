@@ -24,17 +24,17 @@
   },
   "license": "MIT",
   "dependencies": {
-    "async": "^3.1.0",
-    "bluebird": "^3.4.6",
+    "async": "^3.2.0",
+    "bluebird": "^3.7.2",
     "debug": "^4.1.1",
     "msgpack5": "^4.2.0",
-    "strong-globalize": "^5.0.0",
-    "uuid": "^3.0.1"
+    "strong-globalize": "^5.1.0",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^6.1.0",
+    "eslint": "^6.8.0",
     "eslint-config-loopback": "^13.1.0",
     "loopback-datasource-juggler": "^3.32.0",
     "mocha": "^6.2.0"
