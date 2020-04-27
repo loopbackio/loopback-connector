@@ -1,3 +1,13 @@
+2020-04-27, Version 4.11.0
+==========================
+
+ * chore: update dependencies (Raymond Feng)
+
+ * push column/idcolumn to connector level and renam (Agnes Lin)
+
+ * fix: run migrations in series (Michael DePetrillo)
+
+
 2020-03-04, Version 4.10.2
 ==========================
 
