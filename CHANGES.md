@@ -1,4 +1,10 @@
-2020-04-27, Version 4.11.0
+2020-07-31, Version 4.11.1
+==========================
+
+ * Improve assertion in ParameterizedSQL builder (ewrayjohnson)
+
+
+2020-04-26, Version 4.11.0
 ==========================
 
  * chore: update dependencies (Raymond Feng)
