@@ -1,9 +1,9 @@
 {
   "name": "loopback-connector",
-  "version": "4.11.1",
+  "version": "5.0.0-dev",
   "description": "Building blocks for LoopBack connectors",
   "engines": {
-    "node": ">=8.9"
+    "node": ">=10"
   },
   "author": "IBM Corp.",
   "keywords": [
