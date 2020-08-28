@@ -1,3 +1,17 @@
+2020-08-28, Version 5.0.0
+=========================
+
+ * chore: update dependencies to latest (Miroslav Bajtoš)
+
+ * chore: update devDependencies to latest (Miroslav Bajtoš)
+
+ * travis: add Node.js 14.x (Miroslav Bajtoš)
+
+ * [SEMVER-MAJOR] Drop support for Node.js 8.x (Miroslav Bajtoš)
+
+ * chore: switch to DCO (Diana Lau)
+
+
 2020-07-31, Version 4.11.1
 ==========================
 
