@@ -148,7 +148,7 @@ describe('sql connector', function() {
     const where = connector.buildWhere('customer',
       {or: [{name: 'John'}, {name: 'Mary'}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) OR (`NAME`=?)',
+      sql: 'WHERE ((`NAME`=?) OR (`NAME`=?))',
       params: ['John', 'Mary'],
     });
   });
@@ -157,7 +157,7 @@ describe('sql connector', function() {
     const where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {vip: true}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND (`VIP`=?)',
+      sql: 'WHERE ((`NAME`=?) AND (`VIP`=?))',
       params: ['John', true],
     });
   });
@@ -238,7 +238,7 @@ describe('sql connector', function() {
     const where = connector.buildWhere('customer',
       {and: [{name: 'John'}, {or: [{vip: true}, {address: null}]}]});
     expect(where.toJSON()).to.eql({
-      sql: 'WHERE (`NAME`=?) AND ((`VIP`=?) OR (`ADDRESS` IS NULL))',
+      sql: 'WHERE ((`NAME`=?) AND (((`VIP`=?) OR (`ADDRESS` IS NULL))))',
       params: ['John', true],
     });
   });
@@ -341,6 +341,21 @@ describe('sql connector', function() {
   });
 
   it('builds SELECT', function() {
+    const sql = connector.buildSelect('customer', {
+      order: 'name',
+      limit: 5,
+      where: {or: [{name: 'Top Cat'}, {address: 'Trash can'}], vip: true},
+    });
+    expect(sql.toJSON()).to.eql({
+      sql:
+        'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,' +
+        '`ADDRESS` FROM `CUSTOMER` WHERE ((`NAME`=$1) OR (`ADDRESS`=$2)) ' +
+        'AND `VIP`=$3 ORDER BY `NAME` LIMIT 5',
+      params: ['Top Cat', 'Trash can', true],
+    });
+  });
+
+  it('builds SELECT with where', function() {
     const sql = connector.buildSelect('customer',
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
