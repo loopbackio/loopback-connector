@@ -1,3 +1,9 @@
+2020-11-09, Version 5.0.1
+=========================
+
+ * Group clauses for AND/OR conditions (Raymond Feng)
+
+
 2020-08-28, Version 5.0.0
 =========================
 
