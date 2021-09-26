@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on:
   push:
@@ -7,21 +7,106 @@ on:
   pull_request:
     branches:
     - master
+  schedule:
+    - cron: '0 2 * * 1' # At 02:00 on Monday
+
+permissions: {}
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     strategy:
       matrix:
-        node-version: [10, 12, 14]
+        os: [ubuntu-latest]
+        node-version: [10, 12, 14, 16]
+        include:
+          - os: macos-latest
+            node_version: 14
+          - os: windows-latest
+            node_version: 14
+      fail-fast: false
     steps:
-    - name: Git checkout
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Update NPM
+        if: matrix.os != 'macos-latest'
+        run: npm install --global npm
+      - name: Update NPM (macOS)
+        if: matrix.os == 'macos-latest'
+        run: npm install --global --force npm
+      - name: Bootstrap project
+        run: npm ci --ignore-scripts
+      - name: Run tests
+        run: npm test --ignore-scripts
+      - name: Publish coverage report to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-${{ matrix.os }}-node@${{ matrix.node-version }}
+          path-to-lcov: ${{ github.workspace }}/coverage/lcov.info
+          parallel: true
+
+  posttest:
+    name: Post-Test
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
+
+  code-lint:
+    name: Code Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Bootstrap project
+        run: npm ci --ignore-scripts
+      - name: Verify code linting
+        run: npm run lint
+
+  commit-lint:
+    name: Commit Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Bootstrap project
+        run: npm ci --ignore-scripts
+      - name: Verify commit linting
+        run: npx --no-install commitlint --from origin/master --to HEAD --verbose
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    permissions:
+      # See: https://github.com/github/codeql-action/blob/008b2cc71c4cf3401f45919d8eede44a65b4a322/README.md#usage
+      security-events: write
+    steps:
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        languages: 'javascript'
+        config-file: ./.github/codeql/codeql-config.yaml
 
-    - run: npm install
-    - run: npm test
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
