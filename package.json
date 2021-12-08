@@ -20,7 +20,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "posttest": "npm run lint",
-    "test": "nyc --reporter=lcov mocha"
+    "test": "npm run test:ci",
+    "test:ci": "nyc --reporter=lcov mocha"
   },
   "license": "MIT",
   "dependencies": {
