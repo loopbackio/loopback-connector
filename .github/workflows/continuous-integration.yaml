@@ -20,35 +20,28 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [10, 12, 14, 16]
+        node-version: [10, 12, 14, 16, 17]
         include:
           - os: macos-latest
-            node_version: 14
+            node_version: 16
           - os: windows-latest
-            node_version: 14
+            node_version: 16
       fail-fast: false
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Update NPM
-        if: matrix.os != 'macos-latest'
-        run: npm install --global npm
-      - name: Update NPM (macOS)
-        if: matrix.os == 'macos-latest'
-        run: npm install --global --force npm
       - name: Bootstrap project
         run: npm ci --ignore-scripts
       - name: Run tests
-        run: npm test --ignore-scripts
+        run: npm run-script test:ci
       - name: Publish coverage report to Coveralls
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: run-${{ matrix.os }}-node@${{ matrix.node-version }}
-          path-to-lcov: ${{ github.workspace }}/coverage/lcov.info
           parallel: true
 
   posttest:
@@ -66,11 +59,11 @@ jobs:
     name: Code Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 14
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
       - name: Bootstrap project
         run: npm ci --ignore-scripts
       - name: Verify code linting
@@ -80,17 +73,25 @@ jobs:
     name: Commit Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Use Node.js 14
-        uses: actions/setup-node@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
       - name: Bootstrap project
         run: npm ci --ignore-scripts
       - name: Verify commit linting
-        run: npx --no-install commitlint --from origin/master --to HEAD --verbose
+        run: |
+          npx \
+            --no-install \
+            --package=@commitlint/cli \
+            -- \
+            commitlint \
+              --from=origin/master \
+              --to=HEAD \
+              --verbose
 
   codeql:
     name: CodeQL
@@ -100,7 +101,7 @@ jobs:
       security-events: write
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v1
