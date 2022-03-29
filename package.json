@@ -33,10 +33,10 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^13.1.0",
+    "@commitlint/config-conventional": "^13.2.0",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
-    "commitlint": "^13.1.0",
+    "commitlint": "^13.2.1",
     "eslint": "^7.32.0",
     "eslint-config-loopback": "^13.1.0",
     "loopback-datasource-juggler": "^3.36.1",
