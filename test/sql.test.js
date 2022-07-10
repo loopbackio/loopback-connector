@@ -514,4 +514,38 @@ describe('sql connector', function() {
     expect(function() { runExecute(); }).to.not.throw();
     ds.connected = true;
   });
+
+  it('should build INSERT for multiple rows if multiInsertSupported is true', function() {
+    connector.multiInsertSupported = true;
+    const sql = connector.buildInsertAll('customer', [
+      {name: 'Adam', middleName: 'abc', vip: true},
+      {name: 'Test', middleName: null, vip: false},
+    ]);
+    expect(sql.toJSON()).to.eql({
+      sql:
+      'INSERT INTO `CUSTOMER`(`NAME`,`middle_name`,`VIP`) VALUES ($1,$2,$3), ($4,$5,$6)',
+      params: ['Adam', 'abc', true, 'Test', null, false],
+    });
+  });
+
+  it('should return null for INSERT multiple rows if multiInsertSupported is false',
+    function() {
+      connector.multiInsertSupported = false;
+      const sql = connector.buildInsertAll('customer', [
+        {name: 'Adam', middleName: 'abc', vip: true},
+        {name: 'Test', middleName: null, vip: false},
+      ]);
+      // eslint-disable-next-line no-unused-expressions
+      expect(sql).to.be.null;
+    });
+
+  it('should return null for INSERT multiple rows if multiInsertSupported not set',
+    function() {
+      const sql = connector.buildInsertAll('customer', [
+        {name: 'Adam', middleName: 'abc', vip: true},
+        {name: 'Test', middleName: null, vip: false},
+      ]);
+      // eslint-disable-next-line no-unused-expressions
+      expect(sql).to.be.null;
+    });
 });
