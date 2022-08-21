@@ -5,7 +5,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('@loopback/testlab').expect;
 const Connector = require('../lib/connector');
 const testConnector = require('./connectors/test-connector');
 

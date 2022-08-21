@@ -1,10 +1,20 @@
-// Copyright IBM Corp. 2014,2019. All Rights Reserved.
+// Copyright IBM Corp. 2014,2022. All Rights Reserved.
 // Node module: loopback-connector
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-'use strict';
-const SG = require('strong-globalize');
+import SG from 'strong-globalize';
+import {Connector} from './lib/connector';
+import SQLConnector from './lib/sql';
+import { Transaction } from './lib/transaction';
+
+export {
+    Connector,
+    SQLConnector,
+    SQLConnector.ParameterizedSQL,
+    Transaction,
+}
+
 SG.SetRootDir(__dirname);
 
 exports.Connector = require('./lib/connector');

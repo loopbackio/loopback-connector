@@ -1,31 +1,39 @@
 {
   "name": "loopback-connector",
-  "version": "5.0.1",
+  "version": "6.0.0-alpha",
   "description": "Building blocks for LoopBack connectors",
   "engines": {
     "node": ">=10"
   },
   "author": "IBM Corp.",
   "keywords": [
-    "StrongLoop",
     "LoopBack",
     "Connector"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/strongloop/loopback-connector"
+    "url": "https://github.com/loopbackio/loopback-connector.git"
   },
   "main": "index.js",
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "posttest": "npm run lint",
-    "test": "nyc --reporter=lcov mocha"
+    "build": "lb-tsc",
+    "clean": "lb-clean dist *.tsbuildinfo",
+    "lint": "npm run eslint && npm run prettier:check",
+    "lint:fix": "npm run eslint:fix && npm run prettier:fix",
+    "eslint": "lb-eslint --report-unused-directives .",
+    "eslint:fix": "npm run eslint -- --fix",
+    "prettier:cli": "lb-prettier '**/**.ts'",
+    "prettier:check": "npm run prettier:cli -- --check",
+    "prettier:fix": "npm run prettier:cli -- --fix",
+    "mocha": "lb-mocha . dist/__tests__",
+    "test": "lb-nyc npm run mocha",
+    "posttest": "npm run lint"
   },
   "license": "MIT",
   "dependencies": {
+    "@loopback/eslint-config": "^13.0.2",
+    "@loopback/testlab": "^5.0.2",
     "async": "^3.2.3",
-    "bluebird": "^3.7.2",
     "debug": "^4.1.1",
     "msgpack5": "^4.2.0",
     "strong-globalize": "^6.0.4",
@@ -33,22 +41,10 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^13.1.0",
+    "@loopback/build": "^9.0.2",
     "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
     "commitlint": "^13.1.0",
-    "eslint": "^7.7.0",
-    "eslint-config-loopback": "^13.1.0",
-    "loopback-datasource-juggler": "^3.32.0",
-    "mocha": "^9.0.0",
-    "nyc": "^15.1.0"
-  },
-  "ci": {
-    "downstreamIgnoreList": [
-      "loopback-connector-db2z",
-      "loopback-connector-ibmi",
-      "loopback-connector-informix",
-      "loopback-connector-mqlight",
-      "loopback-connector-kv-extreme-scale"
-    ]
+    "loopback-datasource-juggler": "^3.32.0"
   }
 }

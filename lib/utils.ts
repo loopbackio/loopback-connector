@@ -3,19 +3,23 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-'use strict';
-const Promise = require('bluebird');
+type PromiseCallback = <T extends unknown>() => {
+  (err: unknown, data: T): void;
+  promise: Promise<T>;
+};
 
-exports.createPromiseCallback = createPromiseCallback;
+export function createPromiseCallback(): PromiseCallback {
+  let cb: PromiseCallback;
 
-function createPromiseCallback() {
-  let cb;
   const promise = new Promise(function(resolve, reject) {
+    // @ts-ignore
     cb = function(err, data) {
       if (err) return reject(err);
       return resolve(data);
     };
   });
+  // @ts-ignore
   cb.promise = promise;
+  // @ts-ignore
   return cb;
 }
