@@ -97,16 +97,90 @@ describe('Connector', () => {
     });
 
     it('should return undefined for non-existing nested property', () => {
-      const definition = connector.getPropertyDefinition('MyModel',
-        'someProp.innerArray.foo');
+      const definition = connector.getPropertyDefinition(
+        'MyModel',
+        'someProp.innerArray.foo',
+      );
       // eslint-disable-next-line no-unused-expressions
       expect(definition).to.be.undefined;
     });
 
     it('should preserve backward-compatibility for non-existing property', () => {
-      const definition = connector.getPropertyDefinition('MyModel', 'idontexist');
+      const definition = connector.getPropertyDefinition(
+        'MyModel',
+        'idontexist',
+      );
       // eslint-disable-next-line no-unused-expressions
       expect(definition).to.be.undefined;
     });
+  });
+
+  describe('isNullable()', () => {
+    const nullableOverrideFlags = ['required', 'id'];
+
+    const nullableFlags = ['nullable', 'null', 'allowNull'];
+
+    const nullableValues = [1, 'Y', 'YES', true];
+
+    const notNullableValues = [0, 'N', 'NO', false];
+
+    for (const nullableOverrideFlag of nullableOverrideFlags) {
+      const propDefNullableOverridePlainSlice = {
+        [nullableOverrideFlag]: true,
+      };
+      it(`returns \`false\` for \`${JSON.stringify(
+        propDefNullableOverridePlainSlice,
+      )}`, () => {
+        const result = Connector.prototype.isNullable(
+          propDefNullableOverridePlainSlice,
+        );
+        // eslint-disable-next-line no-unused-expressions
+        expect(result).to.be.false;
+      });
+
+      for (const nullableFlag of nullableFlags) {
+        for (const nullableValue of nullableValues) {
+          const propDefNullableOverrideSlice = {
+            ...propDefNullableOverridePlainSlice,
+            [nullableFlag]: nullableValue,
+          };
+          it(`returns \`false\` for \`${JSON.stringify(
+            propDefNullableOverrideSlice,
+          )}`, () => {
+            const result = Connector.prototype.isNullable(
+              propDefNullableOverrideSlice,
+            );
+            // eslint-disable-next-line no-unused-expressions
+            expect(result).to.be.false;
+          });
+        }
+      }
+    }
+
+    for (const nullableFlag of nullableFlags) {
+      for (const nullableValue of nullableValues) {
+        const propDefNullableSlice = {[nullableFlag]: nullableValue};
+        it(`returns \`true\` for \`${JSON.stringify(
+          propDefNullableSlice,
+        )}\``, () => {
+          const result = Connector.prototype.isNullable(propDefNullableSlice);
+          // eslint-disable-next-line no-unused-expressions
+          expect(result).to.be.true;
+        });
+      }
+
+      for (const notNullableValue of notNullableValues) {
+        const propDefNotNullableSlice = {[nullableFlag]: notNullableValue};
+        it(`returns \`false\` for \`${JSON.stringify(
+          propDefNotNullableSlice,
+        )}\``, () => {
+          const result = Connector.prototype.isNullable(
+            propDefNotNullableSlice,
+          );
+          // eslint-disable-next-line no-unused-expressions
+          expect(result).to.be.false;
+        });
+      }
+    }
   });
 });
