@@ -1,3 +1,71 @@
+2022-09-29, Version 5.1.0
+=========================
+
+ * chore: update actions/setup-node action to v3.5.0 (renovate[bot])
+
+ * chore: update commitlint monorepo (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * fix: rebiew comments (Samarpan Bhattacharya)
+
+ * feat: add capability for insert multiple rows in single query (Samarpan Bhattacharya)
+
+ * ci: pin GitHub Actions Git hash (Rifa Achrinza)
+
+ * fix: support additional values for Connector.isNullable (Rifa Achrinza)
+
+ * chore: update commitlint monorepo to ^17.0.3 (renovate[bot])
+
+ * chore: update dependency async to ^3.2.4 (Renovate Bot)
+
+ * chore: lock file maintenance (Renovate Bot)
+
+ * chore: update dependency commitlint to ^17.0.1 (Renovate Bot)
+
+ * chore: update commitlint monorepo to v17 (Renovate Bot)
+
+ * chore: update dependency loopback-datasource-juggler to v4 (Renovate Bot)
+
+ * chore: update dependency msgpack5 to ^4.5.1 (Renovate Bot)
+
+ * chore: update dependency uuid to ^8.3.2 (Renovate Bot)
+
+ * chore: update dependency strong-globalize to ^6.0.5 (Renovate Bot)
+
+ * chore: update commitlint monorepo (Renovate Bot)
+
+ * chore: update dependency mocha to ^9.2.2 (Renovate Bot)
+
+ * chore: update dependency loopback-datasource-juggler to ^3.36.1 (Renovate Bot)
+
+ * chore: update dependency eslint to ^7.32.0 (Renovate Bot)
+
+ * ci: update envirnoment (Rifa Achrinza)
+
+ * chore: update dependency debug to ^4.3.4 (Renovate Bot)
+
+ * docs: add SECURITY.md (Diana Lau)
+
+ * chore: update dependency nanoid to 3.1.31 [security] (Renovate Bot)
+
+ * chore: update dependency chai to ^4.3.6 (Renovate Bot)
+
+ * chore: update dependency async to ^3.2.3 (Renovate Bot)
+
+ * ci: add renovate config (Rifa Achrinza)
+
+ * docs: update coc (Diana Lau)
+
+ * docs: add code of conduct (Diana Lau)
+
+ * docs: add ci badges (Rifa Achrinza)
+
+ * ci: update ci (Rifa Achrinza)
+
+ * ci: add github actions (Agnes Lin)
+
+
 2020-11-09, Version 5.0.1
 =========================
 
