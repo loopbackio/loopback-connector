@@ -1,3 +1,33 @@
+2022-11-07, Version 5.1.1
+=========================
+
+ * chore: update dependency eslint to ^8.27.0 (renovate[bot])
+
+ * chore: update dependency eslint to v8 (renovate[bot])
+
+ * fix: return inserted ids with models in createAll (Samarpan Bhattacharya)
+
+ * chore: update github/codeql-action action to v2.1.31 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.30 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update commitlint monorepo to ^17.2.0 (renovate[bot])
+
+ * docs: fix broken links (Shubham Prajapat)
+
+ * chore: update github/codeql-action action to v2.1.29 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.28 (renovate[bot])
+
+ * chore: update actions/setup-node action to v3.5.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.27 (renovate[bot])
+
+ * chore: update actions/checkout action to v3.1.0 (renovate[bot])
+
+
 2022-09-29, Version 5.1.0
 =========================
 
