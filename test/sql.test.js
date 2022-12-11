@@ -63,6 +63,7 @@ describe('sql connector', function() {
       {
         id: {
           id: true,
+          generated: true,
           type: Number,
           testdb: {
             column: 'orderId',
@@ -515,19 +516,6 @@ describe('sql connector', function() {
     ds.connected = true;
   });
 
-  it('should build INSERT for multiple rows if multiInsertSupported is true', function() {
-    connector.multiInsertSupported = true;
-    const sql = connector.buildInsertAll('customer', [
-      {name: 'Adam', middleName: 'abc', vip: true},
-      {name: 'Test', middleName: null, vip: false},
-    ]);
-    expect(sql.toJSON()).to.eql({
-      sql:
-      'INSERT INTO `CUSTOMER`(`NAME`,`middle_name`,`VIP`) VALUES ($1,$2,$3), ($4,$5,$6)',
-      params: ['Adam', 'abc', true, 'Test', null, false],
-    });
-  });
-
   it('should return null for INSERT multiple rows if multiInsertSupported is false',
     function() {
       connector.multiInsertSupported = false;
@@ -548,4 +536,52 @@ describe('sql connector', function() {
       // eslint-disable-next-line no-unused-expressions
       expect(sql).to.be.null;
     });
+
+  context('when multiInsertSupported is true', function() {
+    beforeEach(function() {
+      connector.multiInsertSupported = true;
+    });
+
+    it('should build INSERT for multiple rows', function() {
+      connector.multiInsertSupported = true;
+      const sql = connector.buildInsertAll('customer', [
+        {name: 'Adam', middleName: 'abc', vip: true},
+        {name: 'Test', middleName: null, vip: false},
+      ]);
+      expect(sql.toJSON()).to.eql({
+        sql:
+      'INSERT INTO `CUSTOMER`(`NAME`,`middle_name`,`VIP`) VALUES ($1,$2,$3), ($4,$5,$6)',
+        params: ['Adam', 'abc', true, 'Test', null, false],
+      });
+    });
+
+    context('getInsertedDataArray', function() {
+      context('when id column is auto-generated', function() {
+        it('should return back data with id column', function() {
+          connector.multiInsertSupported = true;
+          const insertedArr = connector.getInsertedDataArray('order', [1, 2], [
+            {des: 'Description 1'},
+            {des: 'Description 2'},
+          ]);
+          expect(insertedArr).to.eql([
+            {id: 1, des: 'Description 1'},
+            {id: 2, des: 'Description 2'},
+          ]);
+        });
+      });
+      context('when id column is not auto-generated', function() {
+        it('should return back same data', function() {
+          connector.multiInsertSupported = true;
+          const insertedArr = connector.getInsertedDataArray('customer', [], [
+            {name: 'Adam', middleName: 'abc', vip: true},
+            {name: 'Test', middleName: null, vip: false},
+          ]);
+          expect(insertedArr).to.eql([
+            {name: 'Adam', middleName: 'abc', vip: true},
+            {name: 'Test', middleName: null, vip: false},
+          ]);
+        });
+      });
+    });
+  });
 });

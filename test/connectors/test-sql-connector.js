@@ -192,6 +192,10 @@ TestConnector.prototype.getInsertedId = function(model, info) {
   return info;
 };
 
+TestConnector.prototype.getInsertedIds = function(model, info) {
+  return info;
+};
+
 TestConnector.prototype.fromColumnValue = function(propertyDef, value) {
   return value;
 };
