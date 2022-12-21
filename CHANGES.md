@@ -1,3 +1,41 @@
+2022-12-21, Version 5.2.0
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^8.30.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.37 (renovate[bot])
+
+ * fix: handle non generated ids in bulk insert (Samarpan Bhattacharya)
+
+ * chore: update actions/checkout action to v3.2.0 (renovate[bot])
+
+ * fix: `isRelational` to return a boolean (Rifa Achrinza)
+
+ * feat: return `multiInsertSupported` in `getMetadata` (Rifa Achrinza)
+
+ * chore: update github/codeql-action action to v2.1.36 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.29.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.35 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.34 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^17.3.0 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.28.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.33 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.1.32 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^4.28.0 (renovate[bot])
+
+ * chore: update dependency chai to ^4.3.7 (renovate[bot])
+
+
 2022-11-07, Version 5.1.1
 =========================
 
