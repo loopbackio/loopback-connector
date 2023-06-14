@@ -1,3 +1,29 @@
+2023-06-14, Version 5.3.2
+=========================
+
+ * chore: update github/codeql-action action to v2.20.0 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update actions/checkout action to v3.5.3 (renovate[bot])
+
+ * chore: update coverallsapp/github-action action to v2.2.0 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.42.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.3.6 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^17.6.5 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.3.5 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.3.4 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.41.0 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^4.28.5 (renovate[bot])
+
+
 2023-05-15, Version 5.3.1
 =========================
 
