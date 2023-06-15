@@ -55,6 +55,13 @@ describe('sql connector', function() {
         }, primaryAddress: {
           type: String,
           name: 'primary_address',
+        }, token: {
+          type: String,
+          name: 'token',
+          readOnly: true,
+          testdb: {
+            column: 'TOKEN',
+          },
         },
         address: String,
       },
@@ -279,6 +286,27 @@ describe('sql connector', function() {
     );
   });
 
+  it('builds fields for UPDATE without readOnlys', function() {
+    const fields = connector.buildFieldsForReplace('customer', {
+      middleName: '',
+      lastName: 'Libert',
+      vip: true,
+      token: null,
+      address: '1031 NW 7th Ave, Fort Lauderdale, Florida, United States',
+      primaryAddress: '1031 NW 7th Ave, Fort Lauderdale, Florida, United States',
+    });
+    expect(fields.toJSON()).to.eql({
+      sql: 'SET `middle_name`=?,`LASTNAME`=?,`VIP`=?,`primary_address`=?,`ADDRESS`=?',
+      params: [
+        '',
+        'Libert',
+        true,
+        '1031 NW 7th Ave, Fort Lauderdale, Florida, United States',
+        '1031 NW 7th Ave, Fort Lauderdale, Florida, United States',
+      ],
+    });
+  });
+
   it('builds fields for UPDATE without ids', function() {
     const fields = connector.buildFieldsForUpdate('customer',
       {name: 'John', vip: true});
@@ -300,7 +328,7 @@ describe('sql connector', function() {
   it('builds column names for SELECT', function() {
     const cols = connector.buildColumnNames('customer');
     expect(cols).to.eql('`NAME`,`middle_name`,`LASTNAME`,`VIP`,' +
-      '`primary_address`,`ADDRESS`');
+      '`primary_address`,`TOKEN`,`ADDRESS`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
@@ -314,6 +342,7 @@ describe('sql connector', function() {
         name: false,
         primaryAddress: false,
         lastName: false,
+        token: false,
         middleName: false,
       },
     });
@@ -350,7 +379,7 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql:
         'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,' +
-        '`ADDRESS` FROM `CUSTOMER` WHERE ((`NAME`=$1) OR (`ADDRESS`=$2)) ' +
+        '`TOKEN`,`ADDRESS` FROM `CUSTOMER` WHERE ((`NAME`=$1) OR (`ADDRESS`=$2)) ' +
         'AND `VIP`=$3 ORDER BY `NAME` LIMIT 5',
       params: ['Top Cat', 'Trash can', true],
     });
@@ -360,8 +389,8 @@ describe('sql connector', function() {
     const sql = connector.buildSelect('customer',
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
-      sql: 'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,`ADDRESS`' +
-      ' FROM `CUSTOMER`' +
+      sql: 'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,`TOKEN`,' +
+      '`ADDRESS` FROM `CUSTOMER`' +
       ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
       params: ['John'],
     });
