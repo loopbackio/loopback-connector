@@ -57,6 +57,14 @@ describe('Name mapping', function() {
           type: String,
           name: 'primary_address',
         },
+        token: {
+          type: String,
+          name: 'token',
+          readOnly: true,
+          testdb: {
+            column: 'TOKEN',
+          },
+        },
         address: String,
       },
       {testdb: {table: 'CUSTOMER'}},
