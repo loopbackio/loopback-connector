@@ -1,4 +1,22 @@
-2023-06-14, Version 5.3.2
+2023-06-27, Version 5.3.3
+=========================
+
+ * chore: update dependency loopback-datasource-juggler to ^4.28.7 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update commitlint monorepo to ^17.6.6 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.20.1 (renovate[bot])
+
+ * fix: remove readOnly keys from query (Muhammad Aaqil)
+
+ * chore: update dependency eslint to ^8.43.0 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^4.28.6 (renovate[bot])
+
+
+2023-06-13, Version 5.3.2
 =========================
 
  * chore: update github/codeql-action action to v2.20.0 (renovate[bot])
