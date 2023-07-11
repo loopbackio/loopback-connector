@@ -39,7 +39,7 @@
     "commitlint": "^17.6.6",
     "eslint": "^8.44.0",
     "eslint-config-loopback": "^13.1.0",
-    "loopback-datasource-juggler": "^4.28.7",
+    "loopback-datasource-juggler": "^4.28.8",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0"
   },
