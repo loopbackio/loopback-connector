@@ -1,3 +1,27 @@
+2023-07-17, Version 6.0.0
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^8.45.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.20.4 (renovate[bot])
+
+ * chore: update coverallsapp/github-action action to v2.2.1 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^4.28.8 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.44.0 (renovate[bot])
+
+ * chore: update actions/setup-node action to v3.7.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.20.3 (renovate[bot])
+
+ * chore: drop support for Node.js 14 and lower (dhmlau)
+
+ * chore: update dependency mocha to v10 (renovate[bot])
+
+
 2023-06-27, Version 5.3.3
 =========================
 
