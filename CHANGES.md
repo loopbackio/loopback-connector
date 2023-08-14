@@ -1,4 +1,30 @@
-2023-07-17, Version 6.0.0
+2023-08-14, Version 6.0.1
+=========================
+
+ * chore: update actions/setup-node action to v3.8.0 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^8.47.0 (renovate[bot])
+
+ * chore: update dependency commitlint to ^17.7.1 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^17.7.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.3 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.46.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.0 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^17.6.7 (renovate[bot])
+
+
+2023-07-16, Version 6.0.0
 =========================
 
  * chore: lock file maintenance (renovate[bot])
