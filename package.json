@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.7.0",
-    "chai": "^4.3.7",
+    "chai": "^4.3.8",
     "chai-as-promised": "^7.1.1",
     "commitlint": "^17.7.1",
     "eslint": "^8.47.0",
