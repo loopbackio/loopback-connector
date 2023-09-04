@@ -38,7 +38,7 @@ jobs:
       - name: Run tests
         run: npm run-script test:ci
       - name: Publish coverage report to Coveralls
-        uses: coverallsapp/github-action@95b1a2355bd0e526ad2fd62da9fd386ad4c98474 # v2.2.1
+        uses: coverallsapp/github-action@3b7078ee895f74fc267b7b267c88211df59fa816 # v2.2.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: run-${{ matrix.os }}-node@${{ matrix.node-version }}
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Coveralls finished
-      uses: coverallsapp/github-action@95b1a2355bd0e526ad2fd62da9fd386ad4c98474 # v2.2.1
+      uses: coverallsapp/github-action@3b7078ee895f74fc267b7b267c88211df59fa816 # v2.2.2
       with:
         github-token: ${{ secrets.github_token }}
         parallel-finished: true
