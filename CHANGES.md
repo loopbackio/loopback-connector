@@ -1,3 +1,31 @@
+2023-09-11, Version 6.0.2
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^8.49.0 (renovate[bot])
+
+ * chore: update coverallsapp/github-action action to v2.2.3 (renovate[bot])
+
+ * chore: update coverallsapp/github-action action to v2.2.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.5 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.48.0 (renovate[bot])
+
+ * chore: update actions/checkout action to v3.6.0 (renovate[bot])
+
+ * chore: update dependency chai to ^4.3.8 (renovate[bot])
+
+ * chore: update actions/setup-node action to v3.8.1 (renovate[bot])
+
+ * chore: update dependency strong-globalize to ^6.0.6 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.4 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^4.28.9 (renovate[bot])
+
+
 2023-08-14, Version 6.0.1
 =========================
 
