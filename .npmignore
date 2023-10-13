@@ -17,3 +17,4 @@ loopback-connector-*.tgz
 coverage
 .vscodetest
 .travis.yml
+test

@@ -20,12 +20,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [16, 18, 20]
+        node-version: [18, 20]
         include:
           - os: macos-latest
-            node_version: 16
+            node_version: 18
           - os: windows-latest
-            node_version: 16
+            node_version: 18
       fail-fast: false
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -60,10 +60,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - name: Use Node.js 16
+      - name: Use Node.js 18
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
-          node-version: 16
+          node-version: 18
       - name: Bootstrap project
         run: npm ci --ignore-scripts
       - name: Verify code linting
@@ -76,10 +76,10 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
-      - name: Use Node.js 16
+      - name: Use Node.js 18
         uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
-          node-version: 16
+          node-version: 18
       - name: Bootstrap project
         run: npm ci --ignore-scripts
       - name: Verify commit linting
