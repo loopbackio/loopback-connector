@@ -1,3 +1,39 @@
+2023-10-16, Version 6.0.3
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update commitlint monorepo to ^17.8.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.3 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.1 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.51.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.0 (renovate[bot])
+
+ * chore: update actions/checkout action to v4 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.50.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.9 (renovate[bot])
+
+ * chore: update dependency commitlint to ^17.7.2 (renovate[bot])
+
+ * chore: update dependency chai to ^4.3.10 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.8 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.7 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.21.6 (renovate[bot])
+
+ * chore: update dependency uuid to ^9.0.1 (renovate[bot])
+
+
 2023-09-11, Version 6.0.2
 =========================
 
