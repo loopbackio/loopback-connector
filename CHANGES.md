@@ -1,3 +1,29 @@
+2023-12-07, Version 6.1.0
+=========================
+
+ * chore: update github/codeql-action action to v2.22.9 (renovate[bot])
+
+ * feat: pass options to buildQueryColumns (Muhammad Aaqil)
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^8.55.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.8 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^18.4.3 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.54.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.7 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^18.4.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.6 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.0.3 (renovate[bot])
+
+
 2023-11-13, Version 6.0.4
 =========================
 
