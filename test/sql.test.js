@@ -256,6 +256,11 @@ describe('sql connector', function() {
     expect(orderBy).to.eql('ORDER BY `NAME`');
   });
 
+  it('builds group by with one field', function() {
+    const groupBy = connector.buildGroupBy(['id']);
+    expect(groupBy).to.eql('GROUP BY id');
+  });
+
   it('builds order by with two fields', function() {
     const orderBy = connector.buildOrderBy('customer', ['name', 'vip']);
     expect(orderBy).to.eql('ORDER BY `NAME`,`VIP`');
@@ -363,6 +368,28 @@ describe('sql connector', function() {
       ' FROM `CUSTOMER`' +
       ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
       params: ['John'],
+    });
+  });
+
+  it('builds SELECT with groupBy, sum, avg, min, max & count', function() {
+    const sql = connector.buildSelect('customer',
+      {
+        groupBy: ['name'],
+        sum: 'salary',
+        avg: 'salary',
+        min: 'salary',
+        max: 'salary',
+        count: 'salary',
+      });
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT SUM(salary) as sumOfsalary, COUNT(salary) as countOfsalary,' +
+      ' AVG(salary) as avgOfsalary, MIN(salary) as minOfsalary,' +
+      ' MAX(salary) as maxOfsalary, `NAME`,`middle_name`,`LASTNAME`,`VIP`,' +
+      '`primary_address`,`TOKEN`,`ADDRESS`' +
+      ' FROM `CUSTOMER`' +
+      ' GROUP BY name' +
+      ' ORDER BY `NAME`',
+      params: [],
     });
   });
 
