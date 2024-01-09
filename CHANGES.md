@@ -1,3 +1,27 @@
+2024-01-09, Version 6.1.1
+=========================
+
+ * chore: update github/codeql-action action to v3.23.0 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency chai to ^4.4.0 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^18.4.4 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.22.12 (renovate[bot])
+
+ * chore: update actions/setup-node action to v4.0.1 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.56.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3 (renovate[bot])
+
+ * chore: update github/codeql-action action to v2.22.10 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.0.4 (renovate[bot])
+
+
 2023-12-07, Version 6.1.0
 =========================
 
