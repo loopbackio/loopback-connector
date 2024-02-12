@@ -1,3 +1,29 @@
+2024-02-12, Version 6.1.2
+=========================
+
+ * chore: update dependency loopback-datasource-juggler to ^5.0.6 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency mocha to ^10.3.0 (renovate[bot])
+
+ * chore: update actions/setup-node action to v4.0.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.24.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.23.2 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^18.6.0 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^18.5.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.23.1 (renovate[bot])
+
+ * chore: update dependency chai to ^4.4.1 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.0.5 (renovate[bot])
+
+
 2024-01-09, Version 6.1.1
 =========================
 
