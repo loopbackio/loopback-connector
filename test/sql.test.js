@@ -667,4 +667,23 @@ describe('sql connector', function() {
       });
     });
   });
+
+  it(
+    'should throw an error if buildQueryIsStrict is not implemented by SQLconnector',
+    function() {
+      const baseConnector = new SQLConnector();
+      expect(function() {
+        baseConnector.buildQueryIsStrict();
+      }).to.throw('isStrict must be implemented by the connector');
+    },
+  );
+
+  it('should support discoverIsStrict method', function(done) {
+    connector.discoverIsStrict(function(err, data) {
+      // eslint-disable-next-line no-unused-expressions
+      expect(err).to.be.null;
+      expect(data).to.be.an('array');
+      done(err);
+    });
+  });
 });
