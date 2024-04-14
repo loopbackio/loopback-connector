@@ -11,7 +11,7 @@ language: node_js
 node_js:
   - 10.24.1
   - 12.22.12
-  - 14
+  - 14.21.3
   - 16
   - 17
 install: npm ci --ignore-scripts
