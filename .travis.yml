@@ -13,6 +13,6 @@ node_js:
   - 12.22.12
   - 14.21.3
   - 16.20.2
-  - 17
+  - 17.9.1
 install: npm ci --ignore-scripts
 script: npm run-script test:ci
