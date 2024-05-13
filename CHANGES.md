@@ -1,3 +1,47 @@
+2024-05-13, Version 6.1.5
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency chai-as-promised to ^7.1.2 (renovate[bot])
+
+ * chore: update coverallsapp/github-action action to v2.3.0 (renovate[bot])
+
+ * chore: update actions/checkout action to v4.1.5 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.4 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.3 (renovate[bot])
+
+ * chore: update actions/checkout action to v4.1.4 (renovate[bot])
+
+ * chore: update dependency commitlint to ^19.3.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.2 (renovate[bot])
+
+ * chore: update actions/checkout action to v4.1.3 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.0 (renovate[bot])
+
+ * chore: update dependency node to v17.9.1 (renovate[bot])
+
+ * chore: update dependency node to v16.20.2 (renovate[bot])
+
+ * chore: update dependency node to v14.21.3 (renovate[bot])
+
+ * chore: update dependency node to v12.22.12 (renovate[bot])
+
+ * chore: update dependency node to v10.24.1 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^19.2.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.24.10 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.0.8 (renovate[bot])
+
+
 2024-04-04, Version 6.1.4
 =========================
 
