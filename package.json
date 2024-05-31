@@ -27,7 +27,7 @@
   "dependencies": {
     "async": "^3.2.5",
     "bluebird": "^3.7.2",
-    "debug": "^4.3.4",
+    "debug": "^4.3.5",
     "msgpack5": "^4.5.1",
     "strong-globalize": "^6.0.6",
     "uuid": "^9.0.1"
