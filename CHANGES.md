@@ -1,3 +1,23 @@
+2024-06-06, Version 6.1.6
+=========================
+
+ * chore: update dependency loopback-datasource-juggler to ^5.0.10 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency debug to ^4.3.5 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.7 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.6 (renovate[bot])
+
+ * chore: update actions/checkout action to v4.1.6 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.0.9 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.25.5 (renovate[bot])
+
+
 2024-05-13, Version 6.1.5
 =========================
 
