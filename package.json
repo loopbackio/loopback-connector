@@ -30,7 +30,7 @@
     "debug": "^4.3.5",
     "msgpack5": "^4.5.1",
     "strong-globalize": "^6.0.6",
-    "uuid": "^9.0.1"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.2.2",
