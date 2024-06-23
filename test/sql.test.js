@@ -36,13 +36,13 @@ describe('sql connector', function() {
             dataLength: 32,
           },
         }, middleName: {
-          type: Boolean,
+          type: String,
           name: 'middle_name',
           postgresql: {
             column: 'MIDDLENAME',
           },
         }, lastName: {
-          type: Boolean,
+          type: String,
           name: 'last_name',
           testdb: {
             column: 'LASTNAME',
@@ -581,6 +581,19 @@ describe('sql connector', function() {
         sql:
       'INSERT INTO `CUSTOMER`(`NAME`,`middle_name`,`VIP`) VALUES ($1,$2,$3), ($4,$5,$6)',
         params: ['Adam', 'abc', true, 'Test', null, false],
+      });
+    });
+
+    it('should build INSERT for array w/ undefined properties in first row', function() {
+      connector.multiInsertSupported = true;
+      const sql = connector.buildInsertAll('customer', [
+        {name: 'Adam', middleName: 'abc'},
+        {name: 'Test', middleName: null, vip: false},
+      ]);
+      expect(sql.toJSON()).to.eql({
+        sql:
+      'INSERT INTO `CUSTOMER`(`NAME`,`middle_name`,`VIP`) VALUES ($1,$2,$3), ($4,$5,$6)',
+        params: ['Adam', 'abc', null, 'Test', null, false],
       });
     });
 
