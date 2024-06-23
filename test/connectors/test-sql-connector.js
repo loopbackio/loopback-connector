@@ -84,10 +84,6 @@ TestConnector.prototype.escapeValue = function(value) {
   return value;
 };
 
-TestConnector.prototype.toColumnValue = function(prop, val) {
-  return val;
-};
-
 TestConnector.prototype._buildLimit = function(model, limit, offset) {
   if (isNaN(limit)) {
     limit = 0;
@@ -137,8 +133,41 @@ TestConnector.prototype.escapeValue = function(value) {
   return value;
 };
 
+function realisticSQLToColumnValue(prop, val) {
+  if (val == null) {
+    return null;
+  }
+  if (prop.type === String) {
+    return String(val);
+  }
+  if (prop.type === Number) {
+    if (isNaN(val)) {
+      // Map NaN to NULL
+      return val;
+    }
+    return val;
+  }
+
+  if (prop.type === Date || prop.type.name === 'Timestamp') {
+    if (!val.toUTCString) {
+      val = new Date(val);
+    }
+    return val;
+  }
+
+  if (prop.type === Boolean) {
+    if (val) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  return this.serializeObject(val);
+}
+
 TestConnector.prototype.toColumnValue = function(prop, val, escaping) {
-  return escaping ? this.escapeValue(val) : val;
+  return escaping ? this.escapeValue(val) : realisticSQLToColumnValue(prop, val);
 };
 
 TestConnector.prototype._buildLimit = function(model, limit, offset) {
