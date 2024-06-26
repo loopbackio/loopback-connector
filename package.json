@@ -41,7 +41,7 @@
     "eslint-config-loopback": "^13.1.0",
     "loopback-datasource-juggler": "^5.0.10",
     "mocha": "^10.5.2",
-    "nyc": "^15.1.0"
+    "nyc": "^17.0.0"
   },
   "ci": {
     "downstreamIgnoreList": [
