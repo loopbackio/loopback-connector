@@ -37,7 +37,7 @@
     "chai": "^4.5.0",
     "chai-as-promised": "^7.1.2",
     "commitlint": "^19.5.0",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-loopback": "^13.1.0",
     "loopback-datasource-juggler": "^5.1.0",
     "mocha": "^10.7.3",
