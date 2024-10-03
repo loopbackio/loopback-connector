@@ -18,6 +18,7 @@ const ds = new juggler.DataSource({
 let connector;
 let Customer;
 let Order;
+let Store;
 /* eslint-enable one-var */
 
 describe('sql connector', function() {
@@ -82,9 +83,31 @@ describe('sql connector', function() {
           testdb: {
             column: 'description',
           },
+        }, date: {
+          type: Date,
         },
       },
       {testdb: {table: 'ORDER'}});
+    Store = ds.createModel('store',
+      {
+        id: {
+          id: true,
+          type: String,
+        },
+        state: String,
+      });
+    Customer.hasMany(Order, {as: 'orders', foreignKey: 'customer_name'});
+    Order.belongsTo(Customer, {as: 'customer', foreignKey: 'customer_name'});
+    Order.belongsTo(Store, {as: 'store', foreignKey: 'store_id'});
+    Store.hasMany(Order, {as: 'orders', foreignKey: 'store_id'});
+    Store.hasMany(Customer, {
+      as: 'customers',
+      through: Order,
+      foreignKey: 'store_id',
+      keyThrough: 'customer_name',
+    });
+    Customer.belongsTo(Store, {as: 'favorite_store', foreignKey: 'favorite_store'});
+    Store.hasMany(Customer, {as: 'customers_fav', foreignKey: 'favorite_store'});
   });
 
   // tests for column names mapping are moved to name-mapping.test.js
@@ -328,7 +351,7 @@ describe('sql connector', function() {
   it('builds column names for SELECT', function() {
     const cols = connector.buildColumnNames('customer');
     expect(cols).to.eql('`NAME`,`middle_name`,`LASTNAME`,`VIP`,' +
-      '`primary_address`,`TOKEN`,`ADDRESS`');
+      '`primary_address`,`TOKEN`,`ADDRESS`,`FAVORITE_STORE`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
@@ -346,7 +369,7 @@ describe('sql connector', function() {
         middleName: false,
       },
     });
-    expect(cols).to.eql('`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`VIP`,`ADDRESS`,`FAVORITE_STORE`');
   });
 
   it('builds column names with array fields filter for SELECT', function() {
@@ -379,7 +402,8 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql:
         'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,' +
-        '`TOKEN`,`ADDRESS` FROM `CUSTOMER` WHERE ((`NAME`=$1) OR (`ADDRESS`=$2)) ' +
+        '`TOKEN`,`ADDRESS`,`FAVORITE_STORE` ' +
+        'FROM `CUSTOMER` WHERE ((`NAME`=$1) OR (`ADDRESS`=$2)) ' +
         'AND `VIP`=$3 ORDER BY `NAME` LIMIT 5',
       params: ['Top Cat', 'Trash can', true],
     });
@@ -390,7 +414,7 @@ describe('sql connector', function() {
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
       sql: 'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,`TOKEN`,' +
-      '`ADDRESS` FROM `CUSTOMER`' +
+      '`ADDRESS`,`FAVORITE_STORE` FROM `CUSTOMER`' +
       ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
       params: ['John'],
     });
@@ -565,6 +589,56 @@ describe('sql connector', function() {
       // eslint-disable-next-line no-unused-expressions
       expect(sql).to.be.null;
     });
+  it('builds INNER JOIN', function() {
+    const sql = connector.buildJoins('customer', {orders: {where: {id: 10}}});
+    expect(sql.toJSON()).to.eql({
+      sql: 'INNER JOIN ( SELECT `CUSTOMER_NAME` FROM `ORDER` WHERE ' +
+      '`orderId`=? ORDER BY `orderId` ) AS `ORDER` ON ' +
+      '`CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`',
+      params: [10],
+    });
+  });
+  it('builds SELECT with INNER JOIN (1:n relation)', function() {
+    const sql = connector.buildSelect('customer', {
+      where: {
+        orders: {
+          where: {
+            date: {between: ['2015-01-01', '2015-01-31']},
+          },
+        },
+      },
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT DISTINCT `NAME`,`middle_name`,`LASTNAME`,`VIP`,' +
+      '`primary_address`,`TOKEN`,`ADDRESS`,`FAVORITE_STORE` FROM `CUSTOMER` ' +
+      'INNER JOIN ( SELECT `CUSTOMER_NAME` FROM `ORDER` WHERE ' +
+      '`DATE` BETWEEN $1 AND $2 ORDER BY `orderId` ) AS `ORDER` ' +
+      'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME`  ORDER BY `NAME`',
+      params: ['2015-01-01', '2015-01-31'],
+    });
+  });
+  it('builds SELECT with INNER JOIN (n:n relation)', function() {
+    const sql = connector.buildSelect('store', {
+      where: {
+        customers: {
+          where: {
+            vip: true,
+          },
+        },
+      },
+    });
+
+    expect(sql.toJSON()).to.eql({
+      sql: 'SELECT DISTINCT `ID`,`STATE` FROM `STORE` INNER JOIN' +
+      ' ( SELECT `CUSTOMER_NAME`,`STORE_ID` FROM `ORDER` ' +
+      'ORDER BY `orderId` ) AS `ORDER` ON `STORE`.`ID`=`ORDER`.`STORE_ID` ' +
+      'INNER JOIN ( SELECT `NAME` FROM `CUSTOMER` WHERE ' +
+      '`VIP`=$1 ORDER BY `NAME` ) AS `CUSTOMER` ON ' +
+      '`ORDER`.`CUSTOMER_NAME`=`CUSTOMER`.`NAME`  ORDER BY `ID`',
+      params: [true],
+    });
+  });
 
   context('when multiInsertSupported is true', function() {
     beforeEach(function() {
@@ -581,6 +655,64 @@ describe('sql connector', function() {
         sql:
       'INSERT INTO `CUSTOMER`(`NAME`,`middle_name`,`VIP`) VALUES ($1,$2,$3), ($4,$5,$6)',
         params: ['Adam', 'abc', true, 'Test', null, false],
+      });
+    });
+    it('builds nested SELECTs', function() {
+      const sql = connector.buildSelect('customer', {
+        where: {
+          orders: {
+            where: {
+              store: {
+                where: {
+                  state: 'NY',
+                },
+              },
+            },
+          },
+        },
+      });
+
+      expect(sql.toJSON()).to.eql({
+        sql: 'SELECT DISTINCT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,' +
+        '`TOKEN`,`ADDRESS`,`FAVORITE_STORE` FROM `CUSTOMER` ' +
+        'INNER JOIN ( SELECT DISTINCT `CUSTOMER_NAME` FROM `ORDER` ' +
+        'INNER JOIN ( SELECT `ID` FROM `STORE` WHERE `STATE`=$1 ' +
+        'ORDER BY `ID` ) AS `STORE` ON `ORDER`.`STORE_ID`=`STORE`.`ID`  ' +
+        'ORDER BY `orderId` ) AS `ORDER` ON `CUSTOMER`.`NAME`=`ORDER`.' +
+        '`CUSTOMER_NAME`  ORDER BY `NAME`',
+        params: ['NY'],
+      });
+    });
+    it('builds count', function() {
+      const sql = connector.buildCount('customer');
+      expect(sql.toJSON()).to.eql({
+        sql: 'SELECT count(*) as "cnt" FROM `CUSTOMER` ',
+        params: [],
+      });
+    });
+    it('builds count with WHERE', function() {
+      const sql = connector.buildCount('customer', {name: 'John'});
+      expect(sql.toJSON()).to.eql({
+        sql: 'SELECT count(*) as "cnt" FROM `CUSTOMER` WHERE `NAME`=$1',
+        params: ['John'],
+      });
+    });
+
+    it('builds count with WHERE and JOIN', function() {
+      const sql = connector.buildCount('customer', {
+        name: 'John',
+        orders: {
+          where: {
+            date: {between: ['2015-01-01', '2015-01-31']},
+          },
+        },
+      });
+      expect(sql.toJSON()).to.eql({
+        sql: 'SELECT count(DISTINCT `NAME`) as "cnt" FROM `CUSTOMER` ' +
+          'INNER JOIN ( SELECT `CUSTOMER_NAME` FROM `ORDER` WHERE ' +
+          '`DATE` BETWEEN $1 AND $2 ORDER BY `orderId` ) AS `ORDER` ' +
+          'ON `CUSTOMER`.`NAME`=`ORDER`.`CUSTOMER_NAME` WHERE `NAME`=$3',
+        params: ['2015-01-01', '2015-01-31', 'John'],
       });
     });
 
