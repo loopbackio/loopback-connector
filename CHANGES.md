@@ -1,3 +1,39 @@
+2024-10-11, Version 6.1.10
+==========================
+
+ * chore: update dependency loopback-datasource-juggler to ^5.1.1 (renovate[bot])
+
+ * chore: update coverallsapp/github-action action to v2.3.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.26.12 (renovate[bot])
+
+ * chore: update actions/checkout action to v4.2.1 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.26.11 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.26.10 (renovate[bot])
+
+ * chore: update actions/checkout action to v4.2.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.26.9 (renovate[bot])
+
+ * chore: update actions/setup-node action to v4.0.4 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.26.8 (renovate[bot])
+
+ * chore: update dependency nyc to ^17.1.0 (renovate[bot])
+
+ * chore: update dependency eslint to ^8.57.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.26.7 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^19.5.0 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.1.0 (renovate[bot])
+
+
 2024-09-09, Version 6.1.9
 =========================
 
