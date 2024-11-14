@@ -16,3 +16,8 @@ loopback-connector-*.tgz
 .nyc_output
 coverage
 .vscode
+
+# Code editors
+\#*#
+*~
+.#*
