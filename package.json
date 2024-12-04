@@ -1,6 +1,6 @@
 {
   "name": "loopback-connector",
-  "version": "6.1.11",
+  "version": "6.1.12",
   "description": "Building blocks for LoopBack connectors",
   "engines": {
     "node": ">=18"
