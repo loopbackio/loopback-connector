@@ -35,8 +35,8 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/eslintrc": "^3.2.0",
-    "chai": "^4.5.0",
-    "chai-as-promised": "^7.1.2",
+    "chai": "^5.1.2",
+    "chai-as-promised": "^8.0.1",
     "commitlint": "^19.6.1",
     "eslint": "^9.17.0",
     "eslint-config-loopback": "^13.1.0",
