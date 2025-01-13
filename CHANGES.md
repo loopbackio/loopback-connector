@@ -1,3 +1,33 @@
+2025-01-13, Version 6.2.0
+=========================
+
+ * feat: query to fetch unique columns (Muhammad Aaqil)
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^9.18.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.1 (renovate[bot])
+
+ * chore: update dependency uuid to ^11.0.5 (renovate[bot])
+
+ * chore: update dependency uuid to ^11.0.4 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.0 (renovate[bot])
+
+ * chore: update dependency commitlint to ^19.6.1 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.17.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.27.9 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.27.7 (renovate[bot])
+
+ * chore: update dependency debug to ^4.4.0 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.1.3 (renovate[bot])
+
+
 2024-12-04, Version 6.1.12
 ==========================
 
