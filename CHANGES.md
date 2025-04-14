@@ -1,3 +1,27 @@
+2025-04-14, Version 6.2.3
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update actions/setup-node action to v4.4.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.15 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.14 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.24.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.13 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.23.0 (renovate[bot])
+
+ * chore: update dependency @eslint/eslintrc to ^3.3.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.12 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.1.6 (renovate[bot])
+
+
 2025-03-17, Version 6.2.2
 =========================
 
