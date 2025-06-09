@@ -1,3 +1,27 @@
+2025-06-09, Version 6.2.5
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.19 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.28.0 (renovate[bot])
+
+ * chore: update dependency msgpack5 to v6 (renovate[bot])
+
+ * chore: update dependency mocha to ^11.5.0 (renovate[bot])
+
+ * chore: update dependency mocha to ^11.4.0 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.27.0 (renovate[bot])
+
+ * chore: update dependency mocha to ^11.3.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.28.18 (renovate[bot])
+
+ * chore: update dependency debug to ^4.4.1 (renovate[bot])
+
+
 2025-05-12, Version 6.2.4
 =========================
 
