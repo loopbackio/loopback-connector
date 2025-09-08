@@ -1,3 +1,9 @@
+2025-09-08, Version 6.2.10
+==========================
+
+ * chore: update dependency loopback-datasource-juggler to ^5.2.1 (renovate[bot])
+
+
 2025-09-08, Version 6.2.9
 =========================
 
