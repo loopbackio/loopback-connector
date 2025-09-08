@@ -1,3 +1,31 @@
+2025-09-08, Version 6.2.8
+=========================
+
+ * chore: update dependency debug to ^4.4.2 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^9.35.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.30.1 (renovate[bot])
+
+ * chore: update actions/setup-node action to v5 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.30.0 (renovate[bot])
+
+ * chore: update dependency mocha to ^11.7.2 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.34.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.29.11 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.29.10 (renovate[bot])
+
+ * chore: update github/codeql-action action to v3.29.9 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^5.1.11 (renovate[bot])
+
+
 2025-08-11, Version 6.2.7
 =========================
 
