@@ -3,7 +3,7 @@
   "version": "6.2.12",
   "description": "Building blocks for LoopBack connectors",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "author": "IBM Corp.",
   "keywords": [
