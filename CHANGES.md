@@ -1,3 +1,25 @@
+2025-11-11, Version 7.0.0
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency node to v22.21.1 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.39.1 (renovate[bot])
+
+ * chore: update dependency mocha to ^11.7.5 (renovate[bot])
+
+ * chore: drop Node.js 18 support (dhmlau)
+
+ * chore: update github/codeql-action action to v4.31.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.31.0 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.38.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.30.9 (renovate[bot])
+
+
 2025-10-14, Version 6.2.12
 ==========================
 
