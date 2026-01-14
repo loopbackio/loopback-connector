@@ -1,9 +1,9 @@
 {
   "name": "loopback-connector",
-  "version": "6.2.6",
+  "version": "7.0.2",
   "description": "Building blocks for LoopBack connectors",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "author": "IBM Corp.",
   "keywords": [
@@ -27,22 +27,22 @@
   "dependencies": {
     "async": "^3.2.6",
     "bluebird": "^3.7.2",
-    "debug": "^4.4.1",
+    "debug": "^4.4.3",
     "msgpack5": "^6.0.2",
     "strong-globalize": "^6.0.6",
-    "uuid": "^11.1.0"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^19.8.1",
-    "@eslint/eslintrc": "^3.3.1",
+    "@commitlint/config-conventional": "^20.3.1",
+    "@eslint/eslintrc": "^3.3.3",
     "chai": "^4.5.0",
     "chai-as-promised": "^7.1.2",
-    "commitlint": "^19.8.1",
-    "eslint": "^9.32.0",
+    "commitlint": "^20.3.1",
+    "eslint": "^9.39.2",
     "eslint-config-loopback": "^13.1.0",
     "eslint-plugin-mocha": "^10.5.0",
-    "loopback-datasource-juggler": "^5.1.10",
-    "mocha": "^11.7.1",
+    "loopback-datasource-juggler": "^6.0.2",
+    "mocha": "^11.7.5",
     "nyc": "^17.1.0"
   },
   "ci": {
