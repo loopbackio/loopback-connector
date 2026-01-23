@@ -63,7 +63,14 @@ describe('sql connector', function() {
             column: 'TOKEN',
           },
         },
-        address: String,
+        address: String, ids: {
+          type: String,
+          testdb: {
+            column: 'IDS',
+            dataType: 'VARCHAR',
+            dataLength: 32,
+          },
+        },
       },
       {testdb: {table: 'CUSTOMER'}});
     Order = ds.createModel('order',
@@ -133,6 +140,31 @@ describe('sql connector', function() {
     expect(where.toJSON()).to.eql({
       sql: 'WHERE `NAME`=?',
       params: ['John'],
+    });
+  });
+
+  it('builds where with relation options', function() {
+    const where = connector.buildWhere(
+      'customer',
+      {ids: {inq: ['1', '2']}},
+      {
+        model: {
+          definition: {
+            relations: {
+              userComapnies: {
+                type: 'referencesMany',
+                model: 'Company',
+                keyFrom: 'ids',
+                keyTo: 'id',
+              },
+            },
+          },
+        },
+      },
+    );
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `IDS` IN (?,?)',
+      params: ['1', '2'],
     });
   });
 
@@ -296,13 +328,15 @@ describe('sql connector', function() {
       primaryAddress: '1031 NW 7th Ave, Fort Lauderdale, Florida, United States',
     });
     expect(fields.toJSON()).to.eql({
-      sql: 'SET `middle_name`=?,`LASTNAME`=?,`VIP`=?,`primary_address`=?,`ADDRESS`=?',
+      sql: 'SET `middle_name`=?,`LASTNAME`=?,`VIP`=?,`primary_address`=?,' +
+        '`ADDRESS`=?,`IDS`=?',
       params: [
         '',
         'Libert',
         true,
         '1031 NW 7th Ave, Fort Lauderdale, Florida, United States',
         '1031 NW 7th Ave, Fort Lauderdale, Florida, United States',
+        null,
       ],
     });
   });
@@ -328,7 +362,7 @@ describe('sql connector', function() {
   it('builds column names for SELECT', function() {
     const cols = connector.buildColumnNames('customer');
     expect(cols).to.eql('`NAME`,`middle_name`,`LASTNAME`,`VIP`,' +
-      '`primary_address`,`TOKEN`,`ADDRESS`');
+      '`primary_address`,`TOKEN`,`ADDRESS`,`IDS`');
   });
 
   it('builds column names with true fields filter for SELECT', function() {
@@ -346,7 +380,7 @@ describe('sql connector', function() {
         middleName: false,
       },
     });
-    expect(cols).to.eql('`VIP`,`ADDRESS`');
+    expect(cols).to.eql('`VIP`,`ADDRESS`,`IDS`');
   });
 
   it('builds column names with array fields filter for SELECT', function() {
@@ -379,7 +413,7 @@ describe('sql connector', function() {
     expect(sql.toJSON()).to.eql({
       sql:
         'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,' +
-        '`TOKEN`,`ADDRESS` FROM `CUSTOMER` WHERE ((`NAME`=$1) OR (`ADDRESS`=$2)) ' +
+        '`TOKEN`,`ADDRESS`,`IDS` FROM `CUSTOMER` WHERE ((`NAME`=$1) OR (`ADDRESS`=$2)) ' +
         'AND `VIP`=$3 ORDER BY `NAME` LIMIT 5',
       params: ['Top Cat', 'Trash can', true],
     });
@@ -390,7 +424,7 @@ describe('sql connector', function() {
       {order: 'name', limit: 5, where: {name: 'John'}});
     expect(sql.toJSON()).to.eql({
       sql: 'SELECT `NAME`,`middle_name`,`LASTNAME`,`VIP`,`primary_address`,`TOKEN`,' +
-      '`ADDRESS` FROM `CUSTOMER`' +
+      '`ADDRESS`,`IDS` FROM `CUSTOMER`' +
       ' WHERE `NAME`=$1 ORDER BY `NAME` LIMIT 5',
       params: ['John'],
     });
