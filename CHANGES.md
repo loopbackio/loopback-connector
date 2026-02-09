@@ -1,3 +1,25 @@
+2026-02-09, Version 7.0.3
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.32.2 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^20.4.1 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^20.4.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.32.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.31.11 (renovate[bot])
+
+ * chore: update actions/checkout action to v6.0.2 (renovate[bot])
+
+ * chore: update actions/setup-node action to v6.2.0 (renovate[bot])
+
+ * chore: update dependency node to v22.22.0 (renovate[bot])
+
+
 2026-01-12, Version 7.0.2
 =========================
 
