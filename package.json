@@ -38,9 +38,9 @@
     "chai": "^4.5.0",
     "chai-as-promised": "^7.1.2",
     "commitlint": "^20.4.1",
-    "eslint": "^9.39.2",
-    "eslint-config-loopback": "^13.1.0",
-    "eslint-plugin-mocha": "^10.5.0",
+    "eslint": "^10.0.0",
+    "eslint-config-loopback": "^14.0.0",
+    "eslint-plugin-mocha": "^11.2.0",
     "loopback-datasource-juggler": "^6.0.3",
     "mocha": "^11.7.5",
     "nyc": "^17.1.0"
