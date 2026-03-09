@@ -1,3 +1,39 @@
+2026-03-09, Version 7.0.4
+=========================
+
+ * chore: update dependency loopback-datasource-juggler to ^6.0.4 (renovate[bot])
+
+ * chore: update dependency nyc to v18 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^9.39.4 (renovate[bot])
+
+ * chore: update dependency @eslint/eslintrc to ^3.3.5 (renovate[bot])
+
+ * chore: update dependency node to v22.22.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.32.6 (renovate[bot])
+
+ * chore: update actions/setup-node action to v6.3.0 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^20.4.3 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.32.5 (renovate[bot])
+
+ * chore: update dependency @eslint/eslintrc to ^3.3.4 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.32.4 (renovate[bot])
+
+ * chore: update dependency eslint to ^9.39.3 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^20.4.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.32.3 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^6.0.3 (renovate[bot])
+
+
 2026-02-09, Version 7.0.3
 =========================
 
