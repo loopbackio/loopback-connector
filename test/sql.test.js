@@ -626,4 +626,101 @@ describe('sql connector', function() {
       });
     });
   });
+  describe('toColumnValue with column name parameter', function() {
+    it('should pass escaped column name as fourth parameter', function() {
+      let capturedColumnName;
+      const originalToColumnValue = connector.toColumnValue;
+      // Override toColumnValue to capture the fourth parameter
+      connector.toColumnValue = function(prop, val, escaping, columnName) {
+        capturedColumnName = columnName;
+        return originalToColumnValue.call(this, prop, val, escaping);
+      };
+
+      try {
+        const fields = connector.buildFields('customer', {
+          name: 'John',
+          vip: true,
+        });
+        // Verify that the escaped column name was passed
+        expect(capturedColumnName).to.be.oneOf(['`NAME`', '`VIP`']);
+      } finally {
+        // Restore original method
+        connector.toColumnValue = originalToColumnValue;
+      }
+    });
+
+    it('should enable partial JSON updates with column-specific logic', function() {
+      const originalToColumnValue = connector.toColumnValue;
+      // Mock connector that handles JSON columns differently
+      connector.toColumnValue = function(prop, val, escaping, columnName) {
+        // Example: Enable partial JSON update for specific columns
+        if (columnName === '`ADDRESS`' && typeof val === 'object' && val !== null) {
+          // For JSON columns, connector can use database-specific JSON update syntax
+          // e.g., PostgreSQL: column = column || '{"new": "data"}'::jsonb
+          // This demonstrates how the column name enables column-specific handling
+          return {
+            sql: 'jsonb_set(' + columnName + ', ?, ?)',
+            params: ['{path}', JSON.stringify(val)],
+          };
+        }
+        return originalToColumnValue.call(this, prop, val, escaping);
+      };
+
+      try {
+        const fields = connector.buildFields('customer', {
+          address: {city: 'Miami', zip: '33101'},
+        });
+        // Verify that column-specific logic was applied
+        expect(fields.columnValues).to.have.lengthOf(1);
+        expect(fields.columnValues[0].toJSON()).to.deep.include({
+          sql: 'jsonb_set(`ADDRESS`, ?, ?)',
+        });
+      } finally {
+        connector.toColumnValue = originalToColumnValue;
+      }
+    });
+    it('should work with buildFieldsForUpdate', function() {
+      const capturedColumnNames = [];
+      const originalToColumnValue = connector.toColumnValue;
+      connector.toColumnValue = function(prop, val, escaping, columnName) {
+        if (columnName) {
+          capturedColumnNames.push(columnName);
+        }
+        return originalToColumnValue.call(this, prop, val, escaping);
+      };
+
+      try {
+        connector.buildFieldsForUpdate('customer', {
+          lastName: 'Doe',
+          vip: true,
+        });
+        // Verify column names were passed for UPDATE operations
+        expect(capturedColumnNames).to.include.members(['`LASTNAME`', '`VIP`']);
+      } finally {
+        connector.toColumnValue = originalToColumnValue;
+      }
+    });
+
+    it('should work with buildFieldsFromArray for bulk inserts', function() {
+      const capturedColumnNames = [];
+      const originalToColumnValue = connector.toColumnValue;
+      connector.toColumnValue = function(prop, val, escaping, columnName) {
+        if (columnName && !capturedColumnNames.includes(columnName)) {
+          capturedColumnNames.push(columnName);
+        }
+        return originalToColumnValue.call(this, prop, val, escaping);
+      };
+
+      try {
+        connector.buildFieldsFromArray('customer', [
+          {name: 'John', vip: true},
+          {name: 'Jane', vip: false},
+        ]);
+        // Verify column names were passed for all rows
+        expect(capturedColumnNames).to.include.members(['`NAME`', '`VIP`']);
+      } finally {
+        connector.toColumnValue = originalToColumnValue;
+      }
+    });
+  });
 });
