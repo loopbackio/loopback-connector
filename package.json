@@ -42,7 +42,7 @@
     "eslint-config-loopback": "^13.1.0",
     "eslint-plugin-mocha": "^10.5.0",
     "loopback-datasource-juggler": "^6.0.6",
-    "mocha": "^11.7.5",
+    "mocha": "^11.7.6",
     "nyc": "^18.0.0"
   },
   "ci": {
