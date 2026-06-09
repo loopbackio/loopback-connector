@@ -1,3 +1,33 @@
+2026-06-09, Version 8.0.0
+=========================
+
+ * chore: update dependency uuid to v14 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.36.2 (renovate[bot])
+
+ * chore: update actions/checkout action to v6.0.3 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.36.1 (renovate[bot])
+
+ * chore: drop Node.js 20 support BREAKING CHANGE: drop Node.js 20 support (dhmlau)
+
+ * chore: update commitlint monorepo to ^21.0.2 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.36.0 (renovate[bot])
+
+ * chore: update dependency mocha to ^11.7.6 (renovate[bot])
+
+ * chore: update commitlint monorepo to v21 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.35.5 (renovate[bot])
+
+ * chore: update dependency node to v22.22.3 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^6.0.6 (renovate[bot])
+
+
 2026-05-11, Version 7.0.6
 =========================
 
