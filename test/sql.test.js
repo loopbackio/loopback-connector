@@ -259,6 +259,47 @@ describe('sql connector', function() {
     expect(where.sql).to.not.match(/ AND $/);
   });
 
+  it('builds where and drops an or with only invalid clauses', function() {
+    const where = connector.buildWhere('customer', {
+      name: 'icecream',
+      or: [{notAColumnName: ''}, {notAColumnNameEither: ''}],
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE `NAME`=?',
+      params: ['icecream'],
+    });
+  });
+
+  it('builds empty where for an or with only invalid clauses', function() {
+    const where = connector.buildWhere('customer', {
+      or: [{notAColumnName: ''}, {notAColumnNameEither: ''}],
+    });
+    expect(where.toJSON()).to.eql({
+      sql: '',
+      params: [],
+    });
+  });
+
+  it('builds empty where for an and with only invalid clauses', function() {
+    const where = connector.buildWhere('customer', {
+      and: [{notAColumnName: ''}, {notAColumnNameEither: ''}],
+    });
+    expect(where.toJSON()).to.eql({
+      sql: '',
+      params: [],
+    });
+  });
+
+  it('builds where and drops a nested or with only invalid clauses', function() {
+    const where = connector.buildWhere('customer', {
+      and: [{name: 'John'}, {or: [{notAColumnName: ''}]}],
+    });
+    expect(where.toJSON()).to.eql({
+      sql: 'WHERE ((`NAME`=?))',
+      params: ['John'],
+    });
+  });
+
   it('builds order by with one field', function() {
     const orderBy = connector.buildOrderBy('customer', 'name');
     expect(orderBy).to.eql('ORDER BY `NAME`');
