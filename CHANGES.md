@@ -1,3 +1,41 @@
+2026-07-15, Version 8.0.1
+=========================
+
+ * chore: update actions/setup-node action to v7 (renovate[bot])
+
+ * chore: update actions/setup-node action to v6.5.0 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency eslint to ^9.39.5 (renovate[bot])
+
+ * chore: update dependency @eslint/eslintrc to ^3.3.6 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.37.0 (renovate[bot])
+
+ * chore: update commitlint monorepo (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.36.3 (renovate[bot])
+
+ * ci: fix coveralls on macOS (Rifa Achrinza)
+
+ * test: increase coverage (Ruben Nogueira)
+
+ * fix: empty nested filters (Ruben Nogueira)
+
+ * chore: update dependency node to v22.23.1 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^21.1.0 (renovate[bot])
+
+ * chore: update dependency uuid to ^14.0.1 (renovate[bot])
+
+ * chore: update dependency node to v22.23.0 (renovate[bot])
+
+ * chore: update actions/checkout action to v7 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to v7 (renovate[bot])
+
+
 2026-06-09, Version 8.0.0
 =========================
 
