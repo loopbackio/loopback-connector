@@ -1,3 +1,37 @@
+2026-10-21, Version 8.0.4
+=========================
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update commitlint monorepo to ^21.2.4 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.39.0 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^7.0.4 (renovate[bot])
+
+ * chore: update dependency uuid to ^14.0.3 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.38.3 (renovate[bot])
+
+ * chore: update actions/setup-node action to v7.1.0 (renovate[bot])
+
+ * chore: update dependency mocha to ^12.0.3 (renovate[bot])
+
+ * chore: update dependency msgpack5 to ^6.1.0 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.38.2 (renovate[bot])
+
+ * chore: update dependency node to v22.23.3 (renovate[bot])
+
+ * chore: update commitlint monorepo to ^21.2.3 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.38.1 (renovate[bot])
+
+ * chore: update dependency mocha to ^12.0.2 (renovate[bot])
+
+ * chore: update dependency loopback-datasource-juggler to ^7.0.3 (renovate[bot])
+
+
 2026-09-15, Version 8.0.3
 =========================
 
