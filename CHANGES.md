@@ -1,3 +1,19 @@
+2026-11-12, Version 8.0.5
+=========================
+
+ * chore: update dependency node to v26.13.1 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.39.3 (renovate[bot])
+
+ * chore: lock file maintenance (renovate[bot])
+
+ * chore: update dependency node to v26 (renovate[bot])
+
+ * chore: update github/codeql-action action to v4.39.1 (renovate[bot])
+
+ * chore: update dependency node to v22.23.4 (renovate[bot])
+
+
 2026-10-21, Version 8.0.4
 =========================
 
