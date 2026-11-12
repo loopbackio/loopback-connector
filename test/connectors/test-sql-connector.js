@@ -262,3 +262,7 @@ TestConnector.prototype.executeSQL = function(sql, params, options, callback) {
     callback(null, result);
   }
 };
+
+TestConnector.prototype.buildQueryIsStrict = function() {
+  return 'SELECT 1 AS globalStrictMode, 1 AS sessionStrictMode';
+};
