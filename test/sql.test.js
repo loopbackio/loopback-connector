@@ -489,6 +489,49 @@ describe('sql connector', function() {
     );
   });
 
+  it('joins SQL statements', function() {
+    const stmt = ParameterizedSQL.join([
+      '',
+      new ParameterizedSQL('`NAME`=?', ['John']),
+      {sql: '`VIP`=?', params: [true]},
+      '',
+      '`TOKEN` IS NULL',
+      {sql: '`ID` IN (?,?)', params: [1, [2, 3]]},
+    ], ' AND ');
+    expect(stmt).to.be.instanceOf(ParameterizedSQL);
+    expect(stmt.toJSON()).to.eql({
+      sql: '`NAME`=? AND `VIP`=? AND  AND `TOKEN` IS NULL AND `ID` IN (?,?)',
+      params: ['John', true, 1, [2, 3]],
+    });
+    expect(ParameterizedSQL.join(['SELECT *', 'FROM `CUSTOMER`']).toJSON())
+      .to.eql({sql: 'SELECT * FROM `CUSTOMER`', params: []});
+  });
+
+  it('joins SQL statements without modifying their params', function() {
+    const params1 = ['John'];
+    const params2 = ['Mary'];
+    const stmt1 = new ParameterizedSQL('`NAME`=?', params1);
+    const stmt2 = new ParameterizedSQL('`NAME`=?', params2);
+    const joined = ParameterizedSQL.join([stmt1, stmt2], ' OR ');
+    joined.params.push('Jane');
+    expect(joined.params).to.eql(['John', 'Mary', 'Jane']);
+    expect(params1).to.eql(['John']);
+    expect(params2).to.eql(['Mary']);
+    expect(stmt1.params).to.equal(params1);
+    expect(stmt2.params).to.equal(params2);
+  });
+
+  it('joins a large number of SQL statements in linear time', function() {
+    this.timeout(1000);
+    const values = [];
+    for (let i = 0; i < 50000; i++) {
+      values.push(new ParameterizedSQL('?', [i]));
+    }
+    const stmt = ParameterizedSQL.join(values, ',');
+    expect(stmt.params).to.have.length(50000);
+    expect(stmt.params[49999]).to.equal(49999);
+  });
+
   it('should throw if params does not match placeholders', function() {
     expect(function() {
       let stmt1 = 'SELECT * from `CUSTOMER`';
